@@ -4,9 +4,9 @@ import fitz
 from error_correction_dictionary import character_error_correction, word_error_correction
 
 acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
-mm_address = r"/media/scenerymc/本地磁盘/学习资料/计算机/参考书/可能会读的书/算法/算法导论/整理/CLRS.mm"
-pdf_address_open = r"/media/scenerymc/本地磁盘/学习资料/计算机/参考书/可能会读的书/算法/算法导论/4th/Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein - Introduction to Algorithms-The MIT Press (2022).pdf"
-pdf_address_to = r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\4th\Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein - Introduction to Algorithms-The MIT Press (2022).pdf"
+mm_address = r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\整理\CLRS.mm"
+pdf_address_open = r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\4th\CLRS4th.pdf"
+pdf_address_to = r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\4th\CLRS4th.pdf"
 intersect_portion = 0.5
 
 

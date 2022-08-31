@@ -1,5 +1,4 @@
 from n_image_downloader_temp import temp_get_image, base_url_pre, base_url_suf
-from n_image_downloader import address, sign
 import undetected_chromedriver as uc
 from selenium import webdriver
 from multiprocessing import Pool
@@ -8,12 +7,18 @@ import os
 import time
 
 
+address = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
+sign = {'page_num_prefix': '<span class="name">',
+        'page_num_suffix': '</span></a></span></div><div class="tag-container field-name">',
+        'serial_prefix': "https://nhentai.net/g/", 'image': '<img src="'}
+
+
 def get_images(serial):
-    url = f"{sign['serial_prefix']}{serial}"
+    url = f"https://nhentai.net/g/{serial}"
     driver.get(url)
     s = driver.page_source
-    b = re.search(rf'{sign["page_num_prefix"]}\d*{sign["page_num_suffix"]}', s)
-    n = int(s[b.start() + len(sign['page_num_prefix']): b.end() - len(sign['page_num_suffix'])])
+    b1 = re.search(r'<span class="name">\d+</span></a></span></div><div class="tag-container field-name">', s).group()
+    n = int(re.findall(r"\d+", b1)[0])
 
     print(f'{url}开始下载！n = {n}')
     address_temp = rf"{address}\{serial}"
@@ -22,11 +27,9 @@ def get_images(serial):
 
     driver.get(f"{url}/1")
     s = driver.page_source
-    b_temp = re.search(rf'<a href="/g/\d+/\d*/?">{sign["image"]}', s)
-    b = b_temp.start() + s[b_temp.start():].find(sign['image']) + len(sign['image'])
-    e = b + s[b:].find('"')
-    sample_address = s[b:e].split('/')
-    server, inner_serial = sample_address[2][1], sample_address[-2]
+    b2 = re.search(r'<img src="https://i\d\.nhentai\.net/galleries/\d+/\d+\.(jpg|png|gif)', s).group()
+    server = re.findall(r"i\d", b2)[0][1]
+    inner_serial = re.findall(r"galleries/\d+", b2)[0].split('/')[1]
     folder = f"{base_url_pre}{server}{base_url_suf}/{inner_serial}"
     while True:
         ls = {int(x[:x.find('.')]) for x in os.listdir(address_temp)}

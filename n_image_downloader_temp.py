@@ -3,12 +3,26 @@ import requests
 import urllib3
 import time
 import os
-from n_image_downloader import headers, proxies, address
 
 base_url_pre = "https://i"
 base_url_suf = ".nhentai.net/galleries"
 servers = [3, 5, 7]
-fmts = ['jpg', 'png']
+fmts = ['jpg', 'png', 'gif']
+
+address = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
+headers = {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,"
+              "application/signed-exchange;v=b3;q=0.9",
+    # noqa
+    "Accept-Encoding": "gzip, deflate",
+    "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
+    "Dnt": "1",
+    "Upgrade-Insecure-Requests": "1",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/83.0.4103.97 Safari/537.36",
+    # noqa
+}
+proxies = {'http': 'http://127.0.0.1:41091', 'https': 'http://127.0.0.1:41091'}
 
 
 def temp_get_images(serial, n, inner_serial):
