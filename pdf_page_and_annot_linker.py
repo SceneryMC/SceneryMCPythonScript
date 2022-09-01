@@ -5,12 +5,20 @@ import platform
 from error_correction_dictionary import character_error_correction, word_error_correction
 
 isLinux = (platform.system().lower() == "linux")
-acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
-mm_address = [r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\整理\CLRS.mm", '/mnt/E/学习资料/计算机/参考书/可能会读的书/算法/算法导论/整理/CLRS.mm']
-pdf_address = [r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\4th\CLRS4th.pdf", '/mnt/E/学习资料/计算机/参考书/可能会读的书/算法/算法导论/4th/CLRS4th.pdf']
-t1 = [f'"{acrobat_address}" /A "page=', 'evince -i ']
-t2 = [f'=OpenActions" "{pdf_address[0]}"', f' {pdf_address[1]}']
 intersect_portion = 0.5
+filelist = [
+    (r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\整理\CLRS.mm", r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\4th\CLRS4th.pdf"),
+    (r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\ITLA\ITLA.mm", r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\ITLA\ITLA.pdf"),
+    (r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\LADR\LADR.mm", r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\LADR\LADRcn.pdf"),
+]
+
+
+def address_in_platform(addr, wtl=isLinux):
+    if not wtl:
+        return addr
+    addr = addr.replace(":", "")
+    addr = addr.replace("\\", "/")
+    return f"/mnt/{addr}"
 
 
 def _parse_highlight(annot, wordlist):
@@ -56,22 +64,28 @@ def add_cmd_command(match):
     left = right = -1 - (text[-2] == '/')
     details = ""
     if text[6] == 'P' and len(page) == 2:
-        annot, highlight = get_highlight_and_annot(doc[int(page[0])-1], int(page[1]))
+        annot, highlight = get_highlight_and_annot(doc[int(page[0]) - 1], int(page[1]))
         text = text.replace(f'P{page[0]}-{page[1]}"', f'P{page[0]}-{page[1]} {highlight}"')
         if annot != '':
             details = f'<richcontent CONTENT-TYPE="xml/" TYPE="DETAILS">\n' \
-                  f'<html>\n\t<head>\n\n\t</head>\n\t<body>\n\t\t<p>{annot}</p>\n\t</body>\n</html></richcontent>'
+                      f'<html>\n\t<head>\n\n\t</head>\n\t<body>\n\t\t<p>{annot}</p>\n\t</body>\n</html></richcontent>'
             if right == -2:
                 right = -1
                 details += "</node>"
 
-    return f'{text[:left]} LINK="execute:_{urllib.request.quote(url)}"{text[right:]}{details}'
+    return f'{text[:left]} LINK="execute:_{url}"{text[right:]}{details}'
 
 
-doc = fitz.open(pdf_address[isLinux])
-with open(mm_address[isLinux], encoding='utf-8') as f:
+acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
+file = filelist[0]
+t1 = [urllib.request.quote(f'"{acrobat_address}" /A "page='), 'evince -i ']
+t2 = [urllib.request.quote(f'=OpenActions" "{address_in_platform(file[1], False)}"'),
+      f' {address_in_platform(file[1], True)}']
+
+
+doc = fitz.open(address_in_platform(file[1]))
+with open(address_in_platform(file[0]), encoding='utf-8') as f:
     mm_html_text_backup = f.read()
     mm_html_text = re.sub(r'TEXT="(p\d+|P\d+-\d+)".*?>', add_cmd_command, mm_html_text_backup)
-with open(mm_address[isLinux], 'w', encoding='utf-8') as f:
+with open(address_in_platform(file[0]), 'w', encoding='utf-8') as f:
     f.writelines(mm_html_text)
-
