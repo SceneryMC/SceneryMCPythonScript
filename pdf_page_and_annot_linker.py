@@ -1,5 +1,6 @@
 import re
 import urllib.request
+import html
 import fitz
 import platform
 from error_correction_dictionary import character_error_correction, word_error_correction
@@ -10,6 +11,10 @@ filelist = [
     (r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\整理\CLRS.mm", r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\4th\CLRS4th.pdf"),
     (r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\ITLA\ITLA.mm", r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\ITLA\ITLA.pdf"),
     (r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\LADR\LADR.mm", r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\LADR\LADRcn.pdf"),
+    (r"E:\学习资料\计算机\参考书\可能会读的书\Cpp\入门\CppPrimer\5th\CppPrimer.mm", r"E:\学习资料\计算机\参考书\可能会读的书\Cpp\入门\CppPrimer\5th\CppPrime5thcn.pdf"),
+    (r"E:\学习资料\计算机\参考书\可能会读的书\C\高级\C专家编程\C专家编程.mm", r"E:\学习资料\计算机\参考书\可能会读的书\C\高级\C专家编程\C专家编程.pdf"),
+    (r"E:\学习资料\计算机\参考书\可能会读的书\C\入门\CPP\CPP.mm", r"E:\学习资料\计算机\参考书\可能会读的书\C\入门\CPP\CPP.pdf"),
+    (r"E:\学习资料\计算机\参考书\可能会读的书\C\入门\C程序设计语言\C程序设计语言.mm", r"E:\学习资料\计算机\参考书\可能会读的书\C\入门\C程序设计语言\C程序设计语言.pdf"),
 ]
 
 
@@ -65,10 +70,10 @@ def add_cmd_command(match):
     details = ""
     if text[6] == 'P' and len(page) == 2:
         annot, highlight = get_highlight_and_annot(doc[int(page[0]) - 1], int(page[1]))
-        text = text.replace(f'P{page[0]}-{page[1]}"', f'P{page[0]}-{page[1]} {highlight}"')
+        text = text.replace(f'P{page[0]}-{page[1]}"', f'P{page[0]}-{page[1]} {html.escape(highlight)}"')
         if annot != '':
             details = f'<richcontent CONTENT-TYPE="xml/" TYPE="DETAILS">\n' \
-                      f'<html>\n\t<head>\n\n\t</head>\n\t<body>\n\t\t<p>{annot}</p>\n\t</body>\n</html></richcontent>'
+                      f'<html>\n\t<head>\n\n\t</head>\n\t<body>\n\t\t<p>{html.escape(annot)}</p>\n\t</body>\n</html></richcontent>'
             if right == -2:
                 right = -1
                 details += "</node>"
@@ -77,7 +82,7 @@ def add_cmd_command(match):
 
 
 acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
-file = filelist[0]
+file = filelist[4]
 t1 = [urllib.request.quote(f'"{acrobat_address}" /A "page='), 'evince -i ']
 t2 = [urllib.request.quote(f'=OpenActions" "{address_in_platform(file[1], False)}"'),
       f' {address_in_platform(file[1], True)}']

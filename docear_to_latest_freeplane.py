@@ -1,14 +1,11 @@
 import re
 import urllib.request
+import html
+from pdf_page_and_annot_linker import acrobat_address
 
-acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
 mm_address = r'C:\Users\SceneryMC\Docear\projects\test\literature_and_annotations.mm'
-pdf_address = r'E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\Linear Algebra Done Right\(图灵数学·统计学丛书) Sheldon Axler - 线性代数应该这样学-人民邮电出版社 (2016).pdf'
-hyperlink = r'project://181BF1A7D813BUY4OAN8U6I27YKD5SVHBUYL/repo/(图灵数学·统计学丛书)%20Sheldon%20Axler%20-%20线性代数应该这样学-人民邮电出版社%20(2016).pdf'
-meta_char = r".^$*+?{}[]\|()"
-for c in meta_char:
-    hyperlink = hyperlink.replace(c, rf"\{c}")
-hyperlink = hyperlink.replace(r'\\', '\\')
+pdf_address = r'E:\学习资料\计算机\参考书\可能会读的书\C\高级\C专家编程\C专家编程.mm'
+hyperlink = html.escape(r"project://181BF1A7D813BUY4OAN8U6I27YKD5SVHBUYL/C专家编程.pdf")
 
 
 def add_cmd_command(match):
