@@ -7,15 +7,28 @@ from error_correction_dictionary import character_error_correction, word_error_c
 
 isLinux = (platform.system().lower() == "linux")
 intersect_portion = 0.5
-filelist = [
-    (r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\整理\CLRS.mm", r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\4th\CLRS4th.pdf"),
-    (r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\ITLA\ITLA.mm", r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\ITLA\ITLA.pdf"),
-    (r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\LADR\LADR.mm", r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\LADR\LADRcn.pdf"),
-    (r"E:\学习资料\计算机\参考书\可能会读的书\Cpp\入门\CppPrimer\5th\CppPrimer.mm", r"E:\学习资料\计算机\参考书\可能会读的书\Cpp\入门\CppPrimer\5th\CppPrime5thcn.pdf"),
-    (r"E:\学习资料\计算机\参考书\可能会读的书\C\高级\C专家编程\C专家编程.mm", r"E:\学习资料\计算机\参考书\可能会读的书\C\高级\C专家编程\C专家编程.pdf"),
-    (r"E:\学习资料\计算机\参考书\可能会读的书\C\入门\CPP\CPP.mm", r"E:\学习资料\计算机\参考书\可能会读的书\C\入门\CPP\CPP.pdf"),
-    (r"E:\学习资料\计算机\参考书\可能会读的书\C\入门\C程序设计语言\C程序设计语言.mm", r"E:\学习资料\计算机\参考书\可能会读的书\C\入门\C程序设计语言\C程序设计语言.pdf"),
-]
+filelist = {
+    "CLRS": (r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\整理\CLRS.mm",
+             r"E:\学习资料\计算机\参考书\可能会读的书\算法\算法导论\4th\CLRS4th.pdf"),
+    "ITLA": (r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\ITLA\ITLA.mm",
+             r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\ITLA\ITLA.pdf"),
+    "LADR": (r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\LADR\LADR.mm",
+             r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\LADR\LADRcn.pdf"),
+    "CppPrimer": (r"E:\学习资料\计算机\参考书\可能会读的书\Cpp\入门\CppPrimer\5th\CppPrimer.mm",
+                  r"E:\学习资料\计算机\参考书\可能会读的书\Cpp\入门\CppPrimer\5th\CppPrime5thcn.pdf"),
+    "C专家编程": (r"E:\学习资料\计算机\参考书\可能会读的书\C\高级\C专家编程\C专家编程.mm",
+                  r"E:\学习资料\计算机\参考书\可能会读的书\C\高级\C专家编程\C专家编程.pdf"),
+    "CPP": (r"E:\学习资料\计算机\参考书\可能会读的书\C\入门\CPP\CPP.mm",
+            r"E:\学习资料\计算机\参考书\可能会读的书\C\入门\CPP\CPP.pdf"),
+    "C程序设计语言": (r"E:\学习资料\计算机\参考书\可能会读的书\C\入门\C程序设计语言\C程序设计语言.mm",
+                      r"E:\学习资料\计算机\参考书\可能会读的书\C\入门\C程序设计语言\C程序设计语言.pdf"),
+    "深入理解计算机系统": (r"E:\学习资料\计算机\参考书\可能会读的书\计算机系统\深入理解计算机系统\深入理解计算机系统.mm",
+                        r"E:\学习资料\计算机\参考书\可能会读的书\计算机系统\深入理解计算机系统\深入理解计算机系统3rd.pdf"),
+    "操作系统导论": (r"E:\学习资料\计算机\参考书\可能会读的书\计算机系统\操作系统导论\操作系统导论.mm",
+                     r"E:\学习资料\计算机\参考书\可能会读的书\计算机系统\操作系统导论\操作系统导论2019.pdf"),
+    "操作系统概念": (r"E:\学习资料\计算机\参考书\可能会读的书\计算机系统\操作系统概念\操作系统概念.mm",
+                     r"E:\学习资料\计算机\参考书\可能会读的书\计算机系统\操作系统概念\操作系统概念9th.pdf")
+}
 
 
 def address_in_platform(addr, wtl=isLinux):
@@ -82,11 +95,10 @@ def add_cmd_command(match):
 
 
 acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
-file = filelist[4]
+file = filelist["C专家编程"]
 t1 = [urllib.request.quote(f'"{acrobat_address}" /A "page='), 'evince -i ']
 t2 = [urllib.request.quote(f'=OpenActions" "{address_in_platform(file[1], False)}"'),
       f' {address_in_platform(file[1], True)}']
-
 
 doc = fitz.open(address_in_platform(file[1]))
 with open(address_in_platform(file[0]), encoding='utf-8') as f:

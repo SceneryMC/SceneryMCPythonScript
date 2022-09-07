@@ -3,9 +3,9 @@ import urllib.request
 import html
 from pdf_page_and_annot_linker import acrobat_address
 
-mm_address = r'C:\Users\SceneryMC\Docear\projects\test\literature_and_annotations.mm'
-pdf_address = r'E:\学习资料\计算机\参考书\可能会读的书\C\高级\C专家编程\C专家编程.mm'
-hyperlink = html.escape(r"project://181BF1A7D813BUY4OAN8U6I27YKD5SVHBUYL/C专家编程.pdf")
+mm_address = r'E:\学习资料\计算机\参考书\可能会读的书\计算机系统\操作系统概念\操作系统概念.mm'
+pdf_address = r'E:\学习资料\计算机\参考书\可能会读的书\计算机系统\操作系统概念\操作系统概念9th.pdf'
+hyperlink = html.escape(r"project://181BF1A7D813BUY4OAN8U6I27YKD5SVHBUYL/../操作系统概念.pdf")
 
 
 def add_cmd_command(match):

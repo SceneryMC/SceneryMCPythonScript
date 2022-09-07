@@ -2,7 +2,7 @@ import urllib.request
 from pdf_page_and_annot_linker import filelist, isLinux, address_in_platform, t1
 
 
-for file in filelist:
+for file in filelist.values():
     with open(address_in_platform(file[0]), 'r', encoding="utf-8") as f:
         content = f.read()
     content = content.replace(t1[not isLinux], t1[isLinux])
