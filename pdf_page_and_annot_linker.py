@@ -39,6 +39,23 @@ def address_in_platform(addr, wtl=isLinux):
     return f"/mnt/{addr}"
 
 
+def error_correction(s):
+    for i in range(len(s)):
+        s[i] = character_error_correction.get(s[i], s[i])
+
+    i = 1
+    while i < len(s) - 1:
+        if (not (0 <= ord(s[i - 1]) <= 127) or not (0 <= ord(s[i + 1]) <= 127)) and s[i] == ' ':
+            s.pop(i)
+        i += 1
+    s = ''.join(s)
+
+    for original, correction in word_error_correction:
+        s = s.replace(original, correction)
+
+    return s
+
+
 def _parse_highlight(annot, wordlist):
     points = annot.vertices
     quad_count = int(len(points) / 4)
@@ -53,13 +70,7 @@ def _parse_highlight(annot, wordlist):
             if tmp_intersect_rect.get_area() > intersect_portion * tmp_rect.get_area():
                 words.append(w)
         sentences[i] = ' '.join(w[4] for w in words)
-    sentence = [char for char in ''.join(sentences)]
-    for i in range(len(sentence)):
-        sentence[i] = character_error_correction.get(sentence[i], sentence[i])
-    sentence = ''.join(sentence)
-    for original, correction in word_error_correction:
-        sentence = sentence.replace(original, correction)
-    return sentence
+    return [char for char in ''.join(sentences)]
 
 
 def get_highlight_and_annot(mupdf_page, annot_num):
@@ -68,7 +79,8 @@ def get_highlight_and_annot(mupdf_page, annot_num):
     for annot in mupdf_page.annots():
         annot_num -= 1
         if annot_num == 0 and annot.type[0] == 8:
-            return annot.info['content'], _parse_highlight(annot, wordlist)
+            return error_correction([i for i in annot.info['content']]), \
+                   error_correction(_parse_highlight(annot, wordlist))
 
 
 def add_cmd_command(match):
