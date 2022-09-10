@@ -11,5 +11,3 @@ while i < len(ls):
         ls.pop(i)
     i += 1
 print("".join(ls))
-
-

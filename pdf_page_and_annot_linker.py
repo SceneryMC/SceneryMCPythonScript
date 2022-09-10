@@ -111,10 +111,10 @@ file = filelist["C专家编程"]
 t1 = [urllib.request.quote(f'"{acrobat_address}" /A "page='), 'evince -i ']
 t2 = [urllib.request.quote(f'=OpenActions" "{address_in_platform(file[1], False)}"'),
       f' {address_in_platform(file[1], True)}']
-
-doc = fitz.open(address_in_platform(file[1]))
-with open(address_in_platform(file[0]), encoding='utf-8') as f:
-    mm_html_text_backup = f.read()
-    mm_html_text = re.sub(r'TEXT="(p\d+|P\d+-\d+)".*?>', add_cmd_command, mm_html_text_backup)
-with open(address_in_platform(file[0]), 'w', encoding='utf-8') as f:
-    f.writelines(mm_html_text)
+if __name__ == '__main__':
+    doc = fitz.open(address_in_platform(file[1]))
+    with open(address_in_platform(file[0]), encoding='utf-8') as f:
+        mm_html_text_backup = f.read()
+        mm_html_text = re.sub(r'TEXT="(p\d+|P\d+-\d+)".*?>', add_cmd_command, mm_html_text_backup)
+    with open(address_in_platform(file[0]), 'w', encoding='utf-8') as f:
+        f.writelines(mm_html_text)
