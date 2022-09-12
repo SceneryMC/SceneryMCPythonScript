@@ -24,7 +24,6 @@ filelist = {
                      r"E:\学习资料\计算机\参考书\可能会读的书\计算机系统\操作系统导论\操作系统导论2019CN.pdf"),
     "操作系统概念": (r"E:\学习资料\计算机\参考书\可能会读的书\计算机系统\操作系统概念\操作系统概念.mm",
                      r"E:\学习资料\计算机\参考书\可能会读的书\计算机系统\操作系统概念\操作系统概念9edCN.pdf"),
-
 }
 
 
@@ -73,9 +72,9 @@ def _parse_highlight(annot, wordlist):
 def get_highlight_and_annot(mupdf_page, annot_num):
     wordlist = mupdf_page.get_text("words")  # list of words on page
     wordlist.sort(key=lambda w: tuple(w[5:]))  # ascending y, then x
-    for annot in mupdf_page.annots():
+    for annot in mupdf_page.annots(types=8):
         annot_num -= 1
-        if annot_num == 0 and annot.type[0] == 8:
+        if annot_num == 0:
             return error_correction([i for i in annot.info['content']]), \
                    error_correction(_parse_highlight(annot, wordlist))
 
@@ -104,7 +103,7 @@ def add_cmd_command(match):
 
 
 acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
-file = filelist["C专家编程"]
+file = filelist["深入理解计算机系统"]
 t1 = [urllib.request.quote(f'"{acrobat_address}" /A "page='), 'evince -i ']
 t2 = [urllib.request.quote(f'=OpenActions" "{address_in_platform(file[1], False)}"'),
       f' {address_in_platform(file[1], True)}']
