@@ -15,7 +15,7 @@ filelist = {
     "LADR": (r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\LADR\LADR.mm",
              r"E:\学习资料\计算机\参考书\可能会读的书\数学\线性代数\LADR\LADR3edCN.pdf"),
     "CppPrimer": (r"E:\学习资料\计算机\参考书\可能会读的书\Cpp\入门\CppPrimer\CppPrimer.mm",
-                  r"E:\学习资料\计算机\参考书\可能会读的书\Cpp\入门\CppPrimer\CppPrime5edCN.pdf"),
+                  r"E:\学习资料\计算机\参考书\可能会读的书\Cpp\入门\CppPrimer\CppPrimer5edCN.pdf"),
     "C专家编程": (r"E:\学习资料\计算机\参考书\可能会读的书\C\进阶\C专家编程\C专家编程.mm",
                   r"E:\学习资料\计算机\参考书\可能会读的书\C\进阶\C专家编程\C专家编程.pdf"),
     "深入理解计算机系统": (r"E:\学习资料\计算机\参考书\可能会读的书\计算机系统\深入理解计算机系统\深入理解计算机系统.mm",
