@@ -4,10 +4,18 @@ Linking Fonnat ， 可执行文件和链接格 式 ”)的格式。 在其他系
 (Common Ojbect-FiJe Fonnat, 普通目标文件格式） 。在 BSD UNIX 中（就像佛 具 有佛的本性
 一样） ， a.out 文件具 有 a.out 格式。"""
 
-ls = [c for c in s]
-i = 1
-while i < len(ls):
-    if (not (0 <= ord(ls[i-1]) <= 127) or not(0 <= ord(ls[i+1]) <= 127)) and ls[i] == ' ':
-        ls.pop(i)
-    i += 1
-print("".join(ls))
+# ls = [c for c in s]
+# i = 1
+# while i < len(ls):
+#     if (not (0 <= ord(ls[i-1]) <= 127) or not(0 <= ord(ls[i+1]) <= 127)) and ls[i] == ' ':
+#         ls.pop(i)
+#     i += 1
+# print("".join(ls))
+
+s = "变量的假发计算，改变的而无法变址或文化夫为何覅五分而非我"
+
+test = {"变址": "变量"}
+for original, correction in test.items():
+    print(original, correction)
+    s = s.replace(original, correction)
+print(s)

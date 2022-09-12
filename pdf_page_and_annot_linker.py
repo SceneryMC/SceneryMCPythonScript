@@ -46,7 +46,7 @@ def error_correction(s):
         i += 1
     s = ''.join(s)
 
-    for original, correction in word_error_correction:
+    for original, correction in word_error_correction.items():
         s = s.replace(original, correction)
 
     return s
@@ -72,8 +72,9 @@ def _parse_highlight(annot, wordlist):
 def get_highlight_and_annot(mupdf_page, annot_num):
     wordlist = mupdf_page.get_text("words")  # list of words on page
     wordlist.sort(key=lambda w: tuple(w[5:]))  # ascending y, then x
-    for annot in mupdf_page.annots(types=8):
-        annot_num -= 1
+    for annot in mupdf_page.annots(types=(fitz.PDF_ANNOT_HIGHLIGHT)):
+        if annot.type[0] == 8:
+            annot_num -= 1
         if annot_num == 0:
             return error_correction([i for i in annot.info['content']]), \
                    error_correction(_parse_highlight(annot, wordlist))
