@@ -6,8 +6,7 @@ import fitz
 from pdf_page_and_annot_linker import isLinux, address_in_platform, t1, generate_t2
 
 files = {
-    "Linux命令行与shell脚本编程大全": (r"E:\学习资料\计算机\参考书\可能会读的书\Linux\Linux命令行与shell脚本编程大全\Linux命令行与shell脚本编程大全.mm",
-                        r"E:\学习资料\计算机\参考书\可能会读的书\Linux\Linux命令行与shell脚本编程大全\Linux命令行与shell脚本编程大全3edCN.pdf"),
+
 }
 template_address = r"C:\Users\SceneryMC\AppData\Roaming\Freeplane\1.10.x\templates\xmind2021_default.mm"
 
@@ -38,9 +37,10 @@ for file in files.values():
 
     new_line = []
     for i in range(len(toc)):
-        new_line.append(f'<node TEXT="{html.escape(toc[i][1])}" {is_initial(i)} ID="ID_{random.randint(0, 0x7fffffff)}" '
-                        f'CREATED="{int(time.time() * 1000)}" MODIFIED="{int(time.time() * 1000) + 1}" '
-                        f'LINK="execute:_{t1[isLinux]}{toc[i][2]}{t2[isLinux]}"{has_slash(i)}>')
+        new_line.append(
+            f'<node TEXT="{html.escape(toc[i][1])}" {is_initial(i)} ID="ID_{random.randint(0, 0x7fffffff)}" '
+            f'CREATED="{int(time.time() * 1000)}" MODIFIED="{int(time.time() * 1000) + 1}" '
+            f'LINK="execute:_{t1[isLinux]}{toc[i][2]}{t2[isLinux]}"{has_slash(i)}>')
 
         if i == len(toc) - 1:
             next = 1

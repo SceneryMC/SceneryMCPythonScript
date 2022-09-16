@@ -42,6 +42,10 @@ filelist = {
                     r"E:\学习资料\计算机\参考书\可能会读的书\C\进阶\C语言参考手册\C语言参考手册5ed.pdf"),
     "Linux命令行大全": (r"E:\学习资料\计算机\参考书\可能会读的书\Linux\Linux命令行大全\Linux命令行大全.mm",
                         r"E:\学习资料\计算机\参考书\可能会读的书\Linux\Linux命令行大全\Linux命令行大全2ed.pdf"),
+    '计算机视觉': (r"E:\学习资料\2022-2023第一学期\计算机视觉\计算机视觉.mm",
+                   r"E:\学习资料\2022-2023第一学期\计算机视觉\Szeliski_CVAABook_2ndEd.pdf"),
+    "LaTeX入门": (r"E:\学习资料\计算机\参考书\可能会读的书\LaTeX\LaTeX入门\LaTeX入门.mm",
+                  r"E:\学习资料\计算机\参考书\可能会读的书\LaTeX\LaTeX入门\LaTeX入门.pdf"),
 }
 acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
 t1 = (urllib.request.quote(f'"{acrobat_address}" /A "page='), 'evince -i ')
