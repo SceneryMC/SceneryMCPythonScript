@@ -28,7 +28,28 @@ filelist = {
                        r'E:\学习资料\计算机\参考书\可能会读的书\机器学习\动手学机器学习\d2l-zh.pdf'),
     "机器学习": (r"E:\学习资料\计算机\参考书\可能会读的书\机器学习\机器学习\机器学习.mm",
                  r"E:\学习资料\计算机\参考书\可能会读的书\机器学习\机器学习\机器学习.pdf"),
+    "Java核心技术卷1": (r"E:\学习资料\计算机\参考书\可能会读的书\Java\入门\Java核心技术\Java核心技术卷1.mm",
+                        r"E:\学习资料\计算机\参考书\可能会读的书\Java\入门\Java核心技术\Java核心技术·卷I11ed.pdf"),
+    "Java核心技术卷2": (r"E:\学习资料\计算机\参考书\可能会读的书\Java\入门\Java核心技术\Java核心技术卷2.mm",
+                        r"E:\学习资料\计算机\参考书\可能会读的书\Java\入门\Java核心技术\Java核心技术·卷II11ed.pdf"),
+    "C标准库": (r"E:\学习资料\计算机\参考书\可能会读的书\C\进阶\C标准库\C标准库.mm",
+                r"E:\学习资料\计算机\参考书\可能会读的书\C\进阶\C标准库\C标准库.pdf"),
+    "C和指针": (r"E:\学习资料\计算机\参考书\可能会读的书\C\进阶\C和指针\C和指针.mm",
+                r"E:\学习资料\计算机\参考书\可能会读的书\C\进阶\C和指针\C和指针.pdf"),
+    "C陷阱与缺陷": (r"E:\学习资料\计算机\参考书\可能会读的书\C\进阶\C陷阱与缺陷\C陷阱与缺陷.mm",
+                    r"E:\学习资料\计算机\参考书\可能会读的书\C\进阶\C陷阱与缺陷\C陷阱与缺陷.pdf"),
+    "C语言参考手册": (r"E:\学习资料\计算机\参考书\可能会读的书\C\进阶\C语言参考手册\C语言参考手册.mm",
+                    r"E:\学习资料\计算机\参考书\可能会读的书\C\进阶\C语言参考手册\C语言参考手册5ed.pdf"),
+    "Linux命令行大全": (r"E:\学习资料\计算机\参考书\可能会读的书\Linux\Linux命令行大全\Linux命令行大全.mm",
+                        r"E:\学习资料\计算机\参考书\可能会读的书\Linux\Linux命令行大全\Linux命令行大全2ed.pdf"),
 }
+acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
+t1 = (urllib.request.quote(f'"{acrobat_address}" /A "page='), 'evince -i ')
+
+
+def generate_t2(fileaddr):
+    return (urllib.request.quote(f'=OpenActions" "{address_in_platform(fileaddr, False)}"'),
+            f' {address_in_platform(fileaddr, True)}')
 
 
 def address_in_platform(addr, wtl=isLinux):
@@ -107,12 +128,9 @@ def add_cmd_command(match):
     return f'{text[:left]} LINK="execute:_{url}"{text[right:]}{details}'
 
 
-acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
-file = filelist["深入理解计算机系统"]
-t1 = [urllib.request.quote(f'"{acrobat_address}" /A "page='), 'evince -i ']
-t2 = [urllib.request.quote(f'=OpenActions" "{address_in_platform(file[1], False)}"'),
-      f' {address_in_platform(file[1], True)}']
 if __name__ == '__main__':
+    file = filelist["深入理解计算机系统"]
+    t2 = generate_t2(file[1])
     doc = fitz.open(address_in_platform(file[1]))
     with open(address_in_platform(file[0]), encoding='utf-8') as f:
         mm_html_text_backup = f.read()
