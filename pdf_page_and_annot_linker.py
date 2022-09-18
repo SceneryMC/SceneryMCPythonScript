@@ -137,7 +137,7 @@ def add_cmd_command(match):
 
 
 if __name__ == '__main__':
-    file = filelist["深入理解计算机系统"]
+    file = filelist["CPrimerPlus"]
     t2 = generate_t2(file[1])
     doc = fitz.open(address_in_platform(file[1]))
     with open(address_in_platform(file[0]), encoding='utf-8') as f:
