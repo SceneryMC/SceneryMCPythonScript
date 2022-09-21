@@ -74,6 +74,8 @@ def error_correction(s):
         s[i] = character_error_correction.get(s[i], s[i])
 
     i = 1
+    while '' in s:
+        s.remove('')
     while i < len(s) - 1:
         if (not (0 <= ord(s[i - 1]) <= 127) or not (0 <= ord(s[i + 1]) <= 127)) and s[i] == ' ':
             s.pop(i)
@@ -86,21 +88,27 @@ def error_correction(s):
     return s
 
 
-def _parse_highlight(annot, wordlist):
+def parse_highlight(annot, wordlist):
+    words = []
     points = annot.vertices
     quad_count = int(len(points) / 4)
-    sentences = ['' for _ in range(quad_count)]
+    sentences = [str] * quad_count
     for i in range(quad_count):
         r = fitz.Quad(points[i * 4: i * 4 + 4]).rect
-        words = []
+        words.clear()
         for w in wordlist:
+            print(w)
             tmp_rect = fitz.Rect(w[:4])
             tmp_intersect_rect = fitz.Rect(tmp_rect).intersect(r)
-            tmp_rect.get_area(), tmp_intersect_rect.get_area()
-            if tmp_intersect_rect.get_area() > intersect_portion * tmp_rect.get_area():
-                words.append(w)
-        sentences[i] = ' '.join(w[4] for w in words)
+            if tmp_intersect_rect.get_area() > intersect_portion * min(tmp_rect.get_area(), r.get_area()):
+                word = w[4]
+                unit_length = (w[2] - w[0]) / len(word)
+                start, end = round((r[0] - w[0]) / unit_length, 0), round((r[2] - w[2]) / unit_length, 0)
+                words.append(word[max(0, int(start)):min(len(word), int(end))])
+        sentences[i] = ' '.join(w for w in words)
     return [char for char in ''.join(sentences)]
+    # 67.27999877929688, 682.1510009765625, 77.96600341796875, 693.64697265625
+    # 57.029998779296875, 665.8635864257812, 175.27886962890625, 676.5848388671875
 
 
 def get_highlight_and_annot(mupdf_page, annot_num):
@@ -111,7 +119,7 @@ def get_highlight_and_annot(mupdf_page, annot_num):
             annot_num -= 1
         if annot_num == 0:
             return error_correction([i for i in annot.info['content']]), \
-                   error_correction(_parse_highlight(annot, wordlist))
+                   error_correction(parse_highlight(annot, wordlist))
 
 
 def add_cmd_command(match):
@@ -138,7 +146,7 @@ def add_cmd_command(match):
 
 
 if __name__ == '__main__':
-    file = filelist["大数据"]
+    file = filelist["深入理解计算机系统"]
     t2 = generate_t2(file[1])
     doc = fitz.open(address_in_platform(file[1]))
     with open(address_in_platform(file[0]), encoding='utf-8') as f:
