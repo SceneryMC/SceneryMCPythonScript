@@ -97,7 +97,6 @@ def parse_highlight(annot, wordlist):
         r = fitz.Quad(points[i * 4: i * 4 + 4]).rect
         words.clear()
         for w in wordlist:
-            print(w)
             tmp_rect = fitz.Rect(w[:4])
             tmp_intersect_rect = fitz.Rect(tmp_rect).intersect(r)
             if tmp_intersect_rect.get_area() > intersect_portion * min(tmp_rect.get_area(), r.get_area()):
