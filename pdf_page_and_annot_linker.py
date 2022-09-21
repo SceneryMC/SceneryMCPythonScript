@@ -58,12 +58,10 @@ def parse_highlight(annot, wordlist):
             if tmp_intersect_rect.get_area() > intersect_portion * min(tmp_rect.get_area(), r.get_area()):
                 word = w[4]
                 unit_length = (w[2] - w[0]) / len(word)
-                start, end = round((r[0] - w[0]) / unit_length, 0), round((r[2] - w[2]) / unit_length, 0)
+                start, end = round((r[0] - w[0]) / unit_length, 0), round((r[2] - w[0]) / unit_length, 0)
                 words.append(word[max(0, int(start)):min(len(word), int(end))])
         sentences[i] = ' '.join(w for w in words)
     return [char for char in ''.join(sentences)]
-    # 67.27999877929688, 682.1510009765625, 77.96600341796875, 693.64697265625
-    # 57.029998779296875, 665.8635864257812, 175.27886962890625, 676.5848388671875
 
 
 def get_highlight_and_annot(mupdf_page, annot_num):
