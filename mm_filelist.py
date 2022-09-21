@@ -41,5 +41,8 @@ filelist = {
                    r"E:\学习资料\2022-2023第一学期\计算机视觉\Szeliski_CVAABook_2ndEd.pdf"),
     "LaTeX入门": (r"E:\学习资料\计算机\参考书\可能会读的书\LaTeX\LaTeX入门\LaTeX入门.mm",
                   r"E:\学习资料\计算机\参考书\可能会读的书\LaTeX\LaTeX入门\LaTeX入门.pdf"),
+
+
+
     "大数据": (r"E:\学习资料\小学期\大数据系统开发\大数据.mm", r"E:\学习资料\小学期\大数据系统开发\ppt\大数据系统开发-final.pdf"),
 }
