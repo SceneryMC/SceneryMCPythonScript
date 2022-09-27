@@ -12,9 +12,9 @@ acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
 t1 = (urllib.request.quote(f'"{acrobat_address}" /A "page='), 'evince -i ')
 
 
-def generate_t2(fileaddr):
-    return (urllib.request.quote(f'=OpenActions" "{address_in_platform(fileaddr, False)}"'),
-            f' {address_in_platform(fileaddr, True)}')
+def generate_t2(pdf_addr):
+    return (urllib.request.quote(f'=OpenActions" "{address_in_platform(pdf_addr, False)}"'),
+            f' {address_in_platform(pdf_addr, True)}')
 
 
 def address_in_platform(addr, wtl=isLinux):
@@ -99,11 +99,11 @@ def add_cmd_command(match):
 
 
 if __name__ == '__main__':
-    file = filelist["深入理解计算机系统"]
-    t2 = generate_t2(file[1])
-    doc = fitz.open(address_in_platform(file[1]))
-    with open(address_in_platform(file[0]), encoding='utf-8') as f:
+    mm_addr, pdf_addr = filelist["深入理解计算机系统"]
+    t2 = generate_t2(pdf_addr)
+    doc = fitz.open(address_in_platform(pdf_addr))
+    with open(address_in_platform(mm_addr), encoding='utf-8') as f:
         mm_html_text_backup = f.read()
         mm_html_text = re.sub(r'TEXT="(p\d+|P\d+-\d+)".*?>', add_cmd_command, mm_html_text_backup)
-    with open(address_in_platform(file[0]), 'w', encoding='utf-8') as f:
+    with open(address_in_platform(mm_addr), 'w', encoding='utf-8') as f:
         f.writelines(mm_html_text)

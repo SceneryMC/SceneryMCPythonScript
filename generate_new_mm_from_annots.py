@@ -6,23 +6,18 @@ import fitz
 from pdf_page_and_annot_linker import isLinux, address_in_platform, t1, generate_t2
 
 files = {
-
+    "计算理论导引": (r"E:\学习资料\计算机\参考书\可能会读的书\数学\离散数学\离散数学及其应用.mm",
+                     r"E:\学习资料\计算机\参考书\可能会读的书\数学\离散数学\离散数学及其应用\离散数学及其应用8ed.pdf")
 }
 template_address = r"C:\Users\SceneryMC\AppData\Roaming\Freeplane\1.10.x\templates\xmind2021_default.mm"
 
 
 def has_slash(serial):
-    if serial == len(toc) - 1 or toc[serial][0] >= toc[serial + 1][0]:
-        return "/"
-    else:
-        return ""
+    return "/" if (serial == len(toc) - 1 or toc[serial][0] >= toc[serial + 1][0]) else ""
 
 
 def is_initial(serial):
-    if toc[serial][0] == 1:
-        return 'POSITION="right"'
-    else:
-        return ""
+    return 'POSITION="right"' if toc[serial][0] == 1 else ""
 
 
 for file in files.values():
@@ -36,17 +31,16 @@ for file in files.values():
     t2 = generate_t2(file[1])
 
     new_line = []
-    for i in range(len(toc)):
+    toc.append([1])
+    for i in range(len(toc) - 1):
+        timestamp = int(time.time() * 1000)
         new_line.append(
             f'<node TEXT="{html.escape(toc[i][1])}" {is_initial(i)} ID="ID_{random.randint(0, 0x7fffffff)}" '
-            f'CREATED="{int(time.time() * 1000)}" MODIFIED="{int(time.time() * 1000) + 1}" '
+            f'CREATED="{timestamp}" MODIFIED="{timestamp + 1}" '
             f'LINK="execute:_{t1[isLinux]}{toc[i][2]}{t2[isLinux]}"{has_slash(i)}>')
 
-        if i == len(toc) - 1:
-            next = 1
-        else:
-            next = toc[i + 1][0]
-        for _ in range(toc[i][0] - next):
+        next_indent_level = toc[i + 1][0]
+        for _ in range(toc[i][0] - next_indent_level):
             new_line.append("</node>")
     CL = '\n'
     s = re.sub(r'<hook NAME="AutomaticEdgeColor" COUNTER="30" RULE="ON_BRANCH_CREATION"/>',
