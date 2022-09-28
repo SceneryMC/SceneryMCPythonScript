@@ -6,8 +6,7 @@ import fitz
 from pdf_page_and_annot_linker import isLinux, address_in_platform, t1, generate_t2
 
 files = {
-    "计算理论导引": (r"E:\学习资料\计算机\参考书\可能会读的书\数学\离散数学\离散数学及其应用\离散数学及其应用.mm",
-                     r"E:\学习资料\计算机\参考书\可能会读的书\数学\离散数学\离散数学及其应用\离散数学及其应用8ed.pdf")
+
 }
 template_address = r"C:\Users\SceneryMC\AppData\Roaming\Freeplane\1.10.x\templates\xmind2021_default.mm"
 
