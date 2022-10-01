@@ -51,9 +51,8 @@ if __name__ == '__main__':
     time.sleep(10)
 
     with open("n_site.txt", 'r') as f:
-        for line in f:
-            line = line.strip().split()
-            if line:
-                get_images(line[0])
+        content = [s.lstrip('#') for s in f.read().split()]
+    for s in content:
+        get_images(s)
 
     driver.close()
