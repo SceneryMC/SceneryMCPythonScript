@@ -2,21 +2,15 @@ import re
 import time
 import requests
 
-hubble_attributes = {'folder': 'Hubble', 'name': 'hubble', 'text_begin': "var images",
-                     'text_end': '</script><div class="image-list image-list-150"></div>',
-                     'total': "Showing 1 to 250 of ", 'image_identifier_begin': "id: '",
-                     'image_identifier_end': "',",
+hubble_attributes = {'folder': 'Hubble', 'name': 'hubble',
                      'source': 'https://esahubble.org/media/archives/images/original',
-                     'suffix': "https://esahubble.org/images", 'digit': 6,
+                     'suffix': "https://esahubble.org/images",
                      'frontpage': "https://esahubble.org/images/viewall/page/1/?sort=-release_date"}
-eso_attributes = {'folder': 'ESO', 'name': 'eso', 'text_begin': "var images",
-                  'text_end': '</script><div class="image-list image-list-300"></div>',
-                  'total': "Showing 1 to 50 of ", 'image_identifier_begin': "id: '",
-                  'image_identifier_end': "',",
+eso_attributes = {'folder': 'ESO', 'name': 'eso',
                   'source': 'https://cdn.eso.org/images/original',
-                  'suffix': "https://www.eso.org/public/images", 'digit': 6,
+                  'suffix': "https://www.eso.org/public/images",
                   'frontpage': "https://www.eso.org/public/images/?&sort=-release_date"}
-target_site = input()
+target_site = "hubble"
 if target_site == 'hubble':
     attributes = hubble_attributes
 elif target_site == 'eso':
@@ -25,23 +19,20 @@ elif target_site == 'eso':
 
 def get_urls(url):
     html_text = requests.get(url).text
-    s = html_text.find(attributes['text_begin'])
-    e = html_text.find(attributes['text_end'])
-    total_index = html_text.find(attributes['total'])
-    url_text = html_text[s:e]
+    url_text = re.search(r'var images.*?</script><div class="image-list image-list-\d+', html_text, re.DOTALL).group()
+    total = int(re.search(r"Showing 1 to \d+ of (\d+)", html_text).group(1))
 
-    ls = [substr for substr in re.findall(rf"{attributes['image_identifier_begin']}(\w*){attributes['image_identifier_end']}", url_text)]
-    return ls, int(html_text[total_index + len(attributes['total']):total_index + len(attributes['total']) +
-                                                                    attributes['digit']])
+    ls = re.findall(rf"id: '(\w+)',", url_text)
+    return ls, total
 
 
 def download_image(image, suffix):
     print(f"downloading {image}.{suffix}...")
 
     r = requests.get(f"{attributes['source']}/{image}.{suffix}", stream=True)
-    image_size = int(r.headers['content-length']) / 1024 ** 2
-    if image_size > 100:
-        print(f"TOO LARGE: SIZE = {image_size} MB!")
+    image_size = int(r.headers['content-length'])
+    if image_size > 100 * 1024 ** 2:
+        print(f"TOO LARGE: SIZE = {image_size / 1024 ** 2} MB!")
         with open("skipped.txt", 'a') as f:
             f.write(f"{attributes['source']}/{image}.{suffix}\n")
         return
@@ -66,16 +57,17 @@ def get_suffix(image):
 with open(f'downloaded_{attributes["name"]}.txt') as f:
     downloaded = int(f.readline())
 images, total = get_urls(attributes['frontpage'])
-images = images[:total-downloaded]
-images.reverse()
-i = 0
-for image in images:
-    suffix = get_suffix(image)
-    download_image(image, suffix)
-    print(f"{image} downloaded!")
-    i += 1
-    with open(f'downloaded_{attributes["name"]}.txt', 'w') as f:
-        f.write(str(downloaded + i))
+print(images, total)
+# images = images[:total-downloaded]
+# images.reverse()
+# i = 0
+# for image in images:
+#     suffix = get_suffix(image)
+#     download_image(image, suffix)
+#     print(f"{image} downloaded!")
+#     i += 1
+#     with open(f'downloaded_{attributes["name"]}.txt', 'w') as f:
+#         f.write(str(downloaded + i))
 
 
 # import requests

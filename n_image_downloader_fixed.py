@@ -8,17 +8,13 @@ import time
 
 
 address = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
-sign = {'page_num_prefix': '<span class="name">',
-        'page_num_suffix': '</span></a></span></div><div class="tag-container field-name">',
-        'serial_prefix': "https://nhentai.net/g/", 'image': '<img src="'}
 
 
 def get_images(serial):
     url = f"https://nhentai.net/g/{serial}"
     driver.get(url)
     s = driver.page_source
-    b1 = re.search(r'<span class="name">\d+</span></a></span></div><div class="tag-container field-name">', s).group()
-    n = int(re.findall(r"\d+", b1)[0])
+    n = int(re.search(r'<span class="name">(\d+)</span></a></span></div><div class="tag-container field-name">', s).group(1))
 
     print(f'{url}开始下载！n = {n}')
     address_temp = rf"{address}\{serial}"
@@ -27,9 +23,8 @@ def get_images(serial):
 
     driver.get(f"{url}/1")
     s = driver.page_source
-    b2 = re.search(r'<img src="https://i\d\.nhentai\.net/galleries/\d+/\d+\.(jpg|png|gif)', s).group()
-    server = re.findall(r"i\d", b2)[0][1]
-    inner_serial = re.findall(r"galleries/\d+", b2)[0].split('/')[1]
+    pattern = re.search(r'<img src="https://i(\d)\.nhentai\.net/galleries/(\d+)/\d+\.(jpg|png|gif)', s)
+    server, inner_serial = pattern.group(1), pattern.group(2)
     folder = f"{base_url_pre}{server}{base_url_suf}/{inner_serial}"
     while True:
         ls = {int(x[:x.find('.')]) for x in os.listdir(address_temp)}
@@ -52,7 +47,7 @@ if __name__ == '__main__':
     options.headless = False
     options.add_argument("--window-size=192,108")
     driver = uc.Chrome(options=options)
-    driver.get(f"{sign['serial_prefix']}400000")
+    driver.get(f"https://nhentai.net/g/400000")
     time.sleep(10)
 
     with open("n_site.txt", 'r') as f:
