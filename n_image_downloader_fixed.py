@@ -1,7 +1,7 @@
 from n_image_downloader_temp import temp_get_image, base_url_pre, base_url_suf
 import undetected_chromedriver as uc
 from selenium import webdriver
-from multiprocessing import Pool
+from multiprocessing.dummy import Pool
 import re
 import os
 import time

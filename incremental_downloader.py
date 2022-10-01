@@ -1,6 +1,7 @@
 import re
 import time
 import requests
+from multiprocessing.dummy import Pool
 
 hubble_attributes = {'folder': 'Hubble', 'name': 'hubble',
                      'source': 'https://esahubble.org/media/archives/images/original',
@@ -9,12 +10,7 @@ hubble_attributes = {'folder': 'Hubble', 'name': 'hubble',
 eso_attributes = {'folder': 'ESO', 'name': 'eso',
                   'source': 'https://cdn.eso.org/images/original',
                   'suffix': "https://www.eso.org/public/images",
-                  'frontpage': "https://www.eso.org/public/images/?&sort=-release_date"}
-target_site = "hubble"
-if target_site == 'hubble':
-    attributes = hubble_attributes
-elif target_site == 'eso':
-    attributes = eso_attributes
+                  'frontpage': "https://www.eso.org/public/images/list/1/?sort=-release_date"}
 
 
 def get_urls(url):
@@ -29,7 +25,7 @@ def get_urls(url):
 def download_image(image, suffix):
     print(f"downloading {image}.{suffix}...")
 
-    r = requests.get(f"{attributes['source']}/{image}.{suffix}", stream=True)
+    r = requests.head(f"{attributes['source']}/{image}.{suffix}")
     image_size = int(r.headers['content-length'])
     if image_size > 100 * 1024 ** 2:
         print(f"TOO LARGE: SIZE = {image_size / 1024 ** 2} MB!")
@@ -37,15 +33,32 @@ def download_image(image, suffix):
             f.write(f"{attributes['source']}/{image}.{suffix}\n")
         return
 
+    with open(rf'G:\收藏\图片\{attributes["folder"]}\{image}.{suffix}', "wb") as f:
+        pass
+    start, end, step = 0, image_size, 8 * 1024 ** 2
+    image_segment = [(start, min(start+step, end)-1) for start in range(0, end, step)]
+    p = Pool()
+    for i in image_segment:
+        p.apply_async(download_image_thread, args=(image, suffix, i))
+    p.close()
+    p.join()
+
+
+def download_image_thread(image, suffix, i):
+    headers = {"range": f"bytes={i[0]}-{i[1]}"}
+    print(headers)
     while True:
         try:
-            r = requests.get(f"{attributes['source']}/{image}.{suffix}")
+            r = requests.get(f"{attributes['source']}/{image}.{suffix}", headers=headers, stream=True)
             break
         except requests.exceptions.ConnectionError:
             print("TOO FAST!")
             time.sleep(5)
-    with open(rf'G:\收藏\图片\{attributes["folder"]}\{image}.{suffix}', 'wb') as f:
-        f.write(r.content)
+    with open(rf'G:\收藏\图片\{attributes["folder"]}\{image}.{suffix}', 'rb+') as f:
+        f.seek(i[0])
+        for chunk in r.iter_content(chunk_size=64 * 1024):
+            if chunk:
+                f.write(chunk)
 
 
 def get_suffix(image):
@@ -54,20 +67,22 @@ def get_suffix(image):
     return html_text[suffix_index - 5:suffix_index - 2]
 
 
-with open(f'downloaded_{attributes["name"]}.txt') as f:
-    downloaded = int(f.readline())
-images, total = get_urls(attributes['frontpage'])
-print(images, total)
-# images = images[:total-downloaded]
-# images.reverse()
-# i = 0
-# for image in images:
-#     suffix = get_suffix(image)
-#     download_image(image, suffix)
-#     print(f"{image} downloaded!")
-#     i += 1
-#     with open(f'downloaded_{attributes["name"]}.txt', 'w') as f:
-#         f.write(str(downloaded + i))
+if __name__ == '__main__':
+    attributes = hubble_attributes
+
+    with open(f'downloaded_{attributes["name"]}.txt') as f:
+        downloaded = int(f.readline())
+    images, total = get_urls(attributes['frontpage'])
+    images = images[:total - downloaded]
+    images.reverse()
+    i = 0
+    for image in images:
+        suffix = get_suffix(image)
+        download_image(image, suffix)
+        print(f"{image} downloaded!")
+        i += 1
+        with open(f'downloaded_{attributes["name"]}.txt', 'w') as f:
+            f.write(str(downloaded + i))
 
 
 # import requests
