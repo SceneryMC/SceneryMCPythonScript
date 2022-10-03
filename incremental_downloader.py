@@ -6,7 +6,7 @@ from multiprocessing.dummy import Pool
 hubble_attributes = {'folder': 'Hubble', 'name': 'hubble',
                      'source': 'https://esahubble.org/media/archives/images/original',
                      'suffix': "https://esahubble.org/images",
-                     'basename': "https://esahubble.org/images/viewall/page"}
+                     'basename': "https://esahubble.org/images/page"}
 eso_attributes = {'folder': 'ESO', 'name': 'eso',
                   'source': 'https://cdn.eso.org/images/original',
                   'suffix': "https://www.eso.org/public/images",
@@ -97,7 +97,7 @@ def get_suffix(image):
 
 
 if __name__ == '__main__':
-    attributes = eso_attributes
+    attributes = hubble_attributes
 
     with open(f'downloaded_{attributes["name"]}.txt') as f:
         downloaded = int(f.readline())
