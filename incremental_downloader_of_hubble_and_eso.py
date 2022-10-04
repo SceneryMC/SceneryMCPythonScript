@@ -52,7 +52,7 @@ def download_image(image, suffix):
     image_size = int(r.headers['content-length'])
     if image_size > 96 * 1024 ** 2:
         print(f"TOO LARGE: SIZE = {image_size / 1024 ** 2} MB!")
-        with open("skipped.txt", 'a') as f:
+        with open(f"{attributes['name']}_skipped.txt", 'a') as f:
             f.write(f"{attributes['source']}/{image}.{suffix}\n")
         return
 
