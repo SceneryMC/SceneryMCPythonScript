@@ -6,10 +6,7 @@ mm_address, pdf_address = filelist['机器学习']
 
 
 def add_cmd_command(match):
-    end = match.end()
-
-    page = re.search(r'.*?page="\d+"', mm_html_text[end:]).group()[:-1]
-    page = page[page.rfind('"')+1:]
+    page = re.search(r'.*?page="(\d+)"', mm_html_text[match.end():]).group(1)
     url = f'"{acrobat_address}" /A "page={page}=OpenActions" "{pdf_address}"'
 
     return f'LINK="execute:_{urllib.request.quote(url)}"'
