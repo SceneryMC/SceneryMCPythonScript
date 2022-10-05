@@ -1036,9 +1036,7 @@ https://cdn.eso.org/images/original/potw1752a.tif
 https://cdn.eso.org/images/original/potw1752b.tif
 https://cdn.eso.org/images/original/2017_12_13_ES_Team_Meeting-CC.tif
 https://cdn.eso.org/images/original/upr_IMG_1032-CC.tif
-https://cdn.eso.org/images/original/dji_0045-cc.tif
 https://cdn.eso.org/images/original/dji_0023-cc.tif
-https://cdn.eso.org/images/original/dji_0032-cc.tif
 https://cdn.eso.org/images/original/dji_0021-cc.tif
 https://cdn.eso.org/images/original/dji_0039-cc.tif
 https://cdn.eso.org/images/original/dji_0066-cc.tif
@@ -1046,14 +1044,11 @@ https://cdn.eso.org/images/original/dji_0029-cc.tif
 https://cdn.eso.org/images/original/dji_0062-cc.tif
 https://cdn.eso.org/images/original/dji_0136-cc.tif
 https://cdn.eso.org/images/original/dji_0115-cc.tif
-https://cdn.eso.org/images/original/dji_0028-cc.tif
 https://cdn.eso.org/images/original/dji_0049-cc.tif
 https://cdn.eso.org/images/original/dji_0086-cc.tif
-https://cdn.eso.org/images/original/dji_0044-cc.tif
 https://cdn.eso.org/images/original/dji_0058-cc.tif
 https://cdn.eso.org/images/original/dji_0055-cc.tif
 https://cdn.eso.org/images/original/dji_0100-2-cc.tif
-https://cdn.eso.org/images/original/dji_0040-cc.tif
 https://cdn.eso.org/images/original/eso1802c.tif
 https://cdn.eso.org/images/original/eso1803b.tif
 https://cdn.eso.org/images/original/potw1805a.tif
@@ -1887,7 +1882,6 @@ https://cdn.eso.org/images/original/brammer_day-night.tif
 https://cdn.eso.org/images/original/ann18017f.tif
 https://cdn.eso.org/images/original/brammer-nightmoon-eq-ext.tif
 https://cdn.eso.org/images/original/basecamp-port-pan1-ext.tif
-https://cdn.eso.org/images/original/_MG_0452-CC.tif
 https://cdn.eso.org/images/original/eso1841af.tif
 https://cdn.eso.org/images/original/lasilla-yuri.tif
 https://cdn.eso.org/images/original/annlocal15001d-pt.tif

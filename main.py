@@ -16,6 +16,3 @@ downloaded = set([s[:-4] for s in os.listdir(r"G:\收藏\图片\ESO")])
 #     if skipped[i].lower() == skipped[i+1].lower():
 #         print(skipped[i], skipped[i+1])
 
-print(len(all), len(downloaded), len(skipped))
-print(set(all) - set(downloaded) - set(skipped))
-print(downloaded.union(skipped)-set(all))
