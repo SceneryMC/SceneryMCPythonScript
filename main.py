@@ -1,7 +1,7 @@
 import os
 
 
-with open('tmp_all.txt') as f:
+with open('eso_all_images.txt') as f:
     all = [s.strip() for s in f.readlines()]
 with open('eso_skipped.txt') as f:
     skipped = [s.strip()[s.rfind('/')+1:-4] for s in f.readlines()]

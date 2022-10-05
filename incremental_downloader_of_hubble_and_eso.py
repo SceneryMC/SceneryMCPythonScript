@@ -105,21 +105,17 @@ if __name__ == '__main__':
     print(image_per_page, total)
     will_download = total - downloaded
     images = []
-    for i in range(1, total // image_per_page + (will_download % image_per_page != 0) + 1):
+    for i in range(1, will_download // image_per_page + (will_download % image_per_page != 0) + 1):
         images.extend(get_image_urls(f"{attributes['basename']}/{i}/?sort=-release_date"))
         print(f"page {i} collected!")
-    # images = images[:will_download]
-    # images.reverse()
+    images = images[:will_download]
+    images.reverse()
 
-    with open('tmp_all.txt', 'w') as f:
-        for image in images:
-            f.write(f"{image}\n")
-
-    # i = 0
-    # for image in images:
-    #     suffix = get_suffix(image)
-    #     download_image(image, suffix)
-    #     print(f"{image} downloaded!")
-    #     i += 1
-    #     with open(f'downloaded_{attributes["name"]}.txt', 'w') as f:
-    #         f.write(str(downloaded + i))
+    i = 0
+    for image in images:
+        suffix = get_suffix(image)
+        download_image(image, suffix)
+        print(f"{image} downloaded!")
+        i += 1
+        with open(f'downloaded_{attributes["name"]}.txt', 'w') as f:
+            f.write(str(downloaded + i))
