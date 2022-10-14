@@ -1909,3 +1909,4 @@ https://cdn.eso.org/images/original/2016_04_09_ALMA_Dusk_FD360_Pano_Horalek-CC-e
 https://cdn.eso.org/images/original/brammer_night.tif
 https://cdn.eso.org/images/original/20160406-mw-vlt-fulldome-eq-cc-ext.tif
 https://cdn.eso.org/images/original/eso1137f.tif
+https://cdn.eso.org/images/original/eso2213a.tif
