@@ -9,7 +9,7 @@ from mm_filelist import filelist
 isLinux = (platform.system().lower() == "linux")
 intersect_portion = 0.3
 acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
-t1 = (urllib.request.quote(f'"{acrobat_address}" /A "page='), 'evince -i ')
+t1 = (urllib.request.quote(f'"{acrobat_address}" /A "page='), 'okular --unique -p ')
 
 
 def generate_t2(pdf_addr):
