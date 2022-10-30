@@ -9,6 +9,7 @@ old_gifts = list(os.walk(old_address))[0][2]
 new_gifts = set(current_gifts) - set(old_gifts)
 for gift in new_gifts:
     shutil.copy(rf"{current_address}\{gift}", dst_address)
+    shutil.copy(rf"{current_address}\{gift}", old_address)
     print(f"{gift} added!")
 
 
