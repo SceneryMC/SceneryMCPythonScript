@@ -1,13 +1,7 @@
-new_lines = []
-with open(r"C:\Users\SceneryMC\Source\Repos\assembly\first_window.asm") as f:
+with open(r"C:\Users\SceneryMC\Source\Repos\assembly\first_window.asm", encoding='utf8') as f:
     lines = f.readlines()
-    for line in lines:
-        if line == '\n':
-            new_lines.append("\n")
-            continue
-        line = line[:line.find(';')]
-        if line != "":
-            new_lines.append(f"{line}\n")
+    for i in range(len(lines)):
+        lines[i] = lines[i].rstrip() + "\n"
 
-with open(r"C:\Users\SceneryMC\Source\Repos\assembly\first_window.asm", 'w') as f:
-    f.writelines(new_lines)
+with open(r"C:\Users\SceneryMC\Source\Repos\assembly\first_window.asm", 'w', encoding='utf8') as f:
+    f.writelines(lines)
