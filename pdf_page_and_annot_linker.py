@@ -1,3 +1,4 @@
+import sys
 import re
 import urllib.request
 import html
@@ -99,7 +100,8 @@ def add_cmd_command(match):
 
 
 if __name__ == '__main__':
-    mm_addr, pdf_addr = filelist["深入理解计算机系统"]
+    pdf_name = sys.argv[1]
+    mm_addr, pdf_addr = filelist[pdf_name]
     t2 = generate_t2(pdf_addr)
     doc = fitz.open(address_in_platform(pdf_addr))
     with open(address_in_platform(mm_addr), encoding='utf-8') as f:
