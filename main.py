@@ -12,8 +12,12 @@
 # with open(r"C:\Users\SceneryMC\Source\Repos\assembly\first_window.asm", 'w') as f:
 #     f.writelines(new_lines)
 
+
+
 # import os
 # import shutil
+
+
 
 # address = r"G:\收藏\图片\ESO\others"
 # folders = ["_", "alma", "dsc", "ehpa", "img", "max", "uhd", "vista", "vlt"]
@@ -26,6 +30,8 @@
 #         if s[:len(t)] == t:
 #             shutil.move(rf"{address}\{s}", rf"{address}\{t}")
 
+
+
 # import random as rd
 #
 # ls_1 = [str(rd.randint(0, 9)) for _ in range(2000)]
@@ -36,10 +42,13 @@
 # print(i2)
 # print(i1 * i2)
 
-import os
 
-for root, folders, files in os.walk("/home/scenerymc/code/PycharmProjects/stable-diffusion-webui/outputs/outputs/meow/9/4/2/"):
-    for i in range(len(files)):
-        os.rename(f"{root}/{files[i]}", f"{root}/000{i}.png")
-    for i in range(len(files)):
-        os.rename(f"{root}/000{i}.png", f"{root}/{i}.png")
+
+# import os
+#
+# for root, folders, files in os.walk("/home/scenerymc/code/PycharmProjects/stable-diffusion-webui/outputs/outputs/meow/9/4/2/"):
+#     for i in range(len(files)):
+#         os.rename(f"{root}/{files[i]}", f"{root}/000{i}.png")
+#     for i in range(len(files)):
+#         os.rename(f"{root}/000{i}.png", f"{root}/{i}.png")
+
