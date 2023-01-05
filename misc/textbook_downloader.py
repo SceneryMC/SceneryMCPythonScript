@@ -35,7 +35,7 @@ def download_textbook(url):
     # time.sleep(1)
 
 
-with open('n_site.txt') as f:
+with open('textbook.txt') as f:
     for line in f:
         line = line.strip()
         url_split = line.split('/')

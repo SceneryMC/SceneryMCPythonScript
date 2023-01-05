@@ -1,7 +1,7 @@
 import os
 import shutil
 
-directories = os.listdir('.')
+directories = os.listdir('../..')
 directories.remove('main.py')
 directories.remove('start.bat')
 for directory in directories:
