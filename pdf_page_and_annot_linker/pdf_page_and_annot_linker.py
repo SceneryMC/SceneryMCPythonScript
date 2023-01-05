@@ -100,8 +100,12 @@ def add_cmd_command(match):
 
 
 if __name__ == '__main__':
-    pdf_name = sys.argv[1]
-    mm_addr, pdf_addr = filelist[pdf_name]
+    if sys.argv[1] in filelist:
+        mm_addr, pdf_addr = filelist[sys.argv[1]]
+    else:
+        mm_addr = sys.argv[1]
+        pdf_addr = sys.argv[2]
+
     t2 = generate_t2(pdf_addr)
     doc = fitz.open(address_in_platform(pdf_addr))
     with open(address_in_platform(mm_addr), encoding='utf-8') as f:
