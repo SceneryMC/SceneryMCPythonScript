@@ -1,9 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import time
 import random
 import re
 import html
 import fitz
-from pdf_page_and_annot_linker.pdf_page_and_annot_linker import isLinux, address_in_platform, t1, generate_t2
+from pdf_page_and_annot_linker import isLinux, address_in_platform, t1, generate_t2
 
 files = {
 
