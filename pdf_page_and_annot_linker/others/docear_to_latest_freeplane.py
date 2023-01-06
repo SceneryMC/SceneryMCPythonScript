@@ -1,6 +1,6 @@
 import re
 import urllib.request
-from pdf_page_and_annot_linker import acrobat_address, filelist
+from pdf_page_and_annot_linker.pdf_page_and_annot_linker import acrobat_address, filelist
 
 mm_address, pdf_address = filelist['机器学习']
 

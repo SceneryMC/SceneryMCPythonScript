@@ -1,5 +1,5 @@
-from pdf_page_and_annot_linker import isLinux, address_in_platform, t1, generate_t2
-from mm_filelist import filelist
+from pdf_page_and_annot_linker.pdf_page_and_annot_linker import isLinux, address_in_platform, t1, generate_t2
+from pdf_page_and_annot_linker.mm_filelist import filelist
 
 
 for file in filelist.values():
