@@ -9,9 +9,12 @@ import fitz
 from pdf_page_and_annot_linker import isLinux, address_in_platform, t1, generate_t2
 
 files = {
-
+"Java核心技术卷2": (r"E:\学习资料\计算机\参考书\可能会读的书\Java\入门\Java核心技术\Java核心技术卷2.mm",
+                        r"E:\学习资料\计算机\参考书\可能会读的书\Java\入门\Java核心技术\Java核心技术·卷II12ed.pdf"),
+"Java核心技术卷1": (r"E:\学习资料\计算机\参考书\可能会读的书\Java\入门\Java核心技术\Java核心技术卷1.mm",
+                        r"E:\学习资料\计算机\参考书\可能会读的书\Java\入门\Java核心技术\Java核心技术·卷I12ed.pdf"),
 }
-template_address = r"C:\Users\SceneryMC\AppData\Roaming\Freeplane\1.10.x\templates\xmind2021_default.mm"
+template_address = address_in_platform(r"C:\Users\SceneryMC\AppData\Roaming\Freeplane\1.10.x\templates\xmind2021_default.mm", isLinux)
 
 
 def has_slash(serial):
@@ -23,7 +26,7 @@ def is_initial(serial):
 
 
 for file in files.values():
-    with open(address_in_platform(template_address), encoding="utf-8") as f:
+    with open(template_address, encoding="utf-8") as f:
         s = f.read()
     s = s.replace('show_note_icons="true"',
                   'show_note_icons="true" associatedTemplateLocation="template:/xmind2021_default.mm"')
