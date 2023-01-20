@@ -45,4 +45,6 @@ filelist = {
                      r"E:\学习资料\计算机\参考书\可能会读的书\汇编\汇编语言\汇编语言4ed.pdf"),
     "汇编语言x86": (r"E:\学习资料\计算机\参考书\可能会读的书\汇编\汇编语言基于x86处理器\汇编语言基于x86处理器.mm",
                     r"E:\学习资料\计算机\参考书\可能会读的书\汇编\汇编语言基于x86处理器\汇编语言基于x86处理器7edCN.pdf"),
+    "FluentPython": (r"E:\学习资料\计算机\参考书\可能会读的书\Python\进阶\FluentPython\FluentPython.mm",
+                     r"E:\学习资料\计算机\参考书\可能会读的书\Python\进阶\FluentPython\FluentPython2022.pdf")
 }
