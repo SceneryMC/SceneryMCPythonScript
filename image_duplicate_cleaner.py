@@ -3,10 +3,8 @@ import itertools
 
 root = r"F:\Huawei Share\Backup\HuaweiPhotos\myphone_EEEBE915B45C"
 preferences = {
-    ('Camera', 'Recover'): 1,
     ('Camera', '不错的照片'): 0,
     ('Screenshots', '无'): 0,
-    ('吮指原味稽', '滑稽'): 0,
     ('旧手机截图', '膜蛤hath'): 0,
     ('膜蛤hath', '贴吧'): 1,
 }
