@@ -38,15 +38,3 @@
 # print(i1)
 # print(i2)
 # print(i1 * i2)
-
-
-import os
-
-for root, folders, files in os.walk(
-        "/home/scenerymc/code/PycharmProjects/stable-diffusion-webui/outputs/outputs/"):
-    if not all([x[:-4].isdigit() for x in files]):
-        print(root)
-        for i in range(len(files)):
-            os.rename(f"{root}/{files[i]}", f"{root}/000{i}.png")
-        for i in range(len(files)):
-            os.rename(f"{root}/000{i}.png", f"{root}/{i}.png")

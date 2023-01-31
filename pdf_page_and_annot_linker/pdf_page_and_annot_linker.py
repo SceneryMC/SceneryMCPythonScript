@@ -3,11 +3,10 @@ import re
 import urllib.request
 import html
 import fitz
-import platform
 from error_correction_dictionary import character_error_correction, word_error_correction
+from path_Windows_to_Linux import *
 from mm_filelist import filelist
 
-isLinux = (platform.system().lower() == "linux")
 intersect_portion = 0.3
 acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
 t1 = (urllib.request.quote(f'"{acrobat_address}" /A "page='), 'okular --unique -p ')
@@ -16,14 +15,6 @@ t1 = (urllib.request.quote(f'"{acrobat_address}" /A "page='), 'okular --unique -
 def generate_t2(pdf_addr):
     return (urllib.request.quote(f'=OpenActions" "{path_Windows_to_Linux(pdf_addr, False)}"'),
             f' {path_Windows_to_Linux(pdf_addr, True)}')
-
-
-def path_Windows_to_Linux(addr, wtl=isLinux):
-    if not wtl:
-        return addr
-    addr = addr.replace(":", "")
-    addr = addr.replace("\\", "/")
-    return f"/mnt/{addr}"
 
 
 def error_correction(s):
