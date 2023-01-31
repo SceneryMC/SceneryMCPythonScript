@@ -14,11 +14,11 @@ t1 = (urllib.request.quote(f'"{acrobat_address}" /A "page='), 'okular --unique -
 
 
 def generate_t2(pdf_addr):
-    return (urllib.request.quote(f'=OpenActions" "{address_in_platform(pdf_addr, False)}"'),
-            f' {address_in_platform(pdf_addr, True)}')
+    return (urllib.request.quote(f'=OpenActions" "{path_Windows_to_Linux(pdf_addr, False)}"'),
+            f' {path_Windows_to_Linux(pdf_addr, True)}')
 
 
-def address_in_platform(addr, wtl=isLinux):
+def path_Windows_to_Linux(addr, wtl=isLinux):
     if not wtl:
         return addr
     addr = addr.replace(":", "")
@@ -107,9 +107,9 @@ if __name__ == '__main__':
         pdf_addr = sys.argv[2]
 
     t2 = generate_t2(pdf_addr)
-    doc = fitz.open(address_in_platform(pdf_addr))
-    with open(address_in_platform(mm_addr), encoding='utf-8') as f:
+    doc = fitz.open(path_Windows_to_Linux(pdf_addr))
+    with open(path_Windows_to_Linux(mm_addr), encoding='utf-8') as f:
         mm_html_text_backup = f.read()
         mm_html_text = re.sub(r'TEXT="(p\d+|P\d+-\d+)".*?>', add_cmd_command, mm_html_text_backup)
-    with open(address_in_platform(mm_addr), 'w', encoding='utf-8') as f:
+    with open(path_Windows_to_Linux(mm_addr), 'w', encoding='utf-8') as f:
         f.writelines(mm_html_text)
