@@ -4,6 +4,8 @@ import urllib.request
 import html
 import fitz
 from error_correction_dictionary import character_error_correction, word_error_correction
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from path_Windows_to_Linux import *
 from mm_filelist import filelist
 
