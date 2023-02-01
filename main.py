@@ -38,3 +38,11 @@
 # print(i1)
 # print(i2)
 # print(i1 * i2)
+import random
+
+dis = ['Ubuntu', 'Fedora', 'ArchLinux', 'SUSE']
+
+with open('/home/scenerymc/code/test/foo.txt', 'w') as f:
+    for _ in range(200):
+        f.write(f"{random.choice(dis)}    {random.randint(0, 12)}    {random.randint(0, 12)}    "
+                f"{random.randint(1, 28)}/{random.randint(1, 12)}/{random.randint(2000, 2023)}\n")
