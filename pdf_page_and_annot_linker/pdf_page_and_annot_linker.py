@@ -1,14 +1,15 @@
 import sys
+import os
 import re
 import urllib.request
 import html
 import fitz
 from error_correction_dictionary import character_error_correction, word_error_correction
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from path_Windows_to_Linux import *
 from mm_filelist import filelist
 
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 intersect_portion = 0.3
 acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
 t1 = (urllib.request.quote(f'"{acrobat_address}" /A "page='), 'okular --unique -p ')
