@@ -44,5 +44,5 @@ dis = ['Ubuntu', 'Fedora', 'ArchLinux', 'SUSE']
 
 with open('/home/scenerymc/code/test/foo.txt', 'w') as f:
     for _ in range(200):
-        f.write(f"{random.choice(dis)}    {random.randint(0, 12)}    {random.randint(0, 12)}    "
+        f.write(f"{random.choice(dis)}\t{random.randint(0, 12)}\t{random.randint(0, 12)}\t"
                 f"{random.randint(1, 28)}/{random.randint(1, 12)}/{random.randint(2000, 2023)}\n")
