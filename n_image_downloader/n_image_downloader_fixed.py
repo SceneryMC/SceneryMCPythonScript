@@ -7,7 +7,7 @@ import os
 import time
 
 
-address = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
+path = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
 
 
 def get_images(serial):
@@ -17,7 +17,7 @@ def get_images(serial):
     n = int(re.search(r'<span class="name">(\d+)</span></a></span></div><div class="tag-container field-name">', s).group(1))
 
     print(f'{url}开始下载！n = {n}')
-    address_temp = rf"{address}\{serial}"
+    address_temp = rf"{path}\{serial}"
     if not os.path.exists(address_temp):
         os.mkdir(address_temp)
 
@@ -27,7 +27,7 @@ def get_images(serial):
     server, inner_serial = pattern.group(1), pattern.group(2)
     folder = f"{base_url_pre}{server}{base_url_suf}/{inner_serial}"
     while True:
-        ls = {int(x[:x.find('.')]) for x in os.listdir(address_temp)}
+        ls = {int(x.split('.')[0]) for x in os.listdir(address_temp)}
         ls_download = set(range(1, n+1)) - ls
         print(ls_download)
 

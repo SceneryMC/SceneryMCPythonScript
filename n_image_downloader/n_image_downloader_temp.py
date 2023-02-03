@@ -9,7 +9,7 @@ base_url_suf = ".nhentai.net/galleries"
 servers = [3, 5, 7]
 fmts = ['jpg', 'png', 'gif']
 
-address = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
+path = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
 headers = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,"
               "application/signed-exchange;v=b3;q=0.9",
@@ -27,7 +27,7 @@ proxies = {'http': 'http://127.0.0.1:41091', 'https': 'http://127.0.0.1:41091'}
 
 def temp_get_images(serial, n, inner_serial):
     urllib3.disable_warnings()
-    address_temp = rf"{address}\{serial}"
+    address_temp = rf"{path}\{serial}"
     if not os.path.exists(address_temp):
         os.mkdir(address_temp)
 
@@ -63,11 +63,11 @@ def temp_get_image(i, serial, folder, address_temp):
     print(f"{serial}-{i}开始下载！")
 
     for fmt in fmts:
-        r_sub = requests.get(f"{folder}/{i}.{fmt}", verify=False, headers=headers, proxies=proxies, stream=True)
+        r_sub = requests.get(f"{folder}/{i}.{fmt}", verify=False, headers=headers, stream=True)
         if int(r_sub.headers['content-length']) > 1024:
             while True:
                 try:
-                    r_sub = requests.get(f"{folder}/{i}.{fmt}", verify=False, headers=headers, proxies=proxies)
+                    r_sub = requests.get(f"{folder}/{i}.{fmt}", verify=False, headers=headers)
                     break
                 except:
                     print(f"图片{i}出现一次下载错误！重试中……")
