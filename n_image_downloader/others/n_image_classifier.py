@@ -1,8 +1,9 @@
 import os
 import shutil
+from path_Windows_to_Linux import *
 
-direct_file_path = '/mnt/F/存储/其它/SYNC/等待分类/新建文件夹 (6)/新建 文本文档.txt'
-n_images_path = '/mnt/F/存储/其它/SYNC/等待分类/新建文件夹 (6)'
+direct_file_path = path_Windows_to_Linux(r'F:\存储\其它\SYNC\等待分类\新建文件夹 (6)\新建 文本文档.txt')
+n_images_path = path_Windows_to_Linux(r'F:\存储\其它\SYNC\等待分类\新建文件夹 (6)')
 
 with open(direct_file_path) as f:
     ls = [[y.lstrip('#') for y in x.split()] for x in f.readlines()]
