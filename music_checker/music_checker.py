@@ -28,8 +28,10 @@ for root_path, name in root_paths:
         if update:
             music_saved_dict[root] = music_ls
 
-    with open(f'{name}_music_saved.json', 'w') as f:
-        json.dump(music_saved_dict, f)
+    if update:
+        with open(f'{name}_music_saved.json', 'w') as f:
+            json.dump(music_saved_dict, f)
+
     print(f"----------------------------------------\n"
           f"{path_Windows_to_Linux(root_path)}：原有{saved_total}，现有{total}\n"
           f"----------------------------------------\n")
