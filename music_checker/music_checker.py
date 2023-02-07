@@ -32,4 +32,4 @@ for root_path, name in root_paths:
         json.dump(music_saved_dict, f)
     print(f"----------------------------------------\n"
           f"{path_Windows_to_Linux(root_path)}：原有{saved_total}，现有{total}\n"
-          f"----------------------------------------")
+          f"----------------------------------------\n")
