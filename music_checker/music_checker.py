@@ -3,7 +3,7 @@ import json
 import os
 
 root_paths = [(r'G:\音乐', 'storage'), (r'E:\时间的沉淀\音乐', 'collection')]
-update = True
+update = False
 
 for root_path, name in root_paths:
     total = saved_total = 0
@@ -11,7 +11,7 @@ for root_path, name in root_paths:
         music_saved_dict = json.load(f)
 
     for root, folders, files in os.walk(path_Windows_to_Linux(root_path)):
-        music_saved = set(music_saved_dict.get(root, []))
+        music_saved = set(music_saved_dict.get(path_Windows_to_Linux(root, True), []))
         music_ls = files
         music = set(music_ls)
 
