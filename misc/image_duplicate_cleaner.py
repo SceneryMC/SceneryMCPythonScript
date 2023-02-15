@@ -7,6 +7,7 @@ preferences = {
     ('Screenshots', '无'): 0,
     ('旧手机截图', '膜蛤hath'): 0,
     ('膜蛤hath', '贴吧'): 1,
+    ('Camera', 'Recover'): 1,
 }
 
 folders_listdir = os.listdir(root)
