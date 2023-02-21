@@ -48,7 +48,7 @@ if __name__ == '__main__':
     options.add_argument("--window-size=192,108")
     driver = uc.Chrome(options=options)
     driver.get(f"https://nhentai.net/g/400000")
-    time.sleep(10)
+    time.sleep(15)
 
     with open("n_site.txt", 'r') as f:
         content = [s.lstrip('#') for s in f.read().split()]
