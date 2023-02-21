@@ -3,14 +3,15 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import re
 import urllib.request
-from pdf_page_and_annot_linker import acrobat_address, filelist
+from pdf_page_and_annot_linker import acrobat_path
+from mm_filelist import filelist
 
 mm_address, pdf_address = filelist['机器学习']
 
 
 def add_cmd_command(match):
     page = re.search(r'.*?page="(\d+)"', mm_html_text[match.end():]).group(1)
-    url = f'"{acrobat_address}" /A "page={page}=OpenActions" "{pdf_address}"'
+    url = f'"{acrobat_path}" /A "page={page}=OpenActions" "{pdf_address}"'
 
     return f'LINK="execute:_{urllib.request.quote(url)}"'
 

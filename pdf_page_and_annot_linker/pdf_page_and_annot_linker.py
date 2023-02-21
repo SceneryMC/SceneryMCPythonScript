@@ -11,8 +11,8 @@ from mm_filelist import filelist
 
 
 intersect_portion = 0.3
-acrobat_address = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
-t1 = (urllib.request.quote(f'"{acrobat_address}" /A "page='), 'okular --unique -p ')
+acrobat_path = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
+t1 = (urllib.request.quote(f'"{acrobat_path}" /A "page='), 'okular --unique -p ')
 
 
 def generate_t2(pdf_addr):
