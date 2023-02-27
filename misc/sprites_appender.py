@@ -1,22 +1,22 @@
 import os
 import shutil
 
-current_address = r"C:\Users\SceneryMC\Downloads\Compressed\spritepacks-combined\gifts"
-old_address = r"E:\时间的沉淀\游戏\DDLC\DDLC-1.1.1-pc\given_gifts"
-dst_address = r"E:\时间的沉淀\游戏\DDLC\DDLC-1.1.1-pc\characters"
-current_gifts = list(os.walk(current_address))[0][2]
-old_gifts = list(os.walk(old_address))[0][2]
+current_path = r"C:\Users\SceneryMC\Downloads\Compressed\spritepacks-combined\gifts"
+old_path = r"E:\时间的沉淀\游戏\DDLC\DDLC-1.1.1-pc\given_gifts"
+dst_path = r"E:\时间的沉淀\游戏\DDLC\DDLC-1.1.1-pc\characters"
+current_gifts = list(os.walk(current_path))[0][2]
+old_gifts = list(os.walk(old_path))[0][2]
 new_gifts = set(current_gifts) - set(old_gifts)
 for gift in new_gifts:
-    shutil.copy(rf"{current_address}\{gift}", dst_address)
-    shutil.copy(rf"{current_address}\{gift}", old_address)
+    shutil.copy(rf"{current_path}\{gift}", dst_path)
+    shutil.copy(rf"{current_path}\{gift}", old_path)
     print(f"{gift} added!")
 
 
-# def get_gift_names(address):
+# def get_gift_names(path):
 #     gift_names = set()
 #     no_gift_name_files = set()
-#     for path, dir_list, file_list in os.walk(address):
+#     for path, dir_list, file_list in os.walk(path):
 #         for file in file_list:
 #             with open(f"{path}\\{file}") as f:
 #                 j = json.load(f)
