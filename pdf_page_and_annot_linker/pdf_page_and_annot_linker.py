@@ -1,23 +1,26 @@
 import sys
+import os
 import re
 import urllib.request
 import html
+import itertools
+import random
 import fitz
 from error_correction_dictionary import character_error_correction, word_error_correction
-import os
+
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from path_Windows_to_Linux import *
 from mm_filelist import filelist
-
 
 intersect_portion = 0.3
 acrobat_path = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
 t1 = (urllib.request.quote(f'"{acrobat_path}" /A "page='), 'okular --unique -p ')
 
 
-def generate_t2(pdf_addr):
-    return (urllib.request.quote(f'=OpenActions" "{path_Windows_to_Linux(pdf_addr, False)}"'),
-            f' {path_Windows_to_Linux(pdf_addr, True)}')
+def generate_t2(pdf_path):
+    return (urllib.request.quote(f'=OpenActions" "{path_Windows_to_Linux(pdf_path, False)}"'),
+            f' {path_Windows_to_Linux(pdf_path, True)}')
 
 
 def error_correction(s):
@@ -55,19 +58,8 @@ def parse_highlight(annot, wordlist):
                 unit_length = (w[2] - w[0]) / len(word)
                 start, end = round((r[0] - w[0]) / unit_length, 0), round((r[2] - w[0]) / unit_length, 0)
                 words.append(word[max(0, int(start)):min(len(word), int(end))])
-        sentences[i] = ' '.join(w for w in words)
-    return [char for char in ''.join(sentences)]
-
-
-def get_highlight_and_annot(mupdf_page, annot_num):
-    wordlist = mupdf_page.get_text("words")  # list of words on page
-    wordlist.sort(key=lambda w: tuple(w[5:]))  # ascending y, then x
-    for annot in mupdf_page.annots(types=(fitz.PDF_ANNOT_HIGHLIGHT)):
-        if annot.type[0] == 8:
-            annot_num -= 1
-        if annot_num == 0:
-            return error_correction([i for i in annot.info['content']]), \
-                   error_correction(parse_highlight(annot, wordlist))
+        sentences[i] = sep.join(w for w in words)
+    return [char for char in sep.join(sentences)]
 
 
 def add_cmd_command(match):
@@ -81,11 +73,26 @@ def add_cmd_command(match):
     left = right = -1 - (text[-2] == '/')
     details = ""
     if text[6] == 'P' and len(page) == 2:
-        annot, highlight = get_highlight_and_annot(doc[int(page[0]) - 1], int(page[1]))
-        text = text.replace(f'P{page[0]}-{page[1]}"', f'P{page[0]}-{page[1]} {html.escape(highlight)}"')
-        if annot != '':
-            details = f'<richcontent CONTENT-TYPE="xml/" TYPE="DETAILS">\n' \
-                      f'<html>\n\t<head>\n\n\t</head>\n\t<body>\n\t\t<p>{html.escape(annot)}</p>\n\t</body>\n</html></richcontent>'
+        mupdf_page, annot_num = doc[int(page[0]) - 1], int(page[1]) - 1
+        annot = next(itertools.islice(mupdf_page.annots(types=[fitz.PDF_ANNOT_HIGHLIGHT]), annot_num, None))
+        annot_text = error_correction([i for i in annot.info['content']])
+        if mode == 'text':
+            wordlist = mupdf_page.get_text("words")  # list of words on page
+            wordlist.sort(key=lambda w: tuple(w[5:]))  # ascending y, then x
+            highlight = error_correction(parse_highlight(annot, wordlist))
+            text = text.replace(f'P{page[0]}-{page[1]}"', f'P{page[0]}-{page[1]} {html.escape(highlight)}"')
+        elif mode == 'image':
+            x = [p[0] for p in annot.vertices]
+            y = [p[1] for p in annot.vertices]
+            clip = fitz.Rect((min(x), min(y)), (max(x), max(y)))
+            pix = mupdf_page.get_pixmap(matrix=mat, clip=clip)
+            png_filename = f"png_{random.randrange(0, 0xffffffffffff)}.png"
+            details += f'<hook URI="{image_folder}/{png_filename}" SIZE="{image_size}" NAME="ExternalObject"/>'
+            pix.save(f"{mm_base}/{image_folder}/{png_filename}")
+
+        if annot_text != '':
+            details += f'<richcontent CONTENT-TYPE="xml/" TYPE="DETAILS">\n' \
+                      f'<html>\n\t<head>\n\n\t</head>\n\t<body>\n\t\t<p>{html.escape(annot_text)}</p>\n\t</body>\n</html></richcontent>'
             if right == -2:
                 right = -1
                 details += "</node>"
@@ -94,16 +101,24 @@ def add_cmd_command(match):
 
 
 if __name__ == '__main__':
-    if sys.argv[1] in filelist:
-        mm_addr, pdf_addr = filelist[sys.argv[1]]
+    mode = sys.argv[1]
+    if sys.argv[2] in filelist:
+        mm_path, pdf_path, isChinese = filelist[sys.argv[2]]
     else:
-        mm_addr = sys.argv[1]
-        pdf_addr = sys.argv[2]
+        mm_path = sys.argv[2]
+        pdf_path = sys.argv[3]
+        isChinese = True if sys.argv[4] == "True" else False
 
-    t2 = generate_t2(pdf_addr)
-    doc = fitz.open(path_Windows_to_Linux(pdf_addr))
-    with open(path_Windows_to_Linux(mm_addr), encoding='utf-8') as f:
+    sep = '' if isChinese else ' '
+    mat = fitz.Matrix(2, 2)
+    t2 = generate_t2(pdf_path)
+    mm_base, mm_name = os.path.split(mm_path)
+    mm_name = mm_name[:-3]
+    image_folder = f"{mm_name}_files"
+    image_size = 0.4
+    doc = fitz.open(path_Windows_to_Linux(pdf_path))
+    with open(path_Windows_to_Linux(mm_path), encoding='utf-8') as f:
         mm_html_text_backup = f.read()
         mm_html_text = re.sub(r'TEXT="(p\d+|P\d+-\d+)".*?>', add_cmd_command, mm_html_text_backup)
-    with open(path_Windows_to_Linux(mm_addr), 'w', encoding='utf-8') as f:
+    with open(path_Windows_to_Linux(mm_path), 'w', encoding='utf-8') as f:
         f.writelines(mm_html_text)
