@@ -1,19 +1,17 @@
 import sys
 import os
-
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import time
 import random
 import re
 import html
 import fitz
-from pdf_page_and_annot_linker import isLinux, address_in_platform, t1, generate_t2
+from pdf_page_and_annot_linker import isLinux, path_Windows_to_Linux, t1, generate_t2
 
 files = {
-    "FluentPython": (r"E:\学习资料\计算机\参考书\可能会读的书\Python\进阶\FluentPython\FluentPython.mm",
-                     r"E:\学习资料\计算机\参考书\可能会读的书\Python\进阶\FluentPython\FluentPython2022.pdf")
+
 }
-template_address = address_in_platform(
+template_address = path_Windows_to_Linux(
     r"C:\Users\SceneryMC\AppData\Roaming\Freeplane\1.10.x\templates\xmind2021_default.mm", isLinux)
 
 
@@ -31,7 +29,7 @@ for file in files.values():
     s = s.replace('show_note_icons="true"',
                   'show_note_icons="true" associatedTemplateLocation="template:/xmind2021_default.mm"')
 
-    doc = fitz.open(address_in_platform(file[1]))
+    doc = fitz.open(path_Windows_to_Linux(file[1]))
     toc = doc.get_toc()
     t2 = generate_t2(file[1])
 
@@ -50,5 +48,5 @@ for file in files.values():
     CL = '\n'
     s = re.sub(r'<hook NAME="AutomaticEdgeColor" COUNTER="30" RULE="ON_BRANCH_CREATION"/>',
                f'<hook NAME="AutomaticEdgeColor" COUNTER="30" RULE="ON_BRANCH_CREATION"/>{CL}{CL.join(new_line)}', s)
-    with open(address_in_platform(file[0]), 'w', encoding='utf-8') as f:
+    with open(path_Windows_to_Linux(file[0]), 'w', encoding='utf-8') as f:
         f.write(s)
