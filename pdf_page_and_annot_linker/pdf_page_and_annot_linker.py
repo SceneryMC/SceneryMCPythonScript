@@ -6,6 +6,7 @@ import html
 import itertools
 import random
 import fitz
+from PIL import Image
 from error_correction_dictionary import character_error_correction, word_error_correction
 
 
@@ -45,7 +46,7 @@ def error_correction(s):
 def parse_highlight(annot, wordlist):
     words = []
     points = annot.vertices
-    quad_count = int(len(points) / 4)
+    quad_count = len(points) // 4
     sentences = [str] * quad_count
     for i in range(quad_count):
         r = fitz.Quad(points[i * 4: i * 4 + 4]).rect
@@ -84,11 +85,18 @@ def add_cmd_command(match):
         elif mode == 'image':
             x = [p[0] for p in annot.vertices]
             y = [p[1] for p in annot.vertices]
-            clip = fitz.Rect((min(x), min(y)), (max(x), max(y)))
-            pix = mupdf_page.get_pixmap(matrix=mat, clip=clip)
+            l, u, r, b = min(x), min(y), max(x), max(y)
+            plane = Image.new('RGB', (int((r - l) * length_to_pixel), int((b - u) * length_to_pixel)), color="white")
+            points = annot.vertices
+            quad_count = len(points) // 4
+            for i in range(quad_count):
+                clip = fitz.Quad(points[i * 4: i * 4 + 4]).rect
+                pix = mupdf_page.get_pixmap(matrix=mat, clip=clip, annots=False)
+                plane.paste(Image.frombytes('RGB', (pix.width, pix.height), pix.samples),
+                            (int((clip.x0 - l) * length_to_pixel), int((clip.y0 - u) * length_to_pixel)))
             png_filename = f"png_{random.randrange(0, 0xffffffffffff)}.png"
             details += f'<hook URI="{image_folder}/{png_filename}" SIZE="{image_size}" NAME="ExternalObject"/>'
-            pix.save(f"{mm_base}/{image_folder}/{png_filename}")
+            plane.save(f"{mm_base}/{image_folder}/{png_filename}", quality=100)
 
         if annot_text != '':
             details += f'<richcontent CONTENT-TYPE="xml/" TYPE="DETAILS">\n' \
@@ -116,6 +124,7 @@ if __name__ == '__main__':
     mm_name = mm_name[:-3]
     image_folder = f"{mm_name}_files"
     image_size = 0.4
+    length_to_pixel = 2.05
     doc = fitz.open(path_Windows_to_Linux(pdf_path))
     with open(path_Windows_to_Linux(mm_path), encoding='utf-8') as f:
         mm_html_text_backup = f.read()
