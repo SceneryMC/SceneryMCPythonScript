@@ -10,8 +10,10 @@ for root_path, name in root_paths:
     with open(f'{name}_music_saved.json') as f:
         music_saved_dict = json.load(f)
 
+    music_new_dict = {}
     for root, folders, files in os.walk(path_Windows_to_Linux(root_path)):
-        music_saved = set(music_saved_dict.get(path_Windows_to_Linux(root, True), []))
+        root = path_Windows_to_Linux(root, not isLinux)
+        music_saved = set(music_saved_dict.get(root, []))
         music_ls = files
         music = set(music_ls)
 
@@ -26,11 +28,11 @@ for root_path, name in root_paths:
             print("")
 
         if update:
-            music_saved_dict[root] = music_ls
+            music_new_dict[root] = music_ls
 
     if update:
         with open(f'{name}_music_saved.json', 'w') as f:
-            json.dump(music_saved_dict, f)
+            json.dump(music_new_dict, f)
 
     print(f"----------------------------------------\n"
           f"{path_Windows_to_Linux(root_path)}：原有{saved_total}，现有{total}\n"
