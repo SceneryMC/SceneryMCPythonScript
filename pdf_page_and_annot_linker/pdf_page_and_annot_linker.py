@@ -101,9 +101,9 @@ def add_cmd_command(match):
         if annot_text != '':
             details += f'<richcontent CONTENT-TYPE="xml/" TYPE="DETAILS">\n' \
                       f'<html>\n\t<head>\n\n\t</head>\n\t<body>\n\t\t<p>{html.escape(annot_text)}</p>\n\t</body>\n</html></richcontent>'
-            if right == -2:
-                right = -1
-                details += "</node>"
+        if right == -2:
+            right = -1
+            details += "</node>"
 
     return f'{text[:left]} LINK="execute:_{url}"{text[right:]}{details}'
 
@@ -120,10 +120,10 @@ if __name__ == '__main__':
     sep = '' if isChinese else ' '
     mat = fitz.Matrix(2, 2)
     t2 = generate_t2(pdf_path)
-    mm_base, mm_name = os.path.split(mm_path)
+    mm_base, mm_name = os.path.split(path_Windows_to_Linux(mm_path))
     mm_name = mm_name[:-3]
     image_folder = f"{mm_name}_files"
-    image_size = 0.4
+    image_size = 0.625
     length_to_pixel = 2.05
     doc = fitz.open(path_Windows_to_Linux(pdf_path))
     with open(path_Windows_to_Linux(mm_path), encoding='utf-8') as f:
