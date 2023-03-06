@@ -8,8 +8,8 @@ styles = {"minorTopic": "重要", "importantTopic": "极其重要", 'topic': "",
 xmind_basis = '/home/scenerymc/.config/XMind/Electron v3/vana/workbooks/'
 xmind_image_path = os.path.join(xmind_basis, os.listdir(xmind_basis)[0], 'resources')
 
-xmind_path = '/mnt/E/学习资料/计算机/参考书/可能会读的书/C++/入门/C++Primer/整理/第1部分 C++基础/第12章 动态内存2.xmind'
-freeplane_path = '/mnt/E/学习资料/计算机/参考书/可能会读的书/C++/入门/C++Primer/整理/第1部分 C++基础/C++Primer.mm'
+xmind_path = '/mnt/E/学习资料/计算机/参考书/可能会读的书/算法/算法导论/整理/t12第十二章 二叉搜索树.xmind'
+freeplane_path = '/mnt/E/学习资料/计算机/参考书/可能会读的书/算法/算法导论/整理/CLRS.mm'
 
 freeplane_image_path, mm_filename = os.path.split(freeplane_path)
 mm_filename = mm_filename[:-3]
@@ -38,9 +38,18 @@ def json_to_freeplane(object, node):
             json_to_freeplane(item, node)
     elif isinstance(object, dict):
         text = object['title']
+        no_image = False
+        if 'extensions' in object and object['extensions'][0]['provider'] == "org.xmind.ui.mathJax":
+            latex = object['extensions'][0]['content']['content']
+            latex = latex.replace(r"\begin{align}", "")
+            latex = latex.replace(r"\end{align}", "")
+            latex = latex.replace("&", "")
+            text = f"\\latex\n${latex}$"
+            no_image = True
+            print(text)
         style = styles[object.get('class', None)]
         new_node = node.add_child(core=text, style=style)
-        if 'image' in object:
+        if not no_image and 'image' in object:
             image = object["image"]["src"].split("/")[-1]
             shutil.copy(f'{xmind_image_path}/{image}', f"{freeplane_image_path}/")
             new_node.set_image(link=f'{freeplane_image_folder}/{image}', size=0.4)
@@ -49,7 +58,6 @@ def json_to_freeplane(object, node):
 
 
 j = xmindparser.get_xmind_zen_builtin_json(xmind_path)[0]['rootTopic']
-# print(j)
 # print(j)
 # processing_demo(j, 0)
 
