@@ -1,6 +1,3 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import re
 import urllib.request
 from pdf_page_and_annot_linker import acrobat_path
