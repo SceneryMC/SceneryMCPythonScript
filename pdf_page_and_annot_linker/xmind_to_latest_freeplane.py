@@ -38,7 +38,7 @@ def json_to_freeplane(object, node):
             json_to_freeplane(item, node)
     elif isinstance(object, dict):
         text = object['title']
-        no_image = False
+        ignore_image = False
         if 'extensions' in object \
                 and object['extensions'] \
                 and object['extensions'][0]['provider'] == "org.xmind.ui.mathJax":
@@ -47,11 +47,11 @@ def json_to_freeplane(object, node):
             latex = latex.replace(r"\end{align}", "")
             latex = latex.replace("&", "")
             text = f"\\latex\n${latex}$"
-            no_image = True
+            ignore_image = True
             print(text)
         style = styles[object.get('class', None)]
         new_node = node.add_child(core=text, style=style)
-        if not no_image and 'image' in object:
+        if not ignore_image and 'image' in object:
             image = object["image"]["src"].split("/")[-1]
             shutil.copy(f'{xmind_image_path}/{image}', f"{freeplane_image_path}/")
             new_node.set_image(link=f'{freeplane_image_folder}/{image}', size=0.4)
