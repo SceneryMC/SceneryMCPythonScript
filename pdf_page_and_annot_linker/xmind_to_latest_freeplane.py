@@ -8,7 +8,7 @@ styles = {"minorTopic": "重要", "importantTopic": "极其重要", 'topic': "",
 xmind_basis = '/home/scenerymc/.config/XMind/Electron v3/vana/workbooks/'
 xmind_image_path = os.path.join(xmind_basis, os.listdir(xmind_basis)[0], 'resources')
 
-xmind_path = '/mnt/E/学习资料/计算机/参考书/可能会读的书/算法/算法导论/整理/t12第十二章 二叉搜索树.xmind'
+xmind_path = '/mnt/E/学习资料/计算机/参考书/可能会读的书/算法/算法导论/整理/15第十五章：动态规划.xmind'
 freeplane_path = '/mnt/E/学习资料/计算机/参考书/可能会读的书/算法/算法导论/整理/CLRS.mm'
 
 freeplane_image_path, mm_filename = os.path.split(freeplane_path)
@@ -39,7 +39,9 @@ def json_to_freeplane(object, node):
     elif isinstance(object, dict):
         text = object['title']
         no_image = False
-        if 'extensions' in object and object['extensions'][0]['provider'] == "org.xmind.ui.mathJax":
+        if 'extensions' in object \
+                and object['extensions'] \
+                and object['extensions'][0]['provider'] == "org.xmind.ui.mathJax":
             latex = object['extensions'][0]['content']['content']
             latex = latex.replace(r"\begin{align}", "")
             latex = latex.replace(r"\end{align}", "")
