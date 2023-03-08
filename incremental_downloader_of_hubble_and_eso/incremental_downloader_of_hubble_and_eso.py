@@ -55,7 +55,7 @@ def download_image(image, suffix):
         print(f"TOO LARGE: SIZE = {image_size / 1024 ** 2} MB!")
         with open(f"skipped_{attributes['name']}.txt", 'a') as f:
             f.write(f"{attributes['source']}/{image}.{suffix}\n")
-        return
+        return False
 
     with open(path_Windows_to_Linux(rf'G:\收藏\图片\{attributes["folder"]}\{image}.{suffix}'), "wb") as f:
         pass
@@ -66,9 +66,7 @@ def download_image(image, suffix):
         p.apply_async(download_image_thread, args=(image, suffix, i))
     p.close()
     p.join()
-
-    with open(f"downloaded_list_{attributes['name']}.txt", 'a') as f:
-        f.write(f"{image}\n")
+    return True
 
 
 def download_image_thread(image, suffix, i):
@@ -115,11 +113,12 @@ if __name__ == '__main__':
     images = images[:will_download]
     images.reverse()
 
-    i = 0
-    for image in images:
-        suffix = get_suffix(image)
-        download_image(image, suffix)
-        print(f"{image} downloaded!")
+    for i in range(len(images)):
+        suffix = get_suffix(images[i])
+        if download_image(images[i], suffix):
+            print(f"{images[i]} downloaded!")
+        with open(f"downloaded_list_{attributes['name']}.txt", 'a') as f:
+            f.write(f"{images[i]}\n")
         i += 1
         with open(f'downloaded_{attributes["name"]}.txt', 'w') as f:
             f.write(str(downloaded + i))
