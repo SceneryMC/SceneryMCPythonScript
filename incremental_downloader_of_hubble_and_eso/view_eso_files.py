@@ -1,34 +1,37 @@
 import os
 from incremental_downloader_of_hubble_and_eso import eso_attributes, get_image_urls, get_total
 
+
+def name_unify(s):
+    s = s.lower()
+    return s[:-3] if s.endswith("-en") else s
+
+
 ls_local = []
 ls_skipped = []
 ls_all = []
 ls_refetch = []
 for root, folders, files in os.walk(r"G:\收藏\图片\ESO"):
     for file in files:
-        file = file.split('.')[0].lower()
-        if file.endswith("-en"):
-            file = file[:-3]
+        file = file.split('.')[0]
+        file = name_unify(file)
         ls_local.append(file)
 with open("skipped_eso.txt") as f:
     for url in f:
-        file = url.split('/')[-1][:-1].split('.')[0].lower()
-        if file.endswith("-en"):
-            file = file[:-3]
+        file = url.split('/')[-1][:-1].split('.')[0]
+        file = name_unify(file)
         ls_skipped.append(file)
 with open("downloaded_list_eso.txt") as f:
     for file in f:
-        file = file[:-1].lower()
-        if file.endswith("-en"):
-            file = file[:-3]
+        file = file[:-1]
+        file = name_unify(file)
         ls_all.append(file)
 with open("refetch_eso_image_list") as f:
     for file in f:
-        file = file[:-1].lower()
-        if file.endswith("-en"):
-            file = file[:-3]
+        file = file[:-1]
+        file = name_unify(file)
         ls_refetch.append(file)
+
 
 print("----------NUM----------")
 set_local = set(ls_local)
@@ -66,6 +69,12 @@ ans6 = sorted(list(ans6))
 print(len(ans5), ans5)
 print(len(ans6), ans6)
 
+ans7, ans8 = set_all - set_refetch, set_refetch - set_all
+ans7 = sorted(list(ans7))
+ans8 = sorted(list(ans8))
+print(len(ans7), ans7)
+print(len(ans8), ans8)
+
 print("----------REPEATS----------")
 print("-----local-----")
 ls_local.sort()
@@ -95,4 +104,3 @@ if refetch:
     images = '\n'.join([s.split('/')[-1] for s in images])
     with open('refetch_eso_image_list', 'w') as f:
         f.write(images)
-
