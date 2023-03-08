@@ -21,7 +21,7 @@ with open("skipped_eso.txt") as f:
         file = url.split('/')[-1][:-1].split('.')[0]
         file = name_unify(file)
         ls_skipped.append(file)
-with open("downloaded_list_eso.txt") as f:
+with open("processed_list_eso.txt") as f:
     for file in f:
         file = file[:-1]
         file = name_unify(file)
@@ -43,21 +43,21 @@ print(len(ls_skipped), len(set_skipped))
 set_local_and_skipped = set_local.union(set_skipped)
 print(len(set_local_and_skipped))
 
-set_all = set(ls_all)
-print(len(ls_all), len(set_all))
+set_processed = set(ls_all)
+print(len(ls_all), len(set_processed))
 
 set_refetch = set(ls_refetch)
 print()
 
 print("----------INTERSECT_LIST----------")
-ans1, ans2 = set_local_and_skipped - set_all, set_all - set_local_and_skipped
+ans1, ans2 = set_local_and_skipped - set_processed, set_processed - set_local_and_skipped
 ans1 = sorted(list(ans1))
 ans2 = sorted(list(ans2))
 print(len(ans1), ans1)
 print(len(ans2), ans2)
-print(len(set_local_and_skipped.intersection(set_all)))
+print(len(set_local_and_skipped.intersection(set_processed)))
 
-ans3, ans4 = set_all - set_refetch, set_refetch - set_all
+ans3, ans4 = set_processed - set_refetch, set_refetch - set_processed
 ans3 = sorted(list(ans3))
 ans4 = sorted(list(ans4))
 print(len(ans3), ans3)
@@ -69,7 +69,7 @@ ans6 = sorted(list(ans6))
 print(len(ans5), ans5)
 print(len(ans6), ans6)
 
-ans7, ans8 = set_all - set_refetch, set_refetch - set_all
+ans7, ans8 = set_processed - set_refetch, set_refetch - set_processed
 ans7 = sorted(list(ans7))
 ans8 = sorted(list(ans8))
 print(len(ans7), ans7)

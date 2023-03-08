@@ -101,7 +101,7 @@ def get_suffix(image):
 if __name__ == '__main__':
     attributes = hubble_attributes
 
-    with open(f'downloaded_{attributes["name"]}.txt') as f:
+    with open(f'processed_amount_{attributes["name"]}.txt') as f:
         downloaded = int(f.readline())
     image_per_page, total = get_total(f"{attributes['basename']}/1/?sort=-release_date")
     print(image_per_page, total)
@@ -117,8 +117,8 @@ if __name__ == '__main__':
         suffix = get_suffix(images[i])
         if download_image(images[i], suffix):
             print(f"{images[i]} downloaded!")
-        with open(f"downloaded_list_{attributes['name']}.txt", 'a') as f:
+        with open(f"processed_list_{attributes['name']}.txt", 'a') as f:
             f.write(f"{images[i]}\n")
         i += 1
-        with open(f'downloaded_{attributes["name"]}.txt', 'w') as f:
+        with open(f'processed_amount_{attributes["name"]}.txt', 'w') as f:
             f.write(str(downloaded + i))
