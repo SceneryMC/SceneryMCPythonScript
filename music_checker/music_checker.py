@@ -2,7 +2,7 @@ from path_Windows_to_Linux import *
 import json
 import os
 
-root_paths = [(r'G:\音乐', 'storage'), (r'E:\时间的沉淀\音乐', 'collection')]
+root_paths = [(r'F:\存储\音乐', 'storage'), (r'E:\时间的沉淀\音乐', 'collection')]
 update = False
 
 for root_path, name in root_paths:
