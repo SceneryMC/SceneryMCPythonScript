@@ -9,7 +9,7 @@ def name_unify(s):
 
 ls_local = []
 ls_skipped = []
-ls_all = []
+ls_processed = []
 ls_refetch = []
 for root, folders, files in os.walk(r"G:\收藏\图片\ESO"):
     for file in files:
@@ -25,7 +25,7 @@ with open("processed_list_eso.txt") as f:
     for file in f:
         file = file[:-1]
         file = name_unify(file)
-        ls_all.append(file)
+        ls_processed.append(file)
 with open("refetch_eso_image_list") as f:
     for file in f:
         file = file[:-1]
@@ -43,8 +43,8 @@ print(len(ls_skipped), len(set_skipped))
 set_local_and_skipped = set_local.union(set_skipped)
 print(len(set_local_and_skipped))
 
-set_processed = set(ls_all)
-print(len(ls_all), len(set_processed))
+set_processed = set(ls_processed)
+print(len(ls_processed), len(set_processed))
 
 set_refetch = set(ls_refetch)
 print()
@@ -87,10 +87,10 @@ for i in range(len(ls_skipped)-2):
     if ls_skipped[i] == ls_skipped[i+1]:
         print(ls_skipped[i])
 print("-----all-----")
-ls_all.sort()
-for i in range(len(ls_all)-2):
-    if ls_all[i] == ls_all[i+1]:
-        print(ls_all[i])
+ls_processed.sort()
+for i in range(len(ls_processed)-2):
+    if ls_processed[i] == ls_processed[i+1]:
+        print(ls_processed[i])
 
 
 refetch = False
