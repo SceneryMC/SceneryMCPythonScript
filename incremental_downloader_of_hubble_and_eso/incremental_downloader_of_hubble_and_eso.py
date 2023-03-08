@@ -101,7 +101,7 @@ def get_suffix(image):
 
 
 if __name__ == '__main__':
-    attributes = eso_attributes
+    attributes = hubble_attributes
 
     with open(f'downloaded_{attributes["name"]}.txt') as f:
         downloaded = int(f.readline())

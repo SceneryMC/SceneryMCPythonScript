@@ -1915,5 +1915,5 @@ https://cdn.eso.org/images/original/eso2215c.tif
 https://cdn.eso.org/images/original/potw2249b.tif
 https://cdn.eso.org/images/original/potw2301a.tif
 https://cdn.eso.org/images/original/potw2304a.tif
-https://cdn.eso.org/images/original/potw2304a.tif
 https://cdn.eso.org/images/original/potw2307a.tif
+https://cdn.eso.org/images/original/potw2310a.tif

@@ -14846,3 +14846,6 @@ potw2306a
 potw2308a
 potw2309b
 potw2309a
+MAORY-5
+MAORY-3
+MAORY-6xray2
