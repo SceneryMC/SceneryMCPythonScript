@@ -111,19 +111,18 @@ def add_cmd_command(match):
 if __name__ == '__main__':
     mode = sys.argv[1]
     if sys.argv[2] in filelist:
-        mm_path, pdf_path, isChinese = filelist[sys.argv[2]]
+        mm_path, pdf_path, image_size = filelist[sys.argv[2]]
     else:
         mm_path = sys.argv[2]
         pdf_path = sys.argv[3]
-        isChinese = True if sys.argv[4] == "True" else False
+        image_size = float(sys.argv[4])
 
-    sep = '' if isChinese else ' '
+    sep = ' ' if pdf_path[:-4].endswith("ed") else ''
     mat = fitz.Matrix(2, 2)
     t2 = generate_t2(pdf_path)
     mm_base, mm_name = os.path.split(path_Windows_to_Linux(mm_path))
     mm_name = mm_name[:-3]
     image_folder = f"{mm_name}_files"
-    image_size = 0.625
     length_to_pixel = 2.05
     doc = fitz.open(path_Windows_to_Linux(pdf_path))
     with open(path_Windows_to_Linux(mm_path), encoding='utf-8') as f:
