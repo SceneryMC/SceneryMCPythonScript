@@ -52,12 +52,12 @@ def json_to_freeplane(object, node):
         style = styles[object.get('class', None)]
         new_node = node.add_child(core=text, style=style)
         if not ignore_image and 'image' in object:
-            image = object["image"]["src"].split("/")[-1]
-            img_byte = xmind_zip.open(f"resources/{image}").read()
-            img_path = f"{freeplane_image_path}/{image}"
+            img_name = object["image"]["src"].split("/")[-1]
+            img_byte = xmind_zip.open(f"resources/{img_name}").read()
+            img_path = f"{freeplane_image_path}/{img_name}"
             with open(img_path, 'wb') as f:
                 f.write(img_byte)
-            new_node.set_image(link=img_path, size=0.4)
+            new_node.set_image(link=img_path, size=0.6)
         if 'children' in object:
             json_to_freeplane(object['children']['attached'], new_node)
 
