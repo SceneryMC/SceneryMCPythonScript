@@ -4,7 +4,7 @@ from zipfile import ZipFile
 import os
 
 indent = ' ' * 4
-styles = {"minorTopic": "重要", "importantTopic": "极其重要", 'topic': "", None: ""}
+styles = {"minorTopic": "重要", "importantTopic": "极其重要", 'topic': "", 'expiredTopic': "",  None: ""}
 
 xmind_folder_path = ''
 freeplane_parent = ''
@@ -56,7 +56,7 @@ def json_to_freeplane(object, node):
             img_path = f"{freeplane_image_path}/{img_name}"
             with open(img_path, 'wb') as f:
                 f.write(img_byte)
-            new_node.set_image(link=img_path, size=0.6)
+            new_node.set_image(link=img_path, size=0.5)
         if 'children' in object:
             json_to_freeplane(object['children']['attached'], new_node)
 
