@@ -1,15 +1,14 @@
 import xmindparser
 import freeplane
 from zipfile import ZipFile
-import shutil
 import os
 
 indent = ' ' * 4
 styles = {"minorTopic": "重要", "importantTopic": "极其重要", 'topic': "", None: ""}
 
-xmind_folder_path = '/mnt/E/学习资料/计算机/参考书/可能会读的书/LaTeX/lshort'
-freeplane_parent = '/mnt/E/学习资料/计算机/参考书/可能会读的书/LaTeX/lshort'
-mm_name = 'lshort'
+xmind_folder_path = ''
+freeplane_parent = ''
+mm_name = ''
 
 xmind_file_paths = [f"{xmind_folder_path}/{x}" for x in os.listdir(xmind_folder_path) if x.endswith('.xmind')]
 mm_path = f"{freeplane_parent}/{mm_name}.mm"
