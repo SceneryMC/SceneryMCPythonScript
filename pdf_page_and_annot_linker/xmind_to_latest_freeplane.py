@@ -46,7 +46,7 @@ def json_to_freeplane(object, node):
             latex = latex.replace(r"\begin{align}", "")
             latex = latex.replace(r"\end{align}", "")
             latex = latex.replace("&", "")
-            text = f"\\latex\n${latex}$"
+            text = f"\\latex\n${latex}$\n"
             ignore_image = True
             print(text)
         style = styles[object.get('class', None)]
