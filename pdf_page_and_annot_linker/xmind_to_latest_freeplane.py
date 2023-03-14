@@ -1,20 +1,20 @@
 import xmindparser
 import freeplane
+from zipfile import ZipFile
 import shutil
 import os
 
-indent = '    '
+indent = ' ' * 4
 styles = {"minorTopic": "重要", "importantTopic": "极其重要", 'topic': "", None: ""}
-xmind_basis = '/home/scenerymc/.config/XMind/Electron v3/vana/workbooks/'
-xmind_image_path = os.path.join(xmind_basis, os.listdir(xmind_basis)[0], 'resources')
 
-xmind_path = '/mnt/E/学习资料/计算机/参考书/可能会读的书/算法/算法导论/整理/15第十五章：动态规划.xmind'
-freeplane_path = '/mnt/E/学习资料/计算机/参考书/可能会读的书/算法/算法导论/整理/CLRS.mm'
+xmind_folder_path = '/mnt/E/学习资料/计算机/参考书/可能会读的书/LaTeX/lshort'
+freeplane_parent = '/mnt/E/学习资料/计算机/参考书/可能会读的书/LaTeX/lshort'
+mm_name = 'lshort'
 
-freeplane_image_path, mm_filename = os.path.split(freeplane_path)
-mm_filename = mm_filename[:-3]
-freeplane_image_folder = f'{mm_filename}_files'
-freeplane_image_path = f"{freeplane_image_path}/{freeplane_image_folder}"
+xmind_file_paths = [f"{xmind_folder_path}/{x}" for x in os.listdir(xmind_folder_path) if x.endswith('.xmind')]
+mm_path = f"{freeplane_parent}/{mm_name}.mm"
+freeplane_image_folder = f'{mm_name}_files'
+freeplane_image_path = f"{freeplane_parent}/{freeplane_image_folder}"
 if not os.path.exists(freeplane_image_path):
     os.mkdir(freeplane_image_path)
 
@@ -53,16 +53,21 @@ def json_to_freeplane(object, node):
         new_node = node.add_child(core=text, style=style)
         if not ignore_image and 'image' in object:
             image = object["image"]["src"].split("/")[-1]
-            shutil.copy(f'{xmind_image_path}/{image}', f"{freeplane_image_path}/")
-            new_node.set_image(link=f'{freeplane_image_folder}/{image}', size=0.4)
+            img_byte = xmind_zip.open(f"resources/{image}").read()
+            img_path = f"{freeplane_image_path}/{image}"
+            with open(img_path, 'wb') as f:
+                f.write(img_byte)
+            new_node.set_image(link=img_path, size=0.4)
         if 'children' in object:
             json_to_freeplane(object['children']['attached'], new_node)
 
 
-j = xmindparser.get_xmind_zen_builtin_json(xmind_path)[0]['rootTopic']
-# print(j)
-# processing_demo(j, 0)
+for xmind_file_path in xmind_file_paths:
+    xmind_zip = ZipFile(xmind_file_path)
+    j = xmindparser.get_xmind_zen_builtin_json(xmind_file_path)[0]['rootTopic']
+    # print(j)
+    # processing_demo(j, 0)
 
-mindmap = freeplane.Mindmap(freeplane_path)
-json_to_freeplane(j, mindmap.rootnode)
-mindmap.save(freeplane_path)
+    mindmap = freeplane.Mindmap(mm_path)
+    json_to_freeplane(j, mindmap.rootnode)
+    mindmap.save(mm_path)
