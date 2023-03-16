@@ -47,3 +47,12 @@
 #         f.write(f"{random.choice(dis)}\t{random.randint(0, 12)}\t{random.randint(0, 12)}\t"
 #                 f"{random.randint(1, 28)}/{random.randint(1, 12)}/{random.randint(2000, 2023)}\n")
 
+# import fitz
+#
+#
+# doc = fitz.open('/mnt/E/学习资料/计算机/参考书/可能会读的书/C++/入门/C++Primer/C++Primer5edCN（复件）.pdf')
+# for page in doc:
+#     for annot in page.annots():
+#         if annot.colors['stroke'] == (1.0, 1.0, 0.0):
+#             annot.set_opacity(0.05)
+# doc.save('/mnt/E/学习资料/计算机/参考书/可能会读的书/C++/入门/C++Primer/C++Primer5edCN-tmp.pdf')
