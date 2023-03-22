@@ -128,5 +128,6 @@ if __name__ == '__main__':
     with open(path_Windows_to_Linux(mm_path), encoding='utf-8') as f:
         mm_html_text_backup = f.read()
         mm_html_text = re.sub(r'TEXT="(p\d+|P\d+-\d+)".*?>', add_cmd_command, mm_html_text_backup)
-    with open(path_Windows_to_Linux(mm_path), 'w', encoding='utf-8') as f:
-        f.writelines(mm_html_text)
+    if not mm_html_text == mm_html_text_backup:
+        with open(path_Windows_to_Linux(mm_path), 'w', encoding='utf-8') as f:
+            f.writelines(mm_html_text)
