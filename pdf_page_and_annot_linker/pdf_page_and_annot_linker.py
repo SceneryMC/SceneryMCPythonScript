@@ -25,17 +25,16 @@ def generate_t2(pdf_path):
 
 
 def error_correction(s):
-    for i in range(len(s)):
-        s[i] = character_error_correction.get(s[i], s[i])
+    s = s.translate(str.maketrans(character_error_correction))
 
-    i = 1
-    while '' in s:
-        s.remove('')
-    while i < len(s) - 1:
-        if (not (0 <= ord(s[i - 1]) <= 127) or not (0 <= ord(s[i + 1]) <= 127)) and s[i] == ' ':
-            s.pop(i)
-        i += 1
-    s = ''.join(s)
+    # i = 1
+    # while '' in s:
+    #     s.remove('')
+    # while i < len(s) - 1:
+    #     if (not (0 <= ord(s[i - 1]) <= 127) or not (0 <= ord(s[i + 1]) <= 127)) and s[i] == ' ':
+    #         s.pop(i)
+    #     i += 1
+    # s = ''.join(s)
 
     for original, correction in word_error_correction.items():
         s = s.replace(original, correction)
@@ -60,7 +59,7 @@ def parse_highlight(annot, wordlist):
                 start, end = round((r[0] - w[0]) / unit_length, 0), round((r[2] - w[0]) / unit_length, 0)
                 words.append(word[max(0, int(start)):min(len(word), int(end))])
         sentences[i] = sep.join(w for w in words)
-    return [char for char in sep.join(sentences)]
+    return sep.join(sentences)
 
 
 def add_cmd_command(match):
@@ -76,7 +75,7 @@ def add_cmd_command(match):
     if text[6] == 'P' and len(page) == 2:
         mupdf_page, annot_num = doc[int(page[0]) - 1], int(page[1]) - 1
         annot = next(itertools.islice(mupdf_page.annots(types=[fitz.PDF_ANNOT_HIGHLIGHT]), annot_num, None))
-        annot_text = error_correction([i for i in annot.info['content']])
+        annot_text = error_correction(annot.info['content'])
         if mode == 'text':
             wordlist = mupdf_page.get_text("words")  # list of words on page
             wordlist.sort(key=lambda w: tuple(w[5:]))  # ascending y, then x
