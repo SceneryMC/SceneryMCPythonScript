@@ -6,11 +6,12 @@ import html
 import itertools
 import random
 import fitz
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PIL import Image
 from error_correction_dictionary import character_error_correction, word_error_correction
 from path_Windows_to_Linux import *
 from mm_filelist import filelist
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 intersect_portion = 0.3
 acrobat_path = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
