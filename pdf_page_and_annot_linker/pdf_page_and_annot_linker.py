@@ -27,15 +27,6 @@ def generate_t2(pdf_path):
 def error_correction(s):
     s = s.translate(str.maketrans(character_error_correction))
 
-    # i = 1
-    # while '' in s:
-    #     s.remove('')
-    # while i < len(s) - 1:
-    #     if (not (0 <= ord(s[i - 1]) <= 127) or not (0 <= ord(s[i + 1]) <= 127)) and s[i] == ' ':
-    #         s.pop(i)
-    #     i += 1
-    # s = ''.join(s)
-
     for original, correction in word_error_correction.items():
         s = s.replace(original, correction)
 
@@ -46,10 +37,8 @@ def parse_highlight(annot, wordlist):
     words = []
     points = annot.vertices
     quad_count = len(points) // 4
-    sentences = [str] * quad_count
     for i in range(quad_count):
         r = fitz.Quad(points[i * 4: i * 4 + 4]).rect
-        words.clear()
         for w in wordlist:
             tmp_rect = fitz.Rect(w[:4])
             tmp_intersect_rect = fitz.Rect(tmp_rect).intersect(r)
@@ -58,8 +47,7 @@ def parse_highlight(annot, wordlist):
                 unit_length = (w[2] - w[0]) / len(word)
                 start, end = round((r[0] - w[0]) / unit_length, 0), round((r[2] - w[0]) / unit_length, 0)
                 words.append(word[max(0, int(start)):min(len(word), int(end))])
-        sentences[i] = sep.join(w for w in words)
-    return sep.join(sentences)
+    return sep.join(words)
 
 
 def add_cmd_command(match):
