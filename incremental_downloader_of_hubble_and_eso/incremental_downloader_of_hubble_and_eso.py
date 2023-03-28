@@ -98,11 +98,7 @@ def get_suffix(image):
     return html_text[suffix_index - 5:suffix_index - 2]
 
 
-if __name__ == '__main__':
-    attributes = hubble_attributes
-
-    with open(f'processed_amount_{attributes["name"]}.txt') as f:
-        downloaded = int(f.readline())
+def get_download_list(downloaded):
     image_per_page, total = get_total(f"{attributes['basename']}/1/?sort=-release_date")
     print(image_per_page, total)
     will_download = total - downloaded
@@ -110,15 +106,19 @@ if __name__ == '__main__':
     for i in range(1, will_download // image_per_page + (will_download % image_per_page != 0) + 1):
         images.extend(get_image_urls(f"{attributes['basename']}/{i}/?sort=-release_date"))
         print(f"page {i} collected!")
-    images = images[:will_download]
-    images.reverse()
+    return images[will_download-1::-1]
 
+
+if __name__ == '__main__':
+    attributes = hubble_attributes if input() == 'hubble' else eso_attributes
+    with open(f'processed_amount_{attributes["name"]}.txt') as f:
+        downloaded = int(f.readline())
+
+    images = get_download_list(downloaded)
     for i in range(len(images)):
-        suffix = get_suffix(images[i])
-        if download_image(images[i], suffix):
+        if download_image(images[i], get_suffix(images[i])):
             print(f"{images[i]} downloaded!")
         with open(f"processed_list_{attributes['name']}.txt", 'a') as f:
             f.write(f"{images[i]}\n")
-        i += 1
         with open(f'processed_amount_{attributes["name"]}.txt', 'w') as f:
-            f.write(str(downloaded + i))
+            f.write(str(downloaded + i + 1))
