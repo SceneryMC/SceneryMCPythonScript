@@ -31,32 +31,37 @@ def processing_demo(object, layer):
                 processing_demo(value, layer + 1)
 
 
+def add_a_node(object, node):
+    text = object['title']
+    ignore_image = False
+    if 'extensions' in object \
+            and object['extensions'] \
+            and object['extensions'][0]['provider'] == "org.xmind.ui.mathJax":
+        latex = object['extensions'][0]['content']['content']
+        latex = latex.replace(r"\begin{align}", "")
+        latex = latex.replace(r"\end{align}", "")
+        latex = latex.replace("&", "")
+        text = f"\\latex\n${latex}$\n"
+        ignore_image = True
+        print(text)
+    style = styles[object.get('class', None)]
+    new_node = node.add_child(core=text, style=style)
+    if not ignore_image and 'image' in object:
+        img_name = object["image"]["src"].split("/")[-1]
+        img_byte = xmind_zip.open(f"resources/{img_name}").read()
+        img_path = f"{freeplane_image_path}/{img_name}"
+        with open(img_path, 'wb') as f:
+            f.write(img_byte)
+        new_node.set_image(link=img_path, size=0.5)
+    return new_node
+
+
 def json_to_freeplane(object, node):
     if isinstance(object, list):
         for item in object:
             json_to_freeplane(item, node)
     elif isinstance(object, dict):
-        text = object['title']
-        ignore_image = False
-        if 'extensions' in object \
-                and object['extensions'] \
-                and object['extensions'][0]['provider'] == "org.xmind.ui.mathJax":
-            latex = object['extensions'][0]['content']['content']
-            latex = latex.replace(r"\begin{align}", "")
-            latex = latex.replace(r"\end{align}", "")
-            latex = latex.replace("&", "")
-            text = f"\\latex\n${latex}$\n"
-            ignore_image = True
-            print(text)
-        style = styles[object.get('class', None)]
-        new_node = node.add_child(core=text, style=style)
-        if not ignore_image and 'image' in object:
-            img_name = object["image"]["src"].split("/")[-1]
-            img_byte = xmind_zip.open(f"resources/{img_name}").read()
-            img_path = f"{freeplane_image_path}/{img_name}"
-            with open(img_path, 'wb') as f:
-                f.write(img_byte)
-            new_node.set_image(link=img_path, size=0.5)
+        new_node = add_a_node(object, node)
         if 'children' in object:
             json_to_freeplane(object['children']['attached'], new_node)
 
@@ -64,7 +69,6 @@ def json_to_freeplane(object, node):
 for xmind_file_path in xmind_file_paths:
     xmind_zip = ZipFile(xmind_file_path)
     j = xmindparser.get_xmind_zen_builtin_json(xmind_file_path)[0]['rootTopic']
-    # print(j)
     # processing_demo(j, 0)
 
     mindmap = freeplane.Mindmap(mm_path)
