@@ -6,14 +6,16 @@ import html
 import itertools
 import random
 import fitz
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PIL import Image
 from error_correction_dictionary import character_error_correction, word_error_correction
 from path_Windows_to_Linux import *
 from mm_filelist import filelist
 
-
 intersect_portion = 0.3
+length_to_pixel = 2.05
+mat = fitz.Matrix(2, 2)
 acrobat_path = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
 t1 = (urllib.request.quote(f'"{acrobat_path}" /A "page='), 'okular --unique -p ')
 
@@ -25,10 +27,8 @@ def generate_t2(pdf_path):
 
 def error_correction(s):
     s = s.translate(str.maketrans(character_error_correction))
-
     for original, correction in word_error_correction.items():
         s = s.replace(original, correction)
-
     return s
 
 
@@ -86,7 +86,7 @@ def add_cmd_command(match):
 
         if annot_text != '':
             details += f'<richcontent CONTENT-TYPE="xml/" TYPE="DETAILS">\n' \
-                      f'<html>\n\t<head>\n\n\t</head>\n\t<body>\n\t\t<p>{html.escape(annot_text)}</p>\n\t</body>\n</html></richcontent>'
+                       f'<html>\n\t<head>\n\n\t</head>\n\t<body>\n\t\t<p>{html.escape(annot_text)}</p>\n\t</body>\n</html></richcontent>'
         if right == -2:
             right = -1
             details += "</node>"
@@ -94,22 +94,23 @@ def add_cmd_command(match):
     return f'{text[:left]} LINK="execute:_{url}"{text[right:]}{details}'
 
 
-if __name__ == '__main__':
-    mode = sys.argv[1]
-    if sys.argv[2] in filelist:
-        mm_path, pdf_path, image_size = filelist[sys.argv[2]]
+def get_args(args):
+    if args[2] in filelist:
+        mm_path, pdf_path, image_size = filelist[args[2]]
     else:
-        mm_path = sys.argv[2]
-        pdf_path = sys.argv[3]
-        image_size = float(sys.argv[4])
+        mm_path = args[2]
+        pdf_path = args[3]
+        image_size = float(args[4])
+    return args[1], mm_path, pdf_path, image_size
 
-    sep = ' ' if pdf_path[:-4].endswith("ed") else ''
-    mat = fitz.Matrix(2, 2)
+
+if __name__ == '__main__':
+    mode, mm_path, pdf_path, image_size = get_args(sys.argv)
+    sep = '' if pdf_path[:-4].endswith("CN") else ' '
     t2 = generate_t2(pdf_path)
     mm_base, mm_name = os.path.split(path_Windows_to_Linux(mm_path))
-    mm_name = mm_name[:-3]
-    image_folder = f"{mm_name}_files"
-    length_to_pixel = 2.05
+    image_folder = f"{mm_name[:-3]}_files"
+
     doc = fitz.open(path_Windows_to_Linux(pdf_path))
     with open(path_Windows_to_Linux(mm_path), encoding='utf-8') as f:
         mm_html_text_backup = f.read()
