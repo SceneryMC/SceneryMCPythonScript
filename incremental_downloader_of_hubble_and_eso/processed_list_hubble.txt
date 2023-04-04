@@ -5161,3 +5161,5 @@ heic2303h
 heic2303b
 heic2303c
 potw2313a
+opo2306a
+potw2314a
