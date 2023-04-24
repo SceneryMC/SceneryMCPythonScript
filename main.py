@@ -56,3 +56,21 @@
 #         if annot.colors['stroke'] == (1.0, 1.0, 0.0):
 #             annot.set_opacity(0.05)
 # doc.save('/mnt/E/学习资料/计算机/参考书/可能会读的书/C++/入门/C++Primer/C++Primer5edCN-tmp.pdf')
+import os
+
+base = r'C:\Users\SceneryMC\Source\Repos\Project2\test1'
+
+for path in [x for x in os.listdir(base) if not x.startswith('log') and x.endswith('.log')]:
+    with open(f"{base}/{path}") as f:
+        content = f.readlines()
+    t = [x.strip(' \n').split(',') for x in content]
+    time = []
+    state = []
+    for x in t:
+        time.append(int(x[0]))
+        state.append(x[2].split('=')[-1])
+    # print(time)
+    # print(state)
+    print(time[-1] - time[0])
+    n, t = state.count('NEW'), state.count('TO')
+    print(len(state), n, t, n / (n + t))
