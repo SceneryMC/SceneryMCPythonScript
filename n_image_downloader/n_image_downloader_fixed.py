@@ -26,8 +26,8 @@ def get_images(serial):
     pattern = re.search(r'<img src="https://i(\d)\.nhentai\.net/galleries/(\d+)/\d+\.(jpg|png|gif)', s)
     server, inner_serial = pattern.group(1), pattern.group(2)
     folder = f"{base_url_pre}{server}{base_url_suf}/{inner_serial}"
-    while True:
-        ls = {int(x.split('.')[0]) for x in os.listdir(address_temp)}
+    while len(dir_ls := os.listdir(address_temp)) != n:
+        ls = {int(x.split('.')[0]) for x in dir_ls}
         ls_download = set(range(1, n+1)) - ls
         print(ls_download)
 
@@ -36,9 +36,6 @@ def get_images(serial):
             p.apply_async(temp_get_image, args=(i, serial, folder, address_temp,))
         p.close()
         p.join()
-
-        if len(os.listdir(address_temp)) == n:
-            break
     print(f'{url}下载完成！')
 
 
