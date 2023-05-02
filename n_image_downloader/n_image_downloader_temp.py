@@ -83,7 +83,7 @@ if __name__ == '__main__':
         for line in f:
             line = [int(x) for x in line.strip().split()]
             if len(line) == 3:
-                temp_get_images(line[0], line[1], line[2])
+                temp_get_images(*line)
 
 
 # view-source:https://nhentai.net/g//1
