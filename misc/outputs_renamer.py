@@ -23,6 +23,7 @@ def rename(src, dst, num_renamed=0):
 
 for root, folders, files in os.walk(outputs_path):
     if not all([x[:-4].isdigit() for x in files]):
+        len_before = len(files)
         print(root)
 
         renamed_index = 0
@@ -34,4 +35,4 @@ for root, folders, files in os.walk(outputs_path):
         #     os.rename(f"{root}/{files[i]}", f"{root}/000{i}.png")
         # for i in range(len(files)):
         #     os.rename(f"{root}/000{i}.png", f"{root}/{i}.png")
-
+        assert len(os.listdir(root)) == len_before
