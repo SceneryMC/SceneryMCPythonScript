@@ -22,7 +22,6 @@ headers = {
                   "Chrome/83.0.4103.97 Safari/537.36",
     # noqa
 }
-proxies = {'http': 'http://127.0.0.1:41091', 'https': 'http://127.0.0.1:41091'}
 
 
 def temp_get_images(serial, n, inner_serial):
@@ -35,12 +34,12 @@ def temp_get_images(serial, n, inner_serial):
     for server in servers:
         for fmt in fmts:
             r = requests.get(f"{base_url_pre}{server}{base_url_suf}/{inner_serial}/1.{fmt}", verify=False,
-                             headers=headers, proxies=proxies, stream=True)
+                             headers=headers, stream=True)
             if int(r.headers['content-length']) > 1024:
                 folder = f"{base_url_pre}{server}{base_url_suf}/{inner_serial}"
                 break
-    while True:
-        ls = [int(x[:x.find('.')]) for x in os.listdir(address_temp)]
+    while len(dir_ls := os.listdir(address_temp)) != n:
+        ls = [int(x[:x.find('.')]) for x in dir_ls]
         ls_download = []
         for i in range(1, n + 1):
             if i not in ls:
@@ -52,9 +51,6 @@ def temp_get_images(serial, n, inner_serial):
             p.apply_async(temp_get_image, args=(i, serial, folder, address_temp,))
         p.close()
         p.join()
-
-        if len(os.listdir(address_temp)) == n:
-            break
     print(f'{serial}下载完成！')
 
 

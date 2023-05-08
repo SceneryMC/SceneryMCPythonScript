@@ -5,37 +5,55 @@ from multiprocessing.dummy import Pool
 import re
 import os
 import time
-
+import json
 
 path = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
 
 
-def get_images(serial):
-    url = f"https://nhentai.net/g/{serial}"
+def get_basic_info(url):
     driver.get(url)
     s = driver.page_source
-    n = int(re.search(r'<span class="name">(\d+)</span></a></span></div><div class="tag-container field-name">', s).group(1))
+
+    artist = re.search(r'<span class="tags"><a href="/artist/([^/]+)/"', s)
+    parodies = re.search('/parody/([^/]+)/', s)
+    return {'artist': artist.group(1) if artist else None,
+            'tags': re.findall(r'"/tag/([^/]+)/"', s),
+            'characters': re.findall(r'"/character/([^/]+)/"', s),
+            'parodies': parodies.group(1) if parodies else None,
+            }, int(
+                re.search(r'<span class="name">(\d+)</span></a></span></div><div class="tag-container field-name">',
+                          s).group(
+                    1))
+
+
+def get_images(serial):
+    url = f"https://nhentai.net/g/{serial}"
+    d, n = get_basic_info(url)
 
     print(f'{url}开始下载！n = {n}')
-    address_temp = rf"{path}\{serial}"
-    if not os.path.exists(address_temp):
-        os.mkdir(address_temp)
+    if download:
+        address_temp = rf"{path}\{serial}"
+        if not os.path.exists(address_temp):
+            os.mkdir(address_temp)
 
-    driver.get(f"{url}/1")
-    s = driver.page_source
-    pattern = re.search(r'<img src="https://i(\d)\.nhentai\.net/galleries/(\d+)/\d+\.(jpg|png|gif)', s)
-    server, inner_serial = pattern.group(1), pattern.group(2)
-    folder = f"{base_url_pre}{server}{base_url_suf}/{inner_serial}"
-    while len(dir_ls := os.listdir(address_temp)) != n:
-        ls = {int(x.split('.')[0]) for x in dir_ls}
-        ls_download = set(range(1, n+1)) - ls
-        print(ls_download)
+        driver.get(f"{url}/1")
+        s = driver.page_source
+        pattern = re.search(r'<img src="https://i(\d)\.nhentai\.net/galleries/(\d+)/\d+\.(jpg|png|gif)', s)
+        server, inner_serial = pattern.group(1), pattern.group(2)
+        folder = f"{base_url_pre}{server}{base_url_suf}/{inner_serial}"
+        while len(dir_ls := os.listdir(address_temp)) != n:
+            ls_download = set(range(1, n + 1)) - {int(x.split('.')[0]) for x in dir_ls}
+            print(ls_download)
 
-        p = Pool()
-        for i in ls_download:
-            p.apply_async(temp_get_image, args=(i, serial, folder, address_temp,))
-        p.close()
-        p.join()
+            p = Pool()
+            for i in ls_download:
+                p.apply_async(temp_get_image, args=(i, serial, folder, address_temp,))
+            p.close()
+            p.join()
+
+    d_all[serial] = d
+    with open("last_n_site.json", 'w') as f:
+        json.dump(d_all, f)
     print(f'{url}下载完成！')
 
 
@@ -46,10 +64,14 @@ if __name__ == '__main__':
     driver = uc.Chrome(options=options)
     driver.get(f"https://nhentai.net/g/400000")
     time.sleep(15)
+    download = False
 
-    with open("n_site.txt", 'r') as f:
+    with open("last_n_site.json") as f:
+        d_all = json.load(f)
+    with open("n_site.txt") as f:
         content = [s.lstrip('#') for s in f.read().split()]
     for s in content:
-        get_images(s)
+        if s not in d_all:
+            get_images(s)
 
     driver.close()
