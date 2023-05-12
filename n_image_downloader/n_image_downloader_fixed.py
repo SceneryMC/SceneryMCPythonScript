@@ -26,7 +26,7 @@ def get_basic_info(url):
                     1))
 
 
-def get_images(serial, download = True):
+def get_images(serial, download):
     url = f"https://nhentai.net/g/{serial}"
     d, n = get_basic_info(url)
 
@@ -51,26 +51,31 @@ def get_images(serial, download = True):
             p.close()
             p.join()
 
-    d_all[serial] = d
+    d_last[serial] = d_all[serial] = d
     with open("last_n_site.json", 'w') as f:
+        json.dump(d_last, f)
+    with open('all_n_site.json', 'w') as f:
         json.dump(d_all, f)
     print(f'{url}下载完成！')
 
 
 if __name__ == '__main__':
+    download = input("是否下载？") != "False"
     options = webdriver.ChromeOptions()
     options.headless = False
     options.add_argument("--window-size=192,108")
     driver = uc.Chrome(options=options)
     driver.get(f"https://nhentai.net/g/400000")
-    time.sleep(15)
+    time.sleep(30)
 
     with open("last_n_site.json") as f:
+        d_last = json.load(f)
+    with open('all_n_site.json') as f:
         d_all = json.load(f)
     with open("n_site.txt") as f:
         content = [s.lstrip('#') for s in f.read().split()]
     for s in content:
-        if s not in d_all:
-            get_images(s, False)
+        if s not in d_last:
+            get_images(s, download)
 
     driver.close()
