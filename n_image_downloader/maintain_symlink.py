@@ -50,6 +50,7 @@ def add_new_symlink():
                     os.makedirs(p)
                 src, dst = rf"{local_path[key]}\{key}", rf"{p}\{key}"
                 if not os.path.exists(dst):
+                    total += 1
                     os.symlink(src, dst)
                     print(rf"NEW {src} to {dst}")
     print(total)

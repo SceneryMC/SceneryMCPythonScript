@@ -36,10 +36,16 @@ def get_images(serial, download):
         if not os.path.exists(address_temp):
             os.mkdir(address_temp)
 
-        driver.get(f"{url}/1")
-        s = driver.page_source
-        pattern = re.search(r'<img src="https://i(\d)\.nhentai\.net/galleries/(\d+)/\d+\.(jpg|png|gif)', s)
-        server, inner_serial = pattern.group(1), pattern.group(2)
+        while True:
+            try:
+                driver.get(f"{url}/1")
+                s = driver.page_source
+                pattern = re.search(r'<img src="https://i(\d)\.nhentai\.net/galleries/(\d+)/\d+\.(jpg|png|gif)', s)
+                server, inner_serial = pattern.group(1), pattern.group(2)
+                break
+            except:
+                time.sleep(5)
+                print("VPN DOWN!")
         folder = f"{base_url_pre}{server}{base_url_suf}/{inner_serial}"
         while len(dir_ls := os.listdir(address_temp)) != n:
             ls_download = set(range(1, n + 1)) - {int(x.split('.')[0]) for x in dir_ls}
