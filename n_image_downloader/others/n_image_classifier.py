@@ -11,7 +11,7 @@ tags_threshold = 0.6
 
 with open(direct_file_path) as f:
     ls = [x.replace('#', '').split() for x in f.readlines() if x != '\n']
-with open('last_n_site.json') as f:
+with open('../last_n_site.json') as f:
     d_all = json.load(f)
 
 folder_list = os.listdir(n_images_path)

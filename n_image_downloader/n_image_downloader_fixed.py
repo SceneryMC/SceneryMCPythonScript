@@ -26,7 +26,7 @@ def get_basic_info(url):
                     1))
 
 
-def get_images(serial):
+def get_images(serial, download = True):
     url = f"https://nhentai.net/g/{serial}"
     d, n = get_basic_info(url)
 
@@ -64,7 +64,6 @@ if __name__ == '__main__':
     driver = uc.Chrome(options=options)
     driver.get(f"https://nhentai.net/g/400000")
     time.sleep(15)
-    download = False
 
     with open("last_n_site.json") as f:
         d_all = json.load(f)
@@ -72,6 +71,6 @@ if __name__ == '__main__':
         content = [s.lstrip('#') for s in f.read().split()]
     for s in content:
         if s not in d_all:
-            get_images(s)
+            get_images(s, False)
 
     driver.close()
