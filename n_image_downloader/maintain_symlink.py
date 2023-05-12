@@ -31,8 +31,11 @@ def check_all_symlink(root_path):
             if os.path.islink(path) and not valid_symlink(path):
                 total += 1
                 os.remove(rf"{base}\{folder}")
-                os.symlink(rf"{local_path[folder]}\{folder}", rf"{base}\{folder}")
-                print(rf"UPDATED {path} to {local_path[folder]}\{folder}")
+                if folder in local_path:
+                    os.symlink(rf"{local_path[folder]}\{folder}", rf"{base}\{folder}")
+                    print(rf"UPDATED {path} to {local_path[folder]}\{folder}")
+                else:
+                    print(rf"DELETED {path}")
     print(total)
 
 
