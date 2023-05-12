@@ -21,16 +21,23 @@ def valid_symlink(path):
 
 
 def check_all_symlink(root_path):
-    for base, folders, _ in os.walk(root_path):
+    total = 0
+    for base, _, files in os.walk(root_path):
+        if artist_path in base:
+            continue
+        folders = os.listdir(base)
         for folder in folders:
             path = rf"{base}\{folder}"
             if os.path.islink(path) and not valid_symlink(path):
+                total += 1
                 os.remove(rf"{base}\{folder}")
                 os.symlink(rf"{local_path[folder]}\{folder}", rf"{base}\{folder}")
-                print(f"UPDATED {path}")
+                print(rf"UPDATED {path} to {local_path[folder]}\{folder}")
+    print(total)
 
 
 def add_new_symlink():
+    total = 0
     for key, value in info.items():
         artist = alias.get(value['artist'], value['artist'])
         for c, ls in classifiers.items():
@@ -42,6 +49,7 @@ def add_new_symlink():
                 if not os.path.exists(dst):
                     os.symlink(src, dst)
                     print(rf"NEW {src} to {dst}")
+    print(total)
 
 
 if __name__ == '__main__':
