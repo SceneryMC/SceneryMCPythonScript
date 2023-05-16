@@ -110,7 +110,7 @@ def get_download_list(downloaded):
 
 
 if __name__ == '__main__':
-    attributes = hubble_attributes if input() == 'hubble' else eso_attributes
+    attributes = hubble_attributes if input("网站：") == 'hubble' else eso_attributes
     with open(f'processed_amount_{attributes["name"]}.txt') as f:
         downloaded = int(f.readline())
 
