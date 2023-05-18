@@ -3,7 +3,7 @@ import json
 
 from path_Windows_to_Linux import *
 from pdf_page_and_annot_linker import t1, generate_t2
-from mm_filelist import filelist, bookxnote_root
+from mm_filelist import filelist, bookxnote_root_windows
 
 # 在IDE中执行python程序，编译器会自动把当前项目的根目录加入到包查找路径中，可以理解为加到PYTHONPATH下，所以直接执行是没有问题的
 # 但是在cmd或者terminal控制台中直接使用python相关命令来执行程序，不会自动将当前项目加入到PYTHONPATH环境变量下，
@@ -21,8 +21,8 @@ for file in filelist.values():
         f.write(content)
 
 
-for root, _, files in os.walk(path_Windows_to_Linux(bookxnote_root)):
-    if os.path.dirname(root) == path_Windows_to_Linux(bookxnote_root):
+for root, _, files in os.walk(path_Windows_to_Linux(bookxnote_root_windows)):
+    if os.path.dirname(root) == path_Windows_to_Linux(bookxnote_root_windows):
         with open(f"{root}/manifest.json", encoding='utf-8') as f:
             j = json.load(f)
         print(j)

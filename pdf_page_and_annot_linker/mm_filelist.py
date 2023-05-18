@@ -52,4 +52,4 @@ filelist = {
                      r"E:\学习资料\计算机\参考书\可能会读的书\Python\进阶\FluentPython\FluentPython2022.pdf", 0.5)
 }
 
-bookxnote_root = r'E:\学习资料\bookxnote\notebooks'
+bookxnote_root_windows = r'E:\学习资料\bookxnote\notebooks'
