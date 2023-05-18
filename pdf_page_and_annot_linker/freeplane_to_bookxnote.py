@@ -6,7 +6,8 @@ import freeplane
 import time
 import re
 import random
-from mm_filelist import filelist
+from mm_filelist import filelist, bookxnote_root
+from path_Windows_to_Linux import *
 
 import lxml
 
@@ -40,6 +41,7 @@ def get_original_text(node):
 
 
 class FreeplaneToBookxnote:
+    freeplane_style = {'重要': "fffb8c00", '极其重要': 'ffe53935', '图片': 'ff0000cc', '代码':'ffcc0099', '': 'ff59c6ff', '总结':'ff00897b'}
     def __init__(self, pdf_path, mm_path, bookxnote_root):
         self.pdf = fitz.open(pdf_path)
         self.mm = freeplane.Mindmap(mm_path)
@@ -63,7 +65,7 @@ class FreeplaneToBookxnote:
         if annot is None:
             extra_json = {
                 "content": get_original_text(node),
-                "linecolor": "ff59c6ff",
+                "linecolor": FreeplaneToBookxnote.freeplane_style[node.style],
             }
         else:
             page, serial = int(annot.group(1)) - 1, int(annot.group(2)) - 1
@@ -108,9 +110,10 @@ class FreeplaneToBookxnote:
 
 
 if __name__ == '__main__':
-    t = FreeplaneToBookxnote('/mnt/E/学习资料/计算机/参考书/可能会读的书/Python/进阶/FluentPython/FluentPython2022.pdf',
-                             '/mnt/E/学习资料/计算机/参考书/可能会读的书/Python/进阶/FluentPython/FluentPython.mm',
-                             "/mnt/E/学习资料/bookxnote/notebooks")
+    mm, pdf, _ = filelist['C++Primer']
+    t = FreeplaneToBookxnote(path_Windows_to_Linux(pdf),
+                             path_Windows_to_Linux(mm),
+                             path_Windows_to_Linux(bookxnote_root))
     j = t.translate()
-    with open('/mnt/E/学习资料/bookxnote/notebooks/FluentPython2022/markups.json', 'w') as f:
+    with open(f'{t.note}/markups.json', 'w') as f:
         json.dump(j, f, ensure_ascii=False)
