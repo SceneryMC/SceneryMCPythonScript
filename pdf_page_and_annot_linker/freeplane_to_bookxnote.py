@@ -106,6 +106,7 @@ class FreeplaneToBookxnote:
         return {"EpubVersion": 2, "filepath": "", "floatingtheme": [], "folded": False, "notelinks": [],
                 "scalingratio": 90, "title": self.pdf_name,
                 "unimportant": [], "markups": self.walk(self.mm.rootnode)['markups'],
+                "maxid": self.maxid,
                 }
 
 
