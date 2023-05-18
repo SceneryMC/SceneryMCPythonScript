@@ -28,4 +28,4 @@ for root, _, files in os.walk(path_Windows_to_Linux(bookxnote_root)):
         print(j)
         j['res'][0]['refpath'] = func_dict[platform](j['res'][0]['refpath'])
         with open(f"{root}/manifest.json", 'w', encoding='utf-8') as f:
-            json.dump(j, f)
+            json.dump(j, f, ensure_ascii=False)
