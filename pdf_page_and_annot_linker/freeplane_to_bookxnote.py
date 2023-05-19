@@ -42,13 +42,13 @@ def get_original_text(node):
 
 class FreeplaneToBookxnote:
     freeplane_style = {'重要': "fffb8c00", '极其重要': 'ffe53935', '图片': 'ff0000cc', '代码':'ffcc0099', '': 'ff59c6ff', '总结':'ff00897b'}
-    def __init__(self, pdf_path, mm_path, bookxnote_root, docid=None):
+    def __init__(self, pdf_path, mm_path, bookxnote_root, docid=0):
         self.pdf = fitz.open(pdf_path)
         self.mm = freeplane.Mindmap(mm_path)
         self.mm_parent = os.path.dirname(mm_path)
         self.pdf_name = os.path.basename(self.pdf.name)[:-4]
         self.note = f"{bookxnote_root}/{self.pdf_name}"
-        self.docid = len(os.listdir(bookxnote_root)) - 2 if not docid else docid
+        self.docid = docid
         self.maxid = 0
 
     def walk(self, node):
@@ -111,11 +111,11 @@ class FreeplaneToBookxnote:
 
 
 if __name__ == '__main__':
-    mm, pdf, _ = filelist['FluentPython']
+    mm, pdf, _ = filelist['CLRS']
     t = FreeplaneToBookxnote(path_Windows_to_Linux(pdf),
                              path_Windows_to_Linux(mm),
                              path_Windows_to_Linux(bookxnote_root_windows),
-                             0,)
+                             )
     j = t.translate()
     with open(f'{t.note}/markups.json', 'w') as f:
         json.dump(j, f, ensure_ascii=False)
