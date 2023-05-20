@@ -13,7 +13,7 @@ import lxml
 
 
 def get_annot_blocks(page, serial, text):
-    output = {"text": text, "length": len(text), "rects":[], "start": 0}
+    output = {"text": text, "length": len(text), "rects":[], "start": serial}
     annot = list(page.annots(types=[fitz.PDF_ANNOT_HIGHLIGHT]))[serial]
     points = annot.vertices
     for i in range(len(points) // 4):
@@ -53,8 +53,9 @@ class FreeplaneToBookxnote:
 
     def walk(self, node):
         node_json = {
-            "data": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),  # "2023-05-16 22:21:24"
+            "date": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),  # "2023-05-16 22:21:24"
             "id": self.maxid,
+            "title": "-",  # 在导出的.md中将 ###### - 替换为 ###
             "type": 7,
             "page": -1,
             "uuid": f"{random.randint(0, 0xffffffffffffffffffffffffffffffff):x}",
@@ -67,6 +68,8 @@ class FreeplaneToBookxnote:
                 "content": get_original_text(node),
                 "linecolor": FreeplaneToBookxnote.freeplane_style[node.style],
             }
+            if node.hyperlink and (page := re.match('execute:_okular --unique -p (\d+)', node.hyperlink)):
+                extra_json["page"] = int(page.group(1)) - 1
         else:
             page, serial = int(annot.group(1)) - 1, int(annot.group(2)) - 1
             extra_json = {
@@ -111,7 +114,7 @@ class FreeplaneToBookxnote:
 
 
 if __name__ == '__main__':
-    mm, pdf, _ = filelist['CLRS']
+    mm, pdf, _ = filelist['C++Primer']
     t = FreeplaneToBookxnote(path_Windows_to_Linux(pdf),
                              path_Windows_to_Linux(mm),
                              path_Windows_to_Linux(bookxnote_root_windows),
