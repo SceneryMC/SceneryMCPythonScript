@@ -11,7 +11,9 @@
 #
 # with open(r"C:\Users\SceneryMC\Source\Repos\assembly\first_window.asm", 'w') as f:
 #     f.writelines(new_lines)
-
+import html
+import json
+import os.path
 
 # import os
 # import shutil
@@ -74,6 +76,3 @@
 #     print(time[-1] - time[0])
 #     n, t = state.count('NEW'), state.count('TO')
 #     print(len(state), n, t, n / (n + t))
-import requests
-
-
