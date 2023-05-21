@@ -74,4 +74,6 @@
 #     print(time[-1] - time[0])
 #     n, t = state.count('NEW'), state.count('TO')
 #     print(len(state), n, t, n / (n + t))
+import requests
+
 

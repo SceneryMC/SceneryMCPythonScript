@@ -42,12 +42,13 @@ def get_original_text(node):
 
 class FreeplaneToBookxnote:
     freeplane_style = {'重要': "fffb8c00", '极其重要': 'ffe53935', '图片': 'ff0000cc', '代码':'ffcc0099', '': 'ff59c6ff', '总结':'ff00897b'}
-    def __init__(self, pdf_path, mm_path, bookxnote_root, docid=0):
+    def __init__(self, pdf_path, mm_path, bookxnote_root, pdf_name=None, docid=0):
+        bookxnote_pdf_name = os.path.basename(pdf_path)[:-4]
         self.pdf = fitz.open(pdf_path)
         self.mm = freeplane.Mindmap(mm_path)
         self.mm_parent = os.path.dirname(mm_path)
-        self.pdf_name = os.path.basename(self.pdf.name)[:-4]
-        self.note = f"{bookxnote_root}/{self.pdf_name}"
+        self.pdf_name = pdf_name if pdf_name is not None else bookxnote_pdf_name
+        self.note = f"{bookxnote_root}/{bookxnote_pdf_name}"
         self.docid = docid
         self.maxid = 0
 
@@ -68,7 +69,8 @@ class FreeplaneToBookxnote:
                 "content": get_original_text(node),
                 "linecolor": FreeplaneToBookxnote.freeplane_style[node.style],
             }
-            if node.hyperlink and (page := re.match('execute:_okular --unique -p (\d+)', node.hyperlink)):
+            if node.hyperlink and (page := re.match('execute:_okular --unique -p (\d+)', node.hyperlink)) \
+                    or (page := re.match('%3D(\d+)%3DOpenActions', node.hyperlink)):
                 extra_json["page"] = int(page.group(1)) - 1
         else:
             page, serial = int(annot.group(1)) - 1, int(annot.group(2)) - 1
@@ -120,5 +122,5 @@ if __name__ == '__main__':
                              path_Windows_to_Linux(bookxnote_root_windows),
                              )
     j = t.translate()
-    with open(f'{t.note}/markups.json', 'w') as f:
+    with open(f'{t.note}/markups.json', 'w', encoding='utf-8') as f:
         json.dump(j, f, ensure_ascii=False)
