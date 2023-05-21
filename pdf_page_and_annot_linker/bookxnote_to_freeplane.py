@@ -36,8 +36,8 @@ def add_detail(node, text):
 
 
 
-def add_a_node(object, old_node):
-    node = old_node.add_child()
+def add_a_node(object, parent_node):
+    node = parent_node.add_child()
     node_type = "ref" if "textblocks" in object else "nonref"
     if style := color_to_style.get(object[color_dict[node_type]], ""):
         node.style = style
@@ -55,14 +55,14 @@ def add_a_node(object, old_node):
     return node
 
 
-def json_to_freeplane(object, node):
+def json_to_freeplane(object, parent_node):
     if isinstance(object, list):
         for item in object:
-            json_to_freeplane(item, node)
+            json_to_freeplane(item, parent_node)
     elif isinstance(object, dict):
-        new_node = add_a_node(object, node)
+        this_node = add_a_node(object, parent_node)
         if 'markups' in object:
-            json_to_freeplane(object['markups'], new_node)
+            json_to_freeplane(object['markups'], this_node)
 
 
 mm = freeplane.Mindmap('/mnt/E/学习资料/计算机/参考书/可能会读的书/C++/入门/C++Primer/C++Primer.mm')
