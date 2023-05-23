@@ -11,9 +11,6 @@
 #
 # with open(r"C:\Users\SceneryMC\Source\Repos\assembly\first_window.asm", 'w') as f:
 #     f.writelines(new_lines)
-import html
-import json
-import os.path
 
 # import os
 # import shutil
@@ -76,3 +73,8 @@ import os.path
 #     print(time[-1] - time[0])
 #     n, t = state.count('NEW'), state.count('TO')
 #     print(len(state), n, t, n / (n + t))
+import chardet
+
+
+with open(r"E:\学习资料\2022-2023第二学期\大数据可视化\项目\MC1\V1\新建 文本文档.txt", 'rb') as f:
+    print(chardet.detect(f.read()))

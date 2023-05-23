@@ -5,7 +5,7 @@ from urllib.parse import quote, unquote
 
 
 songs_per_page = 50
-update = True
+update = False
 
 
 def get_response(encodName, page):
@@ -23,22 +23,25 @@ def get_response(encodName, page):
 def check_an_artist(artist):
     response = json.loads(get_response(quote(artist), 1).text)["data"]
     total = int(response['total'])
+    print(f"{artist}: {total}")
+
     ls = []
     for i in range(2, 1 + total // songs_per_page + int(total % songs_per_page != 0)):
-        ls.extend([(html.unescape(unquote(item['name'])).replace(u'\xa0', ' '), item['musicrid']) for item in response['list']])
+        ls.extend([(html.unescape(unquote(item['name'])).replace(u'\xa0', ' '), item['rid']) for item in response['list']])
         response = json.loads(get_response(quote(artist), i).text)["data"]
-    ls.extend((html.unescape(unquote(item['name'])).replace(u'\xa0', ' '), item['musicrid']) for item in response['list'])
+    ls.extend((html.unescape(unquote(item['name'])).replace(u'\xa0', ' '), item['rid']) for item in response['list'])
+
     with open(f'kuwo_{artist}.json', encoding='utf-8') as f:
         j = json.load(f)
     if new := set(ls) - set(tuple(x) for x in j):
         print(f"新曲目{len(new)}: {new}")
     if update:
         with open(f'kuwo_{artist}.json', 'w', encoding='utf-8') as f:
-            json.dump(ls, f)
+            json.dump(sorted(ls, key=lambda x: -x[1]), f, ensure_ascii=False)
 
 
 artists = ["Ampyx", "CHPTRS", "Vexento", "Dabin", "Lights & Motion", "Marcus Warner", "The Piano Guys",
-           "Thomas Bergerson", "Tony Anderson"] # Jannik and Minecraft
+           "Thomas Bergerson", "Tony Anderson", "TheFatRat", "Alan Walker"] # Jannik and Minecraft
 for artist in artists:
     # with open(f"kuwo_{artist}.json", 'w', encoding='utf-8') as f:
     #     f.write("[]\n")
