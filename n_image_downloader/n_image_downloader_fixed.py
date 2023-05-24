@@ -79,7 +79,7 @@ if __name__ == '__main__':
     with open('all_n_site.json') as f:
         d_all = json.load(f)
     with open("n_site.txt") as f:
-        content = [s.lstrip('#') for s in f.read().split()]
+        content = f.read().replace("\n", ' ').replace("#", ' ').split()
     for s in content:
         if s not in d_last:
             get_images(s, download)
