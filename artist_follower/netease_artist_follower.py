@@ -19,18 +19,19 @@ headers = {
 
 update = True
 for aritst_id, artist_name in artists.items():
+    print(artist_name, end="\t")
     r = requests.get(f"https://music.163.com/artist/album?id={aritst_id}&limit={album_per_page}&offset=0",
                      headers=headers)
     pages = r.text.count("zpgi")
-    result = []
-    for page in range(pages):
+    result = [html.unescape(x) for x in re.findall('<div class="u-cover u-cover-alb3" title="([^"]+)">', r.text)]
+    for page in range(1, pages):
         r = requests.get(f"https://music.163.com/artist/album?id={aritst_id}&limit={album_per_page}&offset={page * album_per_page}",
                          headers=headers)
         result.extend(html.unescape(x) for x in re.findall('<div class="u-cover u-cover-alb3" title="([^"]+)">', r.text))
     with open(f"netease_{artist_name}.json", encoding='utf-8') as f:
         j = json.load(f)
     if new := set(result) - set(j):
-        print(f"新专辑：{new}")
+        print(new)
         if update:
             with open(f"netease_{artist_name}.json", 'w', encoding='utf-8') as f:
                 json.dump(result, f, ensure_ascii=False, indent=True)
