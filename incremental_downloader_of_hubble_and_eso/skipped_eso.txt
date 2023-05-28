@@ -1920,3 +1920,4 @@ https://cdn.eso.org/images/original/potw2310a.tif
 https://cdn.eso.org/images/original/eso1431d.tif
 https://cdn.eso.org/images/original/eso2307a.tif
 https://cdn.eso.org/images/original/eso2307g.tif
+https://cdn.eso.org/images/original/ann23009e.tif
