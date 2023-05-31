@@ -5,19 +5,23 @@ isLinux = platform == "Linux"
 isWindows = platform == 'Windows'
 
 
-def path_Windows_to_Linux(addr, to_Linux=isLinux):
+def path_Windows_to_Linux(path, to_Linux=isLinux):
     if not to_Linux:
-        return addr
-    addr = addr.replace(":", "")
-    addr = addr.replace("\\", "/")
-    return f"/mnt/{addr}"
+        return path
+    path = path.replace(":", "")
+    path = path.replace("\\", "/")
+    return f"/mnt/{path}"
 
 
-def path_Linux_to_Windows(addr, to_Windows=isWindows):
+def path_Linux_to_Windows(path, to_Windows=isWindows):
     if not to_Windows:
-        return addr
-    addr_ls = addr.split('/')
-    return f"{addr_ls[2]}:\\" + '\\'.join(addr_ls[3:])
+        return path
+    path_ls = path.split('/')
+    return f"{path_ls[2]}:\\" + '\\'.join(path_ls[3:])
+
+
+def unmatch_platform(path):
+    return isLinux ^ path.startswith("/mnt")
 
 
 func_dict = {"Linux": path_Windows_to_Linux, "Windows": path_Linux_to_Windows}

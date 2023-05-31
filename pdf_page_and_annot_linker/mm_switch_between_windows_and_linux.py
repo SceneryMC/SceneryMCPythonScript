@@ -26,6 +26,7 @@ for root, _, files in os.walk(path_Windows_to_Linux(bookxnote_root_windows)):
         with open(f"{root}/manifest.json", encoding='utf-8') as f:
             j = json.load(f)
         print(j)
-        j['res'][0]['refpath'] = func_dict[platform](j['res'][0]['refpath'])
-        with open(f"{root}/manifest.json", 'w', encoding='utf-8') as f:
-            json.dump(j, f, ensure_ascii=False)
+        if unmatch_platform(p := j['res'][0]['refpath']):
+            j['res'][0]['refpath'] = func_dict[platform](p)
+            with open(f"{root}/manifest.json", 'w', encoding='utf-8') as f:
+                json.dump(j, f, ensure_ascii=False)
