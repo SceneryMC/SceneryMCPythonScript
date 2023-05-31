@@ -37,5 +37,3 @@ for aritst_id, artist_name in artists.items():
 
     # with open(f"netease_{artist_name}.json", 'w', encoding='utf-8') as f:
     #     f.write("[]\n")
-    # Ampyx	{'Radiant'}
-    # CHPTRS	{'Something More'}
