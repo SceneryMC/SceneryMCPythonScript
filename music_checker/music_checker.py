@@ -3,7 +3,7 @@ import json
 import os
 
 root_paths = [(r'F:\存储\音乐', 'storage'), (r'E:\时间的沉淀\音乐', 'collection')]
-update = False
+update = True
 
 for root_path, name in root_paths:
     total = saved_total = 0
