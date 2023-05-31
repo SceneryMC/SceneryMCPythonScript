@@ -30,11 +30,12 @@ for aritst_id, artist_name in artists.items():
         result.extend(html.unescape(x) for x in re.findall('<div class="u-cover u-cover-alb3" title="([^"]+)">', r.text))
     with open(f"netease_{artist_name}.json", encoding='utf-8') as f:
         j = json.load(f)
-    if new := set(result) - set(j):
-        print(new)
-        if update:
-            with open(f"netease_{artist_name}.json", 'w', encoding='utf-8') as f:
-                json.dump(result, f, ensure_ascii=False, indent=True)
+    if new := set(result) - set(j) and update:
+        with open(f"netease_{artist_name}.json", 'w', encoding='utf-8') as f:
+            json.dump(result, f, ensure_ascii=False, indent=True)
+    print(new)
 
     # with open(f"netease_{artist_name}.json", 'w', encoding='utf-8') as f:
     #     f.write("[]\n")
+    # Ampyx	{'Radiant'}
+    # CHPTRS	{'Something More'}
