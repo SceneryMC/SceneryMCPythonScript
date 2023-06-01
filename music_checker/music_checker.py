@@ -7,7 +7,7 @@ update = True
 
 for root_path, name in root_paths:
     total = saved_total = 0
-    with open(f'{name}_music_saved.json') as f:
+    with open(f'{name}_music_saved.json', encoding='utf-8') as f:
         music_saved_dict = json.load(f)
 
     music_new_dict = {}
@@ -31,8 +31,8 @@ for root_path, name in root_paths:
             music_new_dict[root] = music_ls
 
     if update:
-        with open(f'{name}_music_saved.json', 'w') as f:
-            json.dump(music_new_dict, f)
+        with open(f'{name}_music_saved.json', 'w', encoding='utf-8') as f:
+            json.dump(music_new_dict, f, ensure_ascii=False, indent=True)
 
     print(f"----------------------------------------\n"
           f"{path_Windows_to_Linux(root_path)}：原有{saved_total}，现有{total}\n"
