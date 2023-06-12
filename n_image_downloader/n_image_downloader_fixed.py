@@ -59,9 +59,9 @@ def get_images(serial, download):
 
     d_last[serial] = d_all[serial] = d
     with open("last_n_site.json", 'w') as f:
-        json.dump(d_last, f)
+        json.dump(d_last, f, ensure_ascii=False, indent=True)
     with open('all_n_site.json', 'w') as f:
-        json.dump(d_all, f)
+        json.dump(d_all, f, ensure_ascii=False, indent=True)
     print(f'{url}下载完成！')
 
 
