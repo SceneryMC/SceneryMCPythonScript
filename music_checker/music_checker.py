@@ -21,10 +21,10 @@ for root_path, name in root_paths:
         saved_total += len(music_saved)
         if music != music_saved:
             print(f"{root}:原有{len(music_saved)}，现有{len(music)}")
-            if music - music_saved:
-                print(f"增加：{music - music_saved}")
-            if music_saved - music:
-                print(f"减少：{music_saved - music}")
+            if add := music - music_saved:
+                print(f"增加：{add}")
+            if remove := music_saved - music:
+                print(f"减少：{remove}")
             print("")
 
         if update:
