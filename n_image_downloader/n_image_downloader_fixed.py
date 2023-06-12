@@ -69,8 +69,8 @@ if __name__ == '__main__':
     download = input("是否下载？") != "False"
     options = webdriver.ChromeOptions()
     options.headless = False
-    options.add_argument("--window-size=192,108")
     driver = uc.Chrome(options=options)
+    driver.set_window_size(192, 168)
     driver.get(f"https://nhentai.net/g/400000")
     time.sleep(30)
 
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     with open('all_n_site.json') as f:
         d_all = json.load(f)
     with open("n_site.txt") as f:
-        content = f.read().replace("\n", ' ').replace("#", ' ').split()
+        content = re.findall("(\d{1,6})", f.read())
     for s in content:
         if s not in d_last:
             get_images(s, download)
