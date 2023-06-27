@@ -66,9 +66,11 @@ def add_new_classifiers():
         j = json.load(f)
 
     new_classifiers = {}
+    has_new_classifiers = False
     for key, value in map_classifier_to_folder.items():
         new_classifiers[key] = classifiers[key] - set(os.listdir(f"{sync_path}/{value}"))
-    if new_classifiers:
+        has_new_classifiers = True
+    if has_new_classifiers:
         add_symlink_group(j, new_classifiers)
     add_symlink_group(info, classifiers)
 
