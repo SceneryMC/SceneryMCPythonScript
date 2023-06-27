@@ -1,3 +1,4 @@
+import json
 import os
 from maintain_artist import get_all_exist, artist_path, sync_path, info, alias
 
@@ -47,10 +48,10 @@ def add_a_symlink(artist, c, x, key):
         print(rf"NEW {src} to {dst}")
 
 
-def add_new_symlinks():
-    for key, value in info.items():
+def add_a_symlink_group(d, cl):
+    for key, value in d.items():
         artist = alias.get(value['artist'], value['artist'])
-        for c, ls in classifiers.items():
+        for c, ls in cl.items():
             real_value = value[c]
             if isinstance(real_value, list):
                 matched = ls & set(real_value)
@@ -61,11 +62,17 @@ def add_new_symlinks():
 
 
 def add_new_classifiers():
-    pass
+    with open('all_n_site.json') as f:
+        j = json.load(f)
+
+    new_classifiers = {}
+    for key, value in map_classifier_to_folder.items():
+        new_classifiers[key] = classifiers[key] - set(os.listdir(f"{sync_path}/{value}"))
+    if new_classifiers:
+        add_a_symlink_group(j, new_classifiers)
+    add_a_symlink_group(info, classifiers)
 
 
 if __name__ == '__main__':
     check_all_symlink(sync_path)
-    add_new_symlinks()
-    if input("添加了新的classifier?") == 'true':
-        add_new_classifiers()
+    add_new_classifiers()

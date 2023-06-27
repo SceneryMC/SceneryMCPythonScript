@@ -16,8 +16,8 @@ def get_all_exist(root_path):
     d = {}
     for base, folder, files in os.walk(root_path):
         if not folder:
-            name = base.split('\\')[-1]
-            if name.isdigit() and 1000 < int(name) < 470000:
+            name = base[base.rfind("\\") + 1:]
+            if name.isdigit() and 100 < int(name) < 1000000:
                 d[name] = base[:base.rfind("\\")]
     return d
 
