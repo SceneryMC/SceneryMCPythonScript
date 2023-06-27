@@ -5,8 +5,8 @@ import shutil
 
 
 sync_path = r"F:\存储\其它\SYNC"
-artist_path = rf"{sync_path}\ARTIST"
 tmp_path = r"C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n"
+artist_path = rf"{sync_path}\ARTIST"
 with open('last_n_site.json') as f:
     info = json.load(f)
 with open('artist_alias.json') as f:

@@ -7,8 +7,8 @@ classifiers = {
              'fox-girl', 'yuri', 'full-color', 'cat-girl', 'bdsm', 'demon-girl', },
     'characters': {'cirno', 'flandre-scarlet', 'remilia-scarlet', 'patchouli-knowledge', 'reimu-hakurei', 'sakuya-izayoi'
                    'marisa-kirisame', 'yukari-yakumo', 'sanae-kochiya', 'momiji-inubashiri', 'yuuka-kazami',
-                   'tenshi-hinanai', 'nue-houjuu', 'satori-komeiji', 'madoka-higuchi', 'yuuka-hayase', 'rin-tosaka', },
-    'parodies': {'touhou-project', 'genshin-impact', 'arknights', 'blue-archive', }
+                   'tenshi-hinanai', 'nue-houjuu', 'satori-komeiji', 'madoka-higuchi', 'yuuka-hayase', 'rin-tosaka', 'neeko'},
+    'parodies': {'touhou-project', 'genshin-impact', 'arknights', 'blue-archive', 'league-of-legends'}
 }
 map_classifier_to_folder = {'tags': "TAG", "characters": "CHARACTER", 'parodies': "PARODY"}
 local_path = get_all_exist(artist_path)
@@ -60,6 +60,12 @@ def add_new_symlinks():
                 add_a_symlink(artist, c, real_value, key)
 
 
+def add_new_classifiers():
+    pass
+
+
 if __name__ == '__main__':
     check_all_symlink(sync_path)
     add_new_symlinks()
+    if input("添加了新的classifier?") == 'true':
+        add_new_classifiers()
