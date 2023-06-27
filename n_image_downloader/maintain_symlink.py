@@ -39,7 +39,7 @@ def check_all_symlink(root_path):
                     print(rf"DELETED {path}")
 
 
-def add_a_symlink(artist, c, x, key):
+def add_symlink(artist, c, x, key):
     if not os.path.exists(p := rf"{sync_path}\{map_classifier_to_folder[c]}\{x}\{artist}"):
         os.makedirs(p)
     src, dst = rf"{local_path[key]}\{key}", rf"{p}\{key}"
@@ -48,7 +48,7 @@ def add_a_symlink(artist, c, x, key):
         print(rf"NEW {src} to {dst}")
 
 
-def add_a_symlink_group(d, cl):
+def add_symlink_group(d, cl):
     for key, value in d.items():
         artist = alias.get(value['artist'], value['artist'])
         for c, ls in cl.items():
@@ -56,9 +56,9 @@ def add_a_symlink_group(d, cl):
             if isinstance(real_value, list):
                 matched = ls & set(real_value)
                 for x in matched:
-                    add_a_symlink(artist, c, x, key)
+                    add_symlink(artist, c, x, key)
             elif real_value in ls:
-                add_a_symlink(artist, c, real_value, key)
+                add_symlink(artist, c, real_value, key)
 
 
 def add_new_classifiers():
@@ -69,8 +69,8 @@ def add_new_classifiers():
     for key, value in map_classifier_to_folder.items():
         new_classifiers[key] = classifiers[key] - set(os.listdir(f"{sync_path}/{value}"))
     if new_classifiers:
-        add_a_symlink_group(j, new_classifiers)
-    add_a_symlink_group(info, classifiers)
+        add_symlink_group(j, new_classifiers)
+    add_symlink_group(info, classifiers)
 
 
 if __name__ == '__main__':
