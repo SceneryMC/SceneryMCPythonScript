@@ -3,7 +3,7 @@ import json
 import re
 
 from path_cross_platform import *
-from pdf_page_and_annot_linker import command_template, generate_command
+from pdf_page_and_annot_linker import generate_command
 from mm_filelist import filelist, bookxnote_root_windows
 
 # 在IDE中执行python程序，编译器会自动把当前项目的根目录加入到包查找路径中，可以理解为加到PYTHONPATH下，所以直接执行是没有问题的
@@ -15,7 +15,7 @@ from mm_filelist import filelist, bookxnote_root_windows
 global pdf_path
 def switch_platform(match):
     page_num = match.group(1)
-    return generate_command(pdf_path, page_num)
+    return generate_command(pdf_path, page_num, platform)
 
 
 other_platform = 'Linux' if platform == 'Windows' else 'Windows'
@@ -29,7 +29,6 @@ for file in filelist.values():
 
     with open(pdf_path, 'w', encoding="utf-8") as f:
         f.write(content)
-
 
 for root, _, files in os.walk(path_fit_platform(bookxnote_root_windows)):
     if os.path.dirname(root) == path_fit_platform(bookxnote_root_windows):
