@@ -2,7 +2,10 @@
 # import shutil
 # import random
 # import fitz
-import chardet
+import re
+
+import freeplane
+from lxml import etree, html
 
 # new_lines = []
 # with open(r"C:\Users\SceneryMC\Source\Repos\assembly\first_window.asm") as f:
@@ -70,6 +73,22 @@ import chardet
 #     n, t = state.count('NEW'), state.count('TO')
 #     print(len(state), n, t, n / (n + t))
 
+file = "/mnt/E/学习资料/计算机/参考书/可能会读的书/Python/进阶/FluentPython/FluentPython.mm"
+mm = freeplane.Mindmap(file)._mindmap
+# with open(file) as f:
+#     tree = etree.parse(f, parser=etree.XMLParser(load_dtd=True, no_network=False))
+#     s = etree.tostring(tree.getroot().find('.//map'), encoding='utf-8')
+# with open(file, 'w') as f:
+#     f.write(s.decode('utf-8'))
 
-with open(r"E:\学习资料\2022-2023第二学期\大数据可视化\项目\MC1\V1\新建 文本文档.txt", 'rb') as f:
-    print(chardet.detect(f.read()))
+elements = []
+elements.extend(mm.xpath(".//*[re:match(text(), 'P\\d+-\\d+') and not(@LINK)]", namespaces={"re": "http://exslt.org/regular-expressions"}))
+elements.extend(mm.xpath(".//*[re:match(@TEXT, 'P\\d+-\\d+') and not(@LINK)]", namespaces={"re": "http://exslt.org/regular-expressions"}))
+for element in elements:
+    print(element.get("TEXT"), element.text)
+# for elem in mm.iter():
+#     print(elem.text, elem.get('TEXT'))
+# r = re.search('(P(\\d+)-(\\d+))|(p(\\d+))', "P123-45")
+# print(r.group(1), r.group(4))
+# r = re.search('(P(\\d+)-(\\d+))|(p(\\d+))', "p1238123")
+# print(r.group(1), r.group(4))
