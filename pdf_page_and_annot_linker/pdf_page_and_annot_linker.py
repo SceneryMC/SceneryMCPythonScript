@@ -19,7 +19,7 @@ mat = fitz.Matrix(2, 2)
 ns_re = {"re": "http://exslt.org/regular-expressions"}
 endpoint_regex = '^(P(\\d+)-(\\d+))|(p(\\d+))$'
 acrobat_path = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
-command_template = {"Linux":f'okular --unique -p PAGE_NUM "PDF_PATH"',
+command_template = {"Linux":f'okular --unique -p PAGE_NUM PDF_PATH',
                     "Windows":f'"{acrobat_path}" /A "page=PAGE_NUM=OpenActions" "PDF_PATH"'}
 
 
@@ -47,9 +47,8 @@ def mm_open_as_xml(mm_path: str) -> etree._ElementTree:
     return etree.fromstring(s)
 
 
-def generate_command(pdf_path: str, page_num: int) -> str:
-    return command_template[platform].replace("PAGE_NUM", str(page_num))\
-        .replace("PDF_PATH", pdf_path.replace('"', '\\"'))
+def generate_command(pdf_path: str, page_num: int|str, platform=platform) -> str:
+    return command_template[platform].replace("PAGE_NUM", str(page_num)).replace("PDF_PATH", pdf_path)
 
 class PDFAnnotationLinker:
     def __init__(self, pdf_path: str, mm_path: str, mode: str='text', image_size: float=0.5):

@@ -1,8 +1,9 @@
 import os
 import json
+import re
 
 from path_cross_platform import *
-from pdf_page_and_annot_linker import command_template
+from pdf_page_and_annot_linker import command_template, generate_command
 from mm_filelist import filelist, bookxnote_root_windows
 
 # 在IDE中执行python程序，编译器会自动把当前项目的根目录加入到包查找路径中，可以理解为加到PYTHONPATH下，所以直接执行是没有问题的
@@ -11,12 +12,20 @@ from mm_filelist import filelist, bookxnote_root_windows
 #
 # 解决方法是使用sys.path.append()命令把报警包的所在文件夹路径加入到PYTHONPATH
 
+
+def switch_platform(match):
+
+
+
+other_platform = 'Linux' if platform == 'Windows' else 'Windows'
 for file in filelist.values():
-    with open(path_fit_platform(file[0]), 'r', encoding="utf-8") as f:
+    pdf_path = path_fit_platform(file[0])
+    with open(pdf_path, 'r', encoding="utf-8") as f:
         content = f.read()
-    content = content.replace(t1[not isLinux], t1[isLinux])
-    content = content.replace(t2[not isLinux], t2[isLinux])
-    with open(path_fit_platform(file[0]), 'w', encoding="utf-8") as f:
+    regex = generate_command(pdf_path, '\\d+', other_platform)
+    re.sub(regex, switch_platform, content)
+
+    with open(pdf_path, 'w', encoding="utf-8") as f:
         f.write(content)
 
 
