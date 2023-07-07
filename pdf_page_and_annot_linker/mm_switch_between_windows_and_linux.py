@@ -12,9 +12,10 @@ from mm_filelist import filelist, bookxnote_root_windows
 #
 # 解决方法是使用sys.path.append()命令把报警包的所在文件夹路径加入到PYTHONPATH
 
-
+global pdf_path
 def switch_platform(match):
-
+    page_num = match.group(1)
+    return generate_command(pdf_path, page_num)
 
 
 other_platform = 'Linux' if platform == 'Windows' else 'Windows'
@@ -22,7 +23,8 @@ for file in filelist.values():
     pdf_path = path_fit_platform(file[0])
     with open(pdf_path, 'r', encoding="utf-8") as f:
         content = f.read()
-    regex = generate_command(pdf_path, '\\d+', other_platform)
+
+    regex = generate_command(pdf_path, '(\\d+)', other_platform)
     re.sub(regex, switch_platform, content)
 
     with open(pdf_path, 'w', encoding="utf-8") as f:
