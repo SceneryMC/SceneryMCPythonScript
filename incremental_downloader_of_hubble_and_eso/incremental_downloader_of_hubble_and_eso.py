@@ -63,15 +63,15 @@ def download_image(image, suffix):
     start, end, step = 0, image_size, 8 * 1024 ** 2
     image_segment = [(start, min(start+step, end)-1) for start in range(0, end, step)]
     p = Pool()
-    for i in image_segment:
-        p.apply_async(download_image_thread, args=(image, suffix, i))
+    for segment in image_segment:
+        p.apply_async(download_image_thread, args=(image, suffix, segment))
     p.close()
     p.join()
     return True
 
 
-def download_image_thread(image, suffix, i):
-    headers = {"range": f"bytes={i[0]}-{i[1]}"}
+def download_image_thread(image, suffix, segment):
+    headers = {"range": f"bytes={segment[0]}-{segment[1]}"}
     print(headers)
     while True:
         try:
@@ -81,7 +81,7 @@ def download_image_thread(image, suffix, i):
             print("TOO FAST!")
             time.sleep(5)
     with open(path_fit_platform(rf'G:\收藏\图片\{attributes["folder"]}\{image}.{suffix}'), 'rb+') as f:
-        f.seek(i[0])
+        f.seek(segment[0])
         for chunk in r.iter_content(chunk_size=64 * 1024):
             if chunk:
                 f.write(chunk)
