@@ -52,6 +52,8 @@ class FreeplaneToBookxnote:
         self.docid = docid
         self.maxid = 0
 
+        os.makedirs(f"{self.note}/imgfiles", exist_ok=True)
+
     def walk(self, node):
         node_json = {
             "date": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),  # "2023-05-16 22:21:24"
