@@ -38,12 +38,12 @@ for file in filelist.values():
         with open(mm_path, 'w', encoding="utf-8") as f:
             f.write(new_content)
 
-# for root, _, files in os.walk(path_fit_platform(bookxnote_root_windows)):
-#     if os.path.dirname(root) == path_fit_platform(bookxnote_root_windows):
-#         with open(f"{root}/manifest.json", encoding='utf-8') as f:
-#             j = json.load(f)
-#         print(j)
-#         if platform_not_match(p := j['res'][0]['refpath']):
-#             j['res'][0]['refpath'] = func_dict[platform](p)
-#             with open(f"{root}/manifest.json", 'w', encoding='utf-8') as f:
-#                 json.dump(j, f, ensure_ascii=False)
+for root, _, files in os.walk(path_fit_platform(bookxnote_root_windows)):
+    if os.path.dirname(root) == path_fit_platform(bookxnote_root_windows):
+        with open(f"{root}/manifest.json", encoding='utf-8') as f:
+            j = json.load(f)
+        print(j)
+        if platform_not_match(p := j['res'][0]['refpath']):
+            j['res'][0]['refpath'] = func_dict[platform](p)
+            with open(f"{root}/manifest.json", 'w', encoding='utf-8') as f:
+                json.dump(j, f, ensure_ascii=False)
