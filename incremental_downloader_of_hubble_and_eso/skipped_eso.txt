@@ -1923,3 +1923,9 @@ https://cdn.eso.org/images/original/eso2307g.tif
 https://cdn.eso.org/images/original/ann23009e.tif
 https://cdn.eso.org/images/original/dsc_2970-final.tif
 https://cdn.eso.org/images/original/dsc_2983-final.tif
+https://cdn.eso.org/images/original/eso2309b.tif
+https://cdn.eso.org/images/original/eso2309a.tif
+https://cdn.eso.org/images/original/eso2309d.tif
+https://cdn.eso.org/images/original/elt360-seismic-isolators.tif
+https://cdn.eso.org/images/original/elt360-transfer-ring.tif
+https://cdn.eso.org/images/original/elt360-entrance-02.tif

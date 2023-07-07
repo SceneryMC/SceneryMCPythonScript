@@ -12,6 +12,7 @@ eso_attributes = {'folder': 'ESO', 'name': 'eso',
                   'source': 'https://cdn.eso.org/images/original',
                   'suffix': "https://www.eso.org/public/images",
                   'basename': "https://www.eso.org/public/images/list"}
+attribute_map = {"eso": eso_attributes, "hubble": hubble_attributes}
 
 
 def get_image_urls(url):
@@ -110,7 +111,7 @@ def get_download_list(downloaded):
 
 
 if __name__ == '__main__':
-    attributes = hubble_attributes if input("网站：") == 'hubble' else eso_attributes
+    attributes = attribute_map[input("网站：")]
     with open(f'processed_amount_{attributes["name"]}.txt') as f:
         downloaded = int(f.readline())
 
