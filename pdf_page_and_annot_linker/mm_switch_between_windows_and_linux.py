@@ -1,6 +1,7 @@
 import os
 import json
 import re
+import urllib.request
 
 from path_cross_platform import *
 from pdf_page_and_annot_linker import generate_command
@@ -15,27 +16,34 @@ from mm_filelist import filelist, bookxnote_root_windows
 global pdf_path
 def switch_platform(match):
     page_num = match.group(1)
-    return generate_command(pdf_path, page_num, platform)
+    command = generate_command(pdf_path, page_num, platform)
+    if platform == "Windows":
+        command = urllib.request.quote(command)
+    return command
 
 
 other_platform = 'Linux' if platform == 'Windows' else 'Windows'
 for file in filelist.values():
-    pdf_path = path_fit_platform(file[0])
-    with open(pdf_path, 'r', encoding="utf-8") as f:
+    mm_path, pdf_path = path_fit_platform(file[0]), path_fit_platform(file[1])
+    with open(mm_path, 'r', encoding="utf-8") as f:
         content = f.read()
 
-    regex = generate_command(pdf_path, '(\\d+)', other_platform)
-    re.sub(regex, switch_platform, content)
+    regex = generate_command(pdf_path, "PAGE_NUM", other_platform)
+    if other_platform == 'Windows':
+        regex = urllib.request.quote(regex)
+    regex = re.escape(regex).replace("PAGE_NUM", '(\\d+)')
+    new_content = re.sub(regex, switch_platform, content)
 
-    with open(pdf_path, 'w', encoding="utf-8") as f:
-        f.write(content)
+    if new_content != content:
+        with open(mm_path, 'w', encoding="utf-8") as f:
+            f.write(new_content)
 
-for root, _, files in os.walk(path_fit_platform(bookxnote_root_windows)):
-    if os.path.dirname(root) == path_fit_platform(bookxnote_root_windows):
-        with open(f"{root}/manifest.json", encoding='utf-8') as f:
-            j = json.load(f)
-        print(j)
-        if platform_not_match(p := j['res'][0]['refpath']):
-            j['res'][0]['refpath'] = func_dict[platform](p)
-            with open(f"{root}/manifest.json", 'w', encoding='utf-8') as f:
-                json.dump(j, f, ensure_ascii=False)
+# for root, _, files in os.walk(path_fit_platform(bookxnote_root_windows)):
+#     if os.path.dirname(root) == path_fit_platform(bookxnote_root_windows):
+#         with open(f"{root}/manifest.json", encoding='utf-8') as f:
+#             j = json.load(f)
+#         print(j)
+#         if platform_not_match(p := j['res'][0]['refpath']):
+#             j['res'][0]['refpath'] = func_dict[platform](p)
+#             with open(f"{root}/manifest.json", 'w', encoding='utf-8') as f:
+#                 json.dump(j, f, ensure_ascii=False)

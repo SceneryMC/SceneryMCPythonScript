@@ -4,14 +4,14 @@ import platform
 platform = platform.system()
 
 
-def deduce_old_path_sep(path: str) -> str:
-    return '/' if path.startswith('/mnt') else '\\'
+def deduce_old_platform(path: str) -> str:
+    return 'Linux' if path.startswith('/mnt') else 'Windows'
 
 
-def path_fit_platform(path: str) -> str:
-    old_path_sep = deduce_old_path_sep(path)
-    if os.sep != old_path_sep:
-        return path_Linux_to_Windows(path) if os.sep == '\\' else path_Windows_to_Linux(path)
+def path_fit_platform(path: str, dst_platform: str = platform) -> str:
+    old_platform = deduce_old_platform(path)
+    if dst_platform != old_platform:
+        return path_Linux_to_Windows(path) if dst_platform == 'Windows' else path_Windows_to_Linux(path)
     return path
 
 
