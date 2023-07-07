@@ -1,12 +1,12 @@
 import re
 import os
 from mm_filelist import filelist
-from path_Windows_to_Linux import path_Windows_to_Linux
+from path_cross_platform import path_fit_platform
 
 
 for mm, _, _ in filelist.values():
-    mm = path_Windows_to_Linux(mm)
-    with open(mm) as f:
+    mm = path_fit_platform(mm)
+    with open(mm, encoding='utf-8') as f:
         content = f.read()
     used_images = re.findall(r"_files/(.*?\.png)", content)
 

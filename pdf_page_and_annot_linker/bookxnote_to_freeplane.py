@@ -4,9 +4,9 @@ import freeplane
 import lxml.etree as ET
 import os
 
-from path_Windows_to_Linux import path_Windows_to_Linux, isLinux
+from path_cross_platform import path_fit_platform
 from mm_filelist import *
-from pdf_page_and_annot_linker import t1, generate_t2
+from pdf_page_and_annot_linker import generate_command
 
 
 def add_text(node, text):
@@ -45,7 +45,8 @@ class BooxnoteToFreeplane:
         self.mm_path = mm_path
         self.pdf_name = pdf_name if pdf_name is not None else bookxnote_pdf_name
         self.json_parent_path = json_parent_path
-        self.t2 = generate_t2(pdf_path)
+
+        os.makedirs(f"{os.path.dirname(self.mm_path)}/{self.pdf_name}_files", exist_ok=True)
 
     def add_a_node(self, object, parent_node):
         node = parent_node.add_child()
@@ -54,7 +55,7 @@ class BooxnoteToFreeplane:
                 object[BooxnoteToFreeplane.color_dict[node_type]], ""):
             node.style = style
         if (page := object['page']) != -1:
-            node.hyperlink = f"execute:{t1[isLinux]}{page}{self.t2[isLinux]}"
+            node.hyperlink = f"execute:_{generate_command(self.pdf_path, page)}"
         add_text(node, object[BooxnoteToFreeplane.text_dict[node_type]])
         if node_type == "ref" and "content" in object:
             add_detail(node, object["content"])
@@ -88,8 +89,8 @@ class BooxnoteToFreeplane:
 
 if __name__ == '__main__':
     mm, pdf, _ = filelist['C++Primer']
-    t = BooxnoteToFreeplane(path_Windows_to_Linux(pdf),
-                            path_Windows_to_Linux(r"E:\学习资料\2022-2023第二学期\大数据可视化\作业\2\test.mm"),
-                            path_Windows_to_Linux(r"E:\学习资料\bookxnote\notebooks\C++Primer5edCN"),
+    t = BooxnoteToFreeplane(path_fit_platform(pdf),
+                            path_fit_platform('/mnt/E/学习资料/bookxnote/test.mm'),
+                            path_fit_platform(r"E:\学习资料\bookxnote\notebooks\C++Primer5edCN"),
                             "C++Primer")
     t.translate()

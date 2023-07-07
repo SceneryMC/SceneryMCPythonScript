@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 from collections import Counter
-from path_Windows_to_Linux import *
+from path_cross_platform import *
 
 direct_file_path = path_Windows_to_Linux(r'C:\Users\SceneryMC\PycharmProjects\PythonScript\n_image_downloader\n_site.txt')
 n_images_path = path_Windows_to_Linux(r'F:\存储\其它\SYNC\等待分类\新建文件夹')

@@ -2,7 +2,7 @@ import re
 import time
 import requests
 from multiprocessing.dummy import Pool
-from path_Windows_to_Linux import *
+from path_cross_platform import *
 
 hubble_attributes = {'folder': 'Hubble', 'name': 'hubble',
                      'source': 'https://esahubble.org/media/archives/images/original',
@@ -57,7 +57,7 @@ def download_image(image, suffix):
             f.write(f"{attributes['source']}/{image}.{suffix}\n")
         return False
 
-    with open(path_Windows_to_Linux(rf'G:\收藏\图片\{attributes["folder"]}\{image}.{suffix}'), "wb") as f:
+    with open(path_fit_platform(rf'G:\收藏\图片\{attributes["folder"]}\{image}.{suffix}'), "wb") as f:
         pass
     start, end, step = 0, image_size, 8 * 1024 ** 2
     image_segment = [(start, min(start+step, end)-1) for start in range(0, end, step)]
@@ -79,7 +79,7 @@ def download_image_thread(image, suffix, i):
         except requests.exceptions.ConnectionError:
             print("TOO FAST!")
             time.sleep(5)
-    with open(path_Windows_to_Linux(rf'G:\收藏\图片\{attributes["folder"]}\{image}.{suffix}'), 'rb+') as f:
+    with open(path_fit_platform(rf'G:\收藏\图片\{attributes["folder"]}\{image}.{suffix}'), 'rb+') as f:
         f.seek(i[0])
         for chunk in r.iter_content(chunk_size=64 * 1024):
             if chunk:
