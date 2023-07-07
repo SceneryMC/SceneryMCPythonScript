@@ -1,8 +1,8 @@
 import os
-from path_Windows_to_Linux import *
+from path_cross_platform import path_fit_platform
 
 
-outputs_path = path_Windows_to_Linux(r"F:\存储\其它\outputs")
+outputs_path = path_fit_platform(r"F:\存储\其它\outputs")
 
 
 def rename(src, dst, num_renamed=0):

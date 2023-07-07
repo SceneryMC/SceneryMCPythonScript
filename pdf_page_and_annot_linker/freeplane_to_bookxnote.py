@@ -7,7 +7,7 @@ import time
 import re
 import random
 from mm_filelist import filelist, bookxnote_root_windows
-from path_Windows_to_Linux import *
+from path_cross_platform import *
 
 import lxml
 
@@ -117,9 +117,9 @@ class FreeplaneToBookxnote:
 
 if __name__ == '__main__':
     mm, pdf, _ = filelist['C++Primer']
-    t = FreeplaneToBookxnote(path_Windows_to_Linux(pdf),
-                             path_Windows_to_Linux(mm),
-                             path_Windows_to_Linux(bookxnote_root_windows),
+    t = FreeplaneToBookxnote(path_fit_platform(pdf),
+                             path_fit_platform(mm),
+                             path_fit_platform(bookxnote_root_windows),
                              )
     j = t.translate()
     with open(f'{t.note}/markups.json', 'w', encoding='utf-8') as f:
