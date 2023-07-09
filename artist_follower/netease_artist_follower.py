@@ -63,4 +63,5 @@ def merge():
 
 if __name__ == '__main__':
     get_newest_info()
-    merge()
+    if input("更新") == 'y':
+        merge()
