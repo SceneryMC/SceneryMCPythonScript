@@ -92,3 +92,10 @@ from lxml import etree, html
 # print(r.group(1), r.group(4))
 # r = re.search('(P(\\d+)-(\\d+))|(p(\\d+))', "p1238123")
 # print(r.group(1), r.group(4))
+
+# result = []
+# for root, folders, files in os.walk(r"F:\存储\其它\SYNC\ARTIST\0"):
+#     if not files and folders:
+#         result.append((os.path.basename(root), len(folders)))
+# result.sort(key=lambda x:x[1], reverse=True)
+# print(result)

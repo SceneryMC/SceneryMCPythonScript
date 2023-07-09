@@ -2,23 +2,24 @@ import os
 import json
 import re
 import shutil
+from n_image_downloader_fixed import tmp_path, last_log, all_log
 
 
 sync_path = r"F:\存储\其它\SYNC"
-tmp_path = r"C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n"
 artist_path = rf"{sync_path}\ARTIST"
-with open('last_n_site.json') as f:
+artist_alias = 'artist_alias.json'
+with open(last_log) as f:
     info = json.load(f)
-with open('artist_alias.json') as f:
+with open(artist_alias) as f:
     alias = json.load(f)
 
 def get_all_exist(root_path):
     d = {}
     for base, folder, files in os.walk(root_path):
         if not folder:
-            name = base[base.rfind("\\") + 1:]
+            name = os.path.basename(base)
             if name.isdigit() and 100 < int(name) < 1000000:
-                d[name] = base[:base.rfind("\\")]
+                d[name] = os.path.dirname(base)
     return d
 
 

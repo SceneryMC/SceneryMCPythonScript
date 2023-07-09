@@ -8,8 +8,8 @@ import time
 import json
 
 global driver, d_last, d_all
-path = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
-test_url = f"https://nhentai.net/g/400000"
+tmp_path = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
+test_url = "https://nhentai.net/g/400000"
 last_log = 'last_n_site.json'
 all_log = 'all_n_site.json'
 download_list_file = 'n_site.txt'
@@ -28,19 +28,20 @@ def get_basic_info(url):
             }, int(
                 re.search(r'<span class="name">(\d+)</span></a></span></div><div class="tag-container field-name">',
                           src).group(
-                    1))
+                    1)), "/language/chinese/" in src
+
 
 
 def generate_url(work):
     return f"https://nhentai.net/g/{work}"
 
 
-def visit_work(work, download):
+def visit_work(work, download, Chinese_only):
     url = generate_url(work)
-    d, n = get_basic_info(url)
+    d, n, isChinese = get_basic_info(url)
     print(f'{url}: n = {n}')
 
-    if download:
+    if download and (not Chinese_only or isChinese):
         download_images(work, n)
 
     d_last[work] = d_all[work] = d
@@ -49,7 +50,7 @@ def visit_work(work, download):
 
 
 def download_images(work, n):
-    address_temp = rf"{path}\{work}"
+    address_temp = rf"{tmp_path}\{work}"
     if not os.path.exists(address_temp):
         os.mkdir(address_temp)
 
@@ -100,14 +101,17 @@ def load_log():
         d_all = json.load(f)
 
 
-if __name__ == '__main__':
-    init_driver()
-    load_log()
-
+def process_requests(allow_duplicate):
     with open(download_list_file) as f:
         content = re.findall("(\d{1,6})", f.read())
     for s in content:
-        if s not in d_last:
-            visit_work(s, True)
+        if s not in d_last and (allow_duplicate or s not in d_all):
+            visit_work(s, True, False)
+
+
+if __name__ == '__main__':
+    init_driver()
+    load_log()
+    process_requests(False)
 
     driver.close()
