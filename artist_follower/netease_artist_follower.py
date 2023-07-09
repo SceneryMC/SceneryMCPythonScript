@@ -16,24 +16,51 @@ headers = {
     }
 
 
+def generate_tmp():
+    d = {}
+    for artist_name in artists.values():
+        d[artist_name] = []
+    return d
 
-update = True
-for aritst_id, artist_name in artists.items():
-    print(artist_name, end="\t")
-    r = requests.get(f"https://music.163.com/artist/album?id={aritst_id}&limit={album_per_page}&offset=0",
-                     headers=headers)
-    pages = r.text.count("zpgi")
-    result = [html.unescape(x) for x in re.findall('<div class="u-cover u-cover-alb3" title="([^"]+)">', r.text)]
-    for page in range(1, pages):
-        r = requests.get(f"https://music.163.com/artist/album?id={aritst_id}&limit={album_per_page}&offset={page * album_per_page}",
+
+def get_newest_info():
+    with open('netease_artist_works.json', encoding='utf-8') as f:
+        artist_works = json.load(f)
+    artist_works_tmp = generate_tmp()
+
+    for aritst_id, artist_name in artists.items():
+        print(artist_name, end="\t")
+        r = requests.get(f"https://music.163.com/artist/album?id={aritst_id}&limit={album_per_page}&offset=0",
                          headers=headers)
-        result.extend(html.unescape(x) for x in re.findall('<div class="u-cover u-cover-alb3" title="([^"]+)">', r.text))
-    with open(f"netease_{artist_name}.json", encoding='utf-8') as f:
-        j = json.load(f)
-    if (new := set(result) - set(j)) and update:
-        with open(f"netease_{artist_name}.json", 'w', encoding='utf-8') as f:
-            json.dump(result, f, ensure_ascii=False, indent=True)
-    print(new)
+        pages = r.text.count("zpgi")
+        result = [html.unescape(x) for x in re.findall('<div class="u-cover u-cover-alb3" title="([^"]+)">', r.text)]
+        for page in range(1, pages):
+            r = requests.get(
+                f"https://music.163.com/artist/album?id={aritst_id}&limit={album_per_page}&offset={page * album_per_page}",
+                headers=headers)
+            result.extend(
+                html.unescape(x) for x in re.findall('<div class="u-cover u-cover-alb3" title="([^"]+)">', r.text))
+        new = list(set(result) - set(artist_works[artist_name]))
+        artist_works_tmp[artist_name] = new
+        print(new)
 
-    # with open(f"netease_{artist_name}.json", 'w', encoding='utf-8') as f:
-    #     f.write("[]\n")
+    with open('netease_artist_works_tmp.json', 'w', encoding='utf-8') as f:
+        json.dump(artist_works_tmp, f, ensure_ascii=False, indent=True)
+
+
+def merge():
+    with open('netease_artist_works.json', encoding='utf-8') as f:
+        artist_works = json.load(f)
+    with open('netease_artist_works_tmp.json', encoding='utf-8') as f:
+        artist_works_tmp = json.load(f)
+
+    for artist_name in artist_works:
+        artist_works[artist_name].extend(artist_works_tmp[artist_name])
+
+    with open('netease_artist_works.json', 'w', encoding='utf-8') as f:
+        json.dump(artist_works, f, ensure_ascii=False, indent=True)
+
+
+if __name__ == '__main__':
+    get_newest_info()
+    merge()
