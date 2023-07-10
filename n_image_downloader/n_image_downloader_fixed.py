@@ -31,7 +31,6 @@ def get_basic_info(url):
                     1)), "/language/chinese/" in src
 
 
-
 def generate_url(work):
     return f"https://nhentai.net/g/{work}"
 
@@ -43,9 +42,9 @@ def visit_work(work, download, Chinese_only):
 
     if download and (not Chinese_only or isChinese):
         download_images(work, n)
+        d_last[work] = d_all[work] = d
+        save_log()
 
-    d_last[work] = d_all[work] = d
-    save_log()
     print(f'{url}完成！')
 
 
@@ -106,7 +105,7 @@ def process_requests(allow_duplicate):
         content = re.findall("(\d{1,6})", f.read())
     for s in content:
         if s not in d_last and (allow_duplicate or s not in d_all):
-            visit_work(s, True, False)
+            visit_work(s, True, True)
 
 
 if __name__ == '__main__':

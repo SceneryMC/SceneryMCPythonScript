@@ -2,7 +2,7 @@ import os
 import json
 import re
 import shutil
-from n_image_downloader_fixed import tmp_path, last_log, all_log
+from n_image_downloader_fixed import tmp_path, last_log
 
 
 sync_path = r"F:\存储\其它\SYNC"
