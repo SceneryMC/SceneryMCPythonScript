@@ -1,7 +1,7 @@
 import json
 import os
 from maintain_artist import get_all_exist, artist_path, sync_path, info, alias
-
+from n_image_downloader_fixed import all_log
 
 classifiers = {
     'tags': {'time-stop', 'mind-control', 'mind-break', 'exhibitionism', 'bondage', 'tentacles', 'orgasm-denial',
@@ -62,7 +62,7 @@ def add_symlink_group(d, cl):
 
 
 def add_new_classifiers():
-    with open('all_n_site.json') as f:
+    with open(all_log) as f:
         j = json.load(f)
 
     new_classifiers = {}
