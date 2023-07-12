@@ -75,11 +75,10 @@ def selected_artist():
 def init_driver():
     global driver
     options = webdriver.ChromeOptions()
-    options.headless = False
     driver = uc.Chrome(options=options)
     driver.set_window_size(192, 168)
     driver.get(test_url)
-    time.sleep(30)
+    time.sleep(90)
 
 
 if __name__ == '__main__':

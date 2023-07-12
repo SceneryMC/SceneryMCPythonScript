@@ -11,6 +11,7 @@ s_diff = s2 - s1
 print(s_diff)
 for w in s_diff:
     del j[w]
+    print(f"{w} deleted")
 with open('all_n_site.json', 'w') as f:
     json.dump(j, f, ensure_ascii=False, indent=True)
 
@@ -20,6 +21,6 @@ for w in s_diff:
     try:
         del j[w]
     except:
-        print(w)
+        print(f"FAILED {w}")
 with open('last_n_site.json', 'w') as f:
     json.dump(j, f, ensure_ascii=False, indent=True)
