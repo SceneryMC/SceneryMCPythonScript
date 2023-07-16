@@ -88,9 +88,9 @@ class BooxnoteToFreeplane:
 
 
 if __name__ == '__main__':
-    mm, pdf, _ = filelist['C++Primer']
+    mm, pdf, _ = filelist['Java核心技术卷1']
     t = BooxnoteToFreeplane(path_fit_platform(pdf),
                             path_fit_platform('/mnt/E/学习资料/bookxnote/test.mm'),
-                            path_fit_platform(r"E:\学习资料\bookxnote\notebooks\C++Primer5edCN"),
-                            "C++Primer")
+                            path_fit_platform(r"E:\学习资料\bookxnote\notebooks\Java核心技术·卷I12ed"),
+                            "Java核心技术·卷I12ed")
     t.translate()
