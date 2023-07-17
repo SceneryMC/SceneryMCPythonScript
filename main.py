@@ -9,6 +9,8 @@ import re
 import freeplane
 from lxml import etree, html
 
+from path_cross_platform import path_fit_platform
+
 # new_lines = []
 # with open(r"C:\Users\SceneryMC\Source\Repos\assembly\first_window.asm") as f:
 #     lines = f.readlines()
@@ -100,3 +102,8 @@ from lxml import etree, html
 #         result.append((os.path.basename(root), len(folders)))
 # result.sort(key=lambda x:x[1], reverse=True)
 # print(result)
+
+# with open(path_fit_platform(r"E:\学习资料\bookxnote\notebooks\Java核心技术·卷I12ed\markups.json"), encoding='utf-8') as f:
+#     s = f.read()
+# ls = re.findall('"(fillcolor|linecolor)": "(\w{8})"', s)
+# print([x[1] for x in ls])

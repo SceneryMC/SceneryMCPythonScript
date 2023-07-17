@@ -67,7 +67,7 @@ def default_artist():
     s |= set(os.listdir(rf"{artist_path}\6"))
     with open(artist_alias) as f:
         alias = json.load(f)
-    s = s.union(set(alias.keys()))
+    s |= set(alias.keys())
 
     return s
 
