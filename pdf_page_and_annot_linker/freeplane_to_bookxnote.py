@@ -1,15 +1,14 @@
 import json
-import os
 import shutil
 import fitz
 import freeplane
 import time
 import re
 import random
+import lxml
+from pdf_page_and_annot_linker import command_template, generate_command
 from mm_filelist import filelist, bookxnote_root_windows
 from path_cross_platform import *
-
-import lxml
 
 
 def get_annot_blocks(page, serial, text):
@@ -41,7 +40,7 @@ def get_original_text(node):
 
 
 class FreeplaneToBookxnote:
-    freeplane_style = {'重要': "fffb8c00", '极其重要': 'ffe53935', '图片': 'ff0000cc', '代码':'ffcc0099', '': 'ff59c6ff', '总结':'ff00897b'}
+    freeplane_style = {'重要': "fffb8c00", '极其重要': 'ffe53935', '图片': 'ff0000cc', '代码':'ffcc0099', '': 'fffeeb73', '总结':'ff00897b'}
     def __init__(self, pdf_path, mm_path, bookxnote_root, pdf_name=None, docid=0):
         bookxnote_pdf_name = os.path.basename(pdf_path)[:-4]
         self.pdf = fitz.open(pdf_path)
@@ -51,6 +50,7 @@ class FreeplaneToBookxnote:
         self.note = f"{bookxnote_root}/{bookxnote_pdf_name}"
         self.docid = docid
         self.maxid = 0
+        self.regex = re.escape(command_template[platform].replace("PDF_PATH", pdf_path)).replace("PAGE_NUM", r"(\d+)")
 
         os.makedirs(f"{self.note}/imgfiles", exist_ok=True)
 
@@ -71,9 +71,9 @@ class FreeplaneToBookxnote:
                 "content": get_original_text(node),
                 "linecolor": FreeplaneToBookxnote.freeplane_style[node.style],
             }
-            if node.hyperlink and (page := re.match('execute:_okular --unique -p (\d+)', node.hyperlink)) \
-                    or (page := re.match('%3D(\d+)%3DOpenActions', node.hyperlink)):
+            if node.hyperlink and (page := re.search(self.regex, node.hyperlink)):
                 extra_json["page"] = int(page.group(1)) - 1
+                extra_json["type"] = 5
         else:
             page, serial = int(annot.group(1)) - 1, int(annot.group(2)) - 1
             extra_json = {
@@ -112,15 +112,15 @@ class FreeplaneToBookxnote:
     def translate(self):
         tmp = {"EpubVersion": 2, "filepath": "", "floatingtheme": [], "folded": False, "notelinks": [],
                "scalingratio": 90, "title": self.pdf_name, "unimportant": [],
-               "markups": self.walk(self.mm.rootnode)['markups'], 'maxid': self.maxid}
+               "markups": self.walk(self.mm.rootnode)['markups'], 'maxid': self.maxid}  # self.walk(self.mm.rootnode)
         print(self.maxid)
         return tmp
 
 
 if __name__ == '__main__':
-    mm, pdf, _ = filelist['C++Primer']
+    mm, pdf, _ = filelist['Java核心技术卷1']
     t = FreeplaneToBookxnote(path_fit_platform(pdf),
-                             path_fit_platform(mm),
+                             path_fit_platform(r'E:\学习资料\bookxnote\test.mm'),
                              path_fit_platform(bookxnote_root_windows),
                              )
     j = t.translate()

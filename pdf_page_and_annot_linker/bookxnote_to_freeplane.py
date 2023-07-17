@@ -1,7 +1,7 @@
 import json
 import shutil
 import freeplane
-import lxml.etree as ET
+import lxml.etree, lxml.html
 import os
 
 from path_cross_platform import path_fit_platform
@@ -10,24 +10,25 @@ from pdf_page_and_annot_linker import generate_command
 
 
 def add_text(node, text):
-    if '<body>' not in text:
-        node.plaintext = text
+    if '<body' not in text:
+        node.plaintext = text.replace('\n', '&#xa;')
     else:
-        _element = ET.Element("richcontent", TYPE='NODE')
-        _html = ET.SubElement(_element, "html")
-        _html.append(ET.XML(text))
+        _element = lxml.etree.Element("richcontent", TYPE='NODE')
+        _html = lxml.etree.SubElement(_element, "html")
+        _html.append(lxml.etree.fromstring(text))
         node._node.append(_element)
 
 
 def add_detail(node, text):
-    _element = ET.Element("richcontent", TYPE='DETAILS')
-    _html = ET.SubElement(_element, "html")
-    if '<body>' not in text:
-        _body = ET.SubElement(_html, "body")
-        _p = ET.SubElement(_body, "p")
-        _p.text = text
+    _element = lxml.etree.Element("richcontent", TYPE='DETAILS')
+    _html = lxml.etree.SubElement(_element, "html")
+    if '<body' not in text:
+        _body = lxml.etree.SubElement(_html, "body")
+        for line in text.split('\n'):
+            _p = lxml.etree.SubElement(_body, "p")
+            _p.text = line
     else:
-        _html.append(ET.XML(text))
+        _html.append(lxml.etree.fromstring(text))
     node._node.append(_element)
 
 

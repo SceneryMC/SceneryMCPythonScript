@@ -48,7 +48,8 @@ def mm_open_as_xml(mm_path: str) -> etree._ElementTree:
 
 
 def generate_command(pdf_path: str, page_num: int|str, pf=platform) -> str:
-    return command_template[pf].replace("PAGE_NUM", str(page_num)).replace("PDF_PATH", path_fit_platform(pdf_path, pf))
+    return command_template[pf].replace("PAGE_NUM", str(page_num)).replace("PDF_PATH", path_fit_platform(pdf_path, pf))\
+        .replace('"', '&quot;')
 
 class PDFAnnotationLinker:
     def __init__(self, pdf_path: str, mm_path: str, mode: str='text', image_size: float=0.5):
