@@ -34,9 +34,9 @@ def visit_artist(artist, last_work):
     return works
 
 
-def process_artist(last_work):
+def visit_artists(last_work, load_func):
     global local_last_work
-    local_last_work = load_num()
+    local_last_work = load_func()
     with open(artist_alias) as f:
         alias = json.load(f)
 
@@ -49,9 +49,9 @@ def process_artist(last_work):
         json.dump(new_works, f, ensure_ascii=False, indent=True)
 
 
-def load_num():
+def load_local():
     d = defaultdict(lambda :0)
-    selected = selected_artist()
+    selected = default_artist()
     with open(all_log, encoding='utf-8') as f:
         j = json.load(f)
     for work, info in j.items():
@@ -60,16 +60,22 @@ def load_num():
     return d
 
 
-def selected_artist():
+def default_artist():
     s = set()
-    s = s.union(set(os.listdir(rf"{artist_path}\4")))
-    s = s.union(set(os.listdir(rf"{artist_path}\5")))
-    s = s.union(set(os.listdir(rf"{artist_path}\6")))
+    s |= set(os.listdir(rf"{artist_path}\4"))
+    s |= set(os.listdir(rf"{artist_path}\5"))
+    s |= set(os.listdir(rf"{artist_path}\6"))
     with open(artist_alias) as f:
         alias = json.load(f)
     s = s.union(set(alias.keys()))
 
     return s
+
+
+def load_specified():
+    with open('n_artist.txt') as f:
+        d = {s.strip() : 0 for s in f.readlines()}
+    return d
 
 
 def init_driver():
@@ -82,6 +88,11 @@ def init_driver():
 
 
 if __name__ == '__main__':
+    cmd_to_func = {"a": load_local, "s": load_specified}
+
     last_work = int(input("最近作品？"))
+    target = input("全部a/指定s？")
+
     init_driver()
-    process_artist(last_work)
+    visit_artists(last_work, cmd_to_func[target])
+
