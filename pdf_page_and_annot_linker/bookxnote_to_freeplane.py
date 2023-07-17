@@ -49,25 +49,38 @@ class BooxnoteToFreeplane:
 
         os.makedirs(f"{os.path.dirname(self.mm_path)}/{self.pdf_name}_files", exist_ok=True)
 
+    def save_textblocks(self, node, object):
+        if (page := object['page']) != -1:
+            node.hyperlink = f"execute:_{generate_command(self.pdf_path, page)}"
+            if 'textblocks' in object:
+                blocks = lxml.etree.Element("blocks")
+                for r in object['textblocks'][0]['rects']:
+                    blocks.append(lxml.etree.fromstring(f'<block x0="{r[0]}" y0="{r[1]}" width="{r[2]}" height="{r[3]}"/>'))
+                node._node.append(blocks)
+
+    def add_annotations(self, node, object, node_type):
+        for d in object["annotations"]:
+            if d["style"] == 1:
+                node.set_image(link=f'{self.pdf_name}_files/{d["content"]}', size=0.6)
+                shutil.copy(f"{self.json_parent_path}/imgfiles/{d['content']}",
+                            f"{os.path.dirname(self.mm_path)}/{self.pdf_name}_files")
+            elif d["style"] == 0 and node_type == "nonref":
+                add_detail(node, d["content"])
+
     def add_a_node(self, object, parent_node):
         node = parent_node.add_child()
         node_type = "ref" if "textblocks" in object else "nonref"
-        if style := BooxnoteToFreeplane.color_to_style.get(
-                object[BooxnoteToFreeplane.color_dict[node_type]], ""):
-            node.style = style
-        if (page := object['page']) != -1:
-            node.hyperlink = f"execute:_{generate_command(self.pdf_path, page)}"
+
+        self.save_textblocks(node, object)
         add_text(node, object[BooxnoteToFreeplane.text_dict[node_type]])
         if node_type == "ref" and "content" in object:
             add_detail(node, object["content"])
         if "annotations" in object:
-            for d in object["annotations"]:
-                if d["style"] == 1:
-                    node.set_image(link=f'{self.pdf_name}_files/{d["content"]}', size=0.6)
-                    shutil.copy(f"{self.json_parent_path}/imgfiles/{d['content']}",
-                                f"{os.path.dirname(self.mm_path)}/{self.pdf_name}_files")
-                elif d["style"] == 0 and node_type == "nonref":
-                    add_detail(node, d["content"])
+            self.add_annotations(node, object, node_type)
+        if style := BooxnoteToFreeplane.color_to_style.get(
+                object[BooxnoteToFreeplane.color_dict[node_type]], ""):
+            node.style = style
+
         return node
 
 

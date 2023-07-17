@@ -51,6 +51,15 @@ def generate_command(pdf_path: str, page_num: int|str, pf=platform) -> str:
     return command_template[pf].replace("PAGE_NUM", str(page_num)).replace("PDF_PATH", path_fit_platform(pdf_path, pf))\
         .replace('"', '&quot;')
 
+
+def save_vertices(node, vertices):
+    text_blocks = etree.Element("blocks")
+    for i in range(len(vertices) // 4):
+        r = fitz.Quad(vertices[i * 4: i * 4 + 4]).rect
+        text_blocks.append(etree.fromstring(f'<block x0="{r.x0}" y0="{r.y0}" width="{r.width}" height="{r.height}"/>'))
+    node._node.append(text_blocks)
+
+
 class PDFAnnotationLinker:
     def __init__(self, pdf_path: str, mm_path: str, mode: str='text', image_size: float=0.5):
         self.mm_base, self.mm_name = os.path.split(mm_path)
@@ -109,6 +118,7 @@ class PDFAnnotationLinker:
         annot_text = error_correction(annot.info['content'])
 
         method_map[self.mode](page, annot, endpoint)
+        save_vertices(endpoint, annot.vertices)
 
         endpoint.set("LINK", f"execute:_{command}")
         if annot_text != '':

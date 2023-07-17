@@ -6,23 +6,19 @@ import time
 import re
 import random
 import lxml
-from pdf_page_and_annot_linker import command_template, generate_command
+from pdf_page_and_annot_linker import command_template
 from mm_filelist import filelist, bookxnote_root_windows
 from path_cross_platform import *
 
 
-def get_annot_blocks(page, serial, text):
-    output = {"text": text, "length": len(text), "rects":[], "start": serial}
-    annot = list(page.annots(types=[fitz.PDF_ANNOT_HIGHLIGHT]))[serial]
-    points = annot.vertices
-    for i in range(len(points) // 4):
-        r = fitz.Quad(points[i * 4: i * 4 + 4]).rect
-        output['rects'].append([r.x0, r.y0, r.width, r.height])
-    output['first'] = output["rects"][0]
-    output['last'] = output["rects"][-1]
-    return [output]
+def get_textblocks(node):
+    rects = []
+    for r in node._node.find('blocks').iterfind("./block"):
+        rects.append([float(r.get('x0')), float(r.get('y0')), float(r.get('width')), float(r.get('height'))])
+    return rects
 
-def simplify_body(body):
+
+def get_simplest_text(body):
     if all(y == 'p' or y == 'body' for y in [x.tag for x in body.iter()]):
         return "\n".join(x.strip() for x in body.itertext() if x.strip())
     else:
@@ -34,7 +30,7 @@ def get_original_text(node):
         return plain_text.strip()
     elif (rich_text := node._node.find("./richcontent[@TYPE='NODE']")) is not None:
         body = rich_text.find('html').find('body')
-        return simplify_body(body)
+        return get_simplest_text(body)
     else:
         return ''
 
@@ -54,6 +50,29 @@ class FreeplaneToBookxnote:
 
         os.makedirs(f"{self.note}/imgfiles", exist_ok=True)
 
+    def get_extra_json(self, node):
+        plain_text = node.plaintext
+        if hyperlink := node.hyperlink:
+            page = int(re.search(self.regex, hyperlink.replace("&quot;", '"')).group(1))
+            extra_json = {
+                "docid": self.docid,
+                "fillcolor": FreeplaneToBookxnote.freeplane_style[node.style],
+                "originaltext": get_original_text(node),
+                "page": page,
+                "type": 5,
+            }
+            if blocks := get_textblocks(node):
+                text_blocks = [{"text": plain_text, "length": len(plain_text), "rects": blocks, "start": 0}]
+                text_blocks[0]['first'] = text_blocks[0]['rects'][0]
+                text_blocks[0]['last'] = text_blocks[0]['rects'][-1]
+                extra_json['textblocks'] = text_blocks
+        else:
+            extra_json = {
+                "content": get_original_text(node),
+                "linecolor": FreeplaneToBookxnote.freeplane_style[node.style],
+            }
+        return extra_json
+
     def walk(self, node):
         node_json = {
             "date": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),  # "2023-05-16 22:21:24"
@@ -63,27 +82,7 @@ class FreeplaneToBookxnote:
             "page": -1,
             "uuid": f"{random.randint(0, 0xffffffffffffffffffffffffffffffff):x}",
         }
-
-        plain_text = node.plaintext
-        annot = re.match('P(\d+)-(\d+)', plain_text)
-        if annot is None:
-            extra_json = {
-                "content": get_original_text(node),
-                "linecolor": FreeplaneToBookxnote.freeplane_style[node.style],
-            }
-            if node.hyperlink and (page := re.search(self.regex, node.hyperlink)):
-                extra_json["page"] = int(page.group(1)) - 1
-                extra_json["type"] = 5
-        else:
-            page, serial = int(annot.group(1)) - 1, int(annot.group(2)) - 1
-            extra_json = {
-                "docid": self.docid,
-                "fillcolor": "ffff8280",
-                "originaltext": get_original_text(node),
-                "page": page,
-                "textblocks" : get_annot_blocks(self.pdf[page], serial, plain_text),
-                "type": 5,
-            }
+        extra_json = self.get_extra_json(node)
 
         annotations = []
         if node.imagepath:
@@ -92,20 +91,20 @@ class FreeplaneToBookxnote:
         if (detail := node._node.find("./richcontent[@TYPE='DETAILS']")) is not None:
             body = detail.find('html').find('body')
             if 'content' in extra_json:
-                annotations.append({'content': simplify_body(body), 'style': 0})
+                annotations.append({'content': get_simplest_text(body), 'style': 0})
             else:
-                extra_json['content'] = simplify_body(body)
+                extra_json['content'] = get_simplest_text(body)
         node_json.update(extra_json)
-        self.maxid += 1
+        if annotations:
+            node_json['annotations'] = annotations
 
         markups = []
         for child in node.children:
             markups.append(self.walk(child))
         if markups:
             node_json['markups'] = markups
-        if annotations:
-            node_json['annotations'] = annotations
 
+        self.maxid += 1
         return node_json
 
 
