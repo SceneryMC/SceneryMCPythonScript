@@ -1,11 +1,12 @@
 import json
 import shutil
+import urllib.request
 import freeplane
 import time
 import re
 import random
 import lxml
-from pdf_page_and_annot_linker import command_template
+from pdf_page_and_annot_linker import generate_command
 from mm_filelist import filelist, bookxnote_root_windows
 from path_cross_platform import *
 
@@ -44,14 +45,14 @@ class FreeplaneToBookxnote:
         self.note = f"{bookxnote_root}/{bookxnote_pdf_name}"
         self.docid = docid
         self.maxid = 0
-        self.regex = re.escape(command_template[platform].replace("PDF_PATH", pdf_path)).replace("PAGE_NUM", r"(\d+)")
+        self.regex = re.escape(generate_command(pdf_path, "PAGE_NUM")).replace('PAGE_NUM', r'(\d+)')
 
         os.makedirs(f"{self.note}/imgfiles", exist_ok=True)
 
     def get_extra_json(self, node):
         plain_text = node.plaintext
         if hyperlink := node.hyperlink:
-            page = int(re.search(self.regex, hyperlink.replace("&quot;", '"')).group(1))
+            page = int(re.search(self.regex, hyperlink).group(1))
             extra_json = {
                 "docid": self.docid,
                 "fillcolor": FreeplaneToBookxnote.freeplane_style[node.style],

@@ -4,6 +4,7 @@ import re
 import html
 import itertools
 import random
+import urllib.request
 import fitz
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -48,8 +49,10 @@ def mm_open_as_xml(mm_path: str) -> etree._ElementTree:
 
 
 def generate_command(pdf_path: str, page_num: int|str, pf=platform) -> str:
-    return command_template[pf].replace("PAGE_NUM", str(page_num)).replace("PDF_PATH", path_fit_platform(pdf_path, pf))\
-        .replace('"', '&quot;')
+    command = command_template[pf].replace("PAGE_NUM", str(page_num)).replace("PDF_PATH", path_fit_platform(pdf_path, pf))
+    if pf == "Windows":
+        command = urllib.request.quote(command)
+    return command
 
 
 def save_vertices(node, vertices):
