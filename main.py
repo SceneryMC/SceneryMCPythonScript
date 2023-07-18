@@ -2,12 +2,13 @@
 # import shutil
 # import random
 # import fitz
+import html
 import json
 import os
 import re
 
 import freeplane
-from lxml import etree, html
+from lxml import etree
 
 from path_cross_platform import path_fit_platform
 
@@ -115,3 +116,4 @@ from path_cross_platform import path_fit_platform
 # print(s)
 # x = lxml.html.fromstring(s)
 # print(x.text_content())
+s = '!@#$%^&*()_rdgqiwuoidiqwdj234567890"""'
