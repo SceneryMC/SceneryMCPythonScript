@@ -35,7 +35,9 @@ def get_original_text(node):
 
 
 class FreeplaneToBookxnote:
-    freeplane_style = {'重要': "fffb8c00", '极其重要': 'ffe53935', '图片': 'ff0000cc', '代码':'ffcc0099', '': 'fffeeb73', '总结':'ff00897b'}
+    default_color = 'fffeeb73'
+    freeplane_style = {'重要': "fffb8c00", '极其重要': 'ffe53935', '图片': 'ff0000cc', '代码':'ffcc0099', '': default_color, '总结':'ff00897b'}
+
     def __init__(self, pdf_path, mm_path, bookxnote_root, pdf_name=None, docid=0):
         bookxnote_pdf_name = os.path.basename(pdf_path)[:-4]
         self.mm = freeplane.Mindmap(mm_path)
@@ -52,15 +54,17 @@ class FreeplaneToBookxnote:
         plain_text = node.plaintext
         extra_json = {
             "content": get_original_text(node),
-            "linecolor": FreeplaneToBookxnote.freeplane_style[node.style],
+            "linecolor": FreeplaneToBookxnote.freeplane_style.get(node.style,
+                                                                  FreeplaneToBookxnote.default_color),
         }
         if hyperlink := node.hyperlink:
             if page_r := re.search(self.regex, hyperlink):
                 if (textblocks := node._node.find('./textblocks')) is not None:
-                    page = int(page_r.group(1))
+                    page = int(page_r.group(1)) - 1
                     extra_json = {
                         "docid": self.docid,
-                        "fillcolor": FreeplaneToBookxnote.freeplane_style[node.style],
+                        "fillcolor": FreeplaneToBookxnote.freeplane_style.get(node.style,
+                                                                              FreeplaneToBookxnote.default_color),
                         "originaltext": get_original_text(node),
                         "page": page,
                         "type": 5,
@@ -119,7 +123,7 @@ class FreeplaneToBookxnote:
 
 
 if __name__ == '__main__':
-    mm, pdf, _ = filelist['FluentPython']
+    mm, pdf, _ = filelist['C++Primer']
     t = FreeplaneToBookxnote(path_fit_platform(pdf),
                              path_fit_platform(mm),
                              path_fit_platform(bookxnote_root_windows),
