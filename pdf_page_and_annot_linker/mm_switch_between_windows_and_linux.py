@@ -1,8 +1,6 @@
-import os
+import html
 import json
 import re
-import urllib.request
-
 from path_cross_platform import *
 from pdf_page_and_annot_linker import generate_command
 from mm_filelist import filelist, bookxnote_root_windows
@@ -18,7 +16,7 @@ def switch_platform(match):
     page_num = match.group(1)
     command = generate_command(pdf_path, page_num, platform)
     if platform == "Windows":
-        command = urllib.request.quote(command)
+        command = html.escape(command)
     return command
 
 
@@ -30,8 +28,8 @@ for file in filelist.values():
 
     regex = generate_command(pdf_path, "PAGE_NUM", other_platform)
     if other_platform == 'Windows':
-        regex = urllib.request.quote(regex)
-    regex = re.escape(regex).replace("PAGE_NUM", '(\\d+)')
+        regex = html.escape(regex)
+    regex = re.escape(regex).replace("PAGE_NUM", r'(\d+)')
     new_content = re.sub(regex, switch_platform, content)
 
     if new_content != content:
