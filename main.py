@@ -1,13 +1,11 @@
-# import os
-# import shutil
-# import random
-# import fitz
 import html
 import json
 import os
 import re
+import urllib.request
 
 import freeplane
+import lxml.etree
 from lxml import etree
 
 from path_cross_platform import path_fit_platform
@@ -116,4 +114,21 @@ from path_cross_platform import path_fit_platform
 # print(s)
 # x = lxml.html.fromstring(s)
 # print(x.text_content())
-s = '!@#$%^&*()_rdgqiwuoidiqwdj234567890"""'
+# s = '!@#$%^&*()_rdgqiwuoidiqwdj234567890"""'
+
+# path = r"E:\学习资料\计算机\参考书\可能会读的书\C++\入门\C++Primer\C++Primer.mm"
+#
+# def unquot(r):
+#     text = r.group()
+#     xml_tree = lxml.etree.fromstring(text)
+#     for t in xml_tree.iter():
+#         if t.text:
+#             t.text = html.unescape(t.text)
+#     result = lxml.etree.tostring(xml_tree, encoding='utf-8').decode('utf-8')
+#     return result
+#
+# with open(path, encoding='utf-8') as f:
+#     s = f.read().replace("&nbsp;", "&#160;")
+# s = re.sub(r"<p>.*?</p>", unquot, s, flags=re.DOTALL)
+# with open(path, 'w', encoding='utf=8') as f:
+#     f.write(s)

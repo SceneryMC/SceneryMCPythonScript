@@ -1,6 +1,5 @@
 import json
 import shutil
-import urllib.request
 import freeplane
 import time
 import re
