@@ -56,11 +56,12 @@ def generate_command(pdf_path: str, page_num: int|str, pf=platform) -> str:
 
 
 def save_vertices(node, vertices):
-    text_blocks = etree.Element("blocks")
+    text_blocks = etree.Element("textblocks")
+    blocks = etree.SubElement(text_blocks, "blocks")
     for i in range(len(vertices) // 4):
         r = fitz.Quad(vertices[i * 4: i * 4 + 4]).rect
-        text_blocks.append(etree.fromstring(f'<block x0="{r.x0}" y0="{r.y0}" width="{r.width}" height="{r.height}"/>'))
-    node._node.append(text_blocks)
+        blocks.append(etree.fromstring(f'<block x0="{r.x0}" y0="{r.y0}" width="{r.width}" height="{r.height}"/>'))
+    node.append(text_blocks)
 
 
 def get_hightlighted_text(sep, annot, wordlist) -> str:

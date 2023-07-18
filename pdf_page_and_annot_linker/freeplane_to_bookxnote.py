@@ -50,25 +50,29 @@ class FreeplaneToBookxnote:
 
     def get_extra_json(self, node):
         plain_text = node.plaintext
+        extra_json = {
+            "content": get_original_text(node),
+            "linecolor": FreeplaneToBookxnote.freeplane_style[node.style],
+        }
         if hyperlink := node.hyperlink:
-            page = int(re.search(self.regex, hyperlink).group(1))
-            extra_json = {
-                "docid": self.docid,
-                "fillcolor": FreeplaneToBookxnote.freeplane_style[node.style],
-                "originaltext": get_original_text(node),
-                "page": page,
-                "type": 5,
-            }
-            if (textblocks := node._node.find('./textblocks')) is not None:
-                text_blocks = []
-                for big_block in textblocks.iterfind('./blocks'):
-                    text_blocks.append({"text": plain_text, "length": len(plain_text), "rects": get_textblocks(big_block), "start": 0})
-                extra_json['textblocks'] = text_blocks
-        else:
-            extra_json = {
-                "content": get_original_text(node),
-                "linecolor": FreeplaneToBookxnote.freeplane_style[node.style],
-            }
+            if page_r := re.search(self.regex, hyperlink):
+                if (textblocks := node._node.find('./textblocks')) is not None:
+                    page = int(page_r.group(1))
+                    extra_json = {
+                        "docid": self.docid,
+                        "fillcolor": FreeplaneToBookxnote.freeplane_style[node.style],
+                        "originaltext": get_original_text(node),
+                        "page": page,
+                        "type": 5,
+                    }
+
+                    text_blocks = []
+                    for big_block in textblocks.iterfind('./blocks'):
+                        blocks = {"text": plain_text, "length": len(plain_text), "rects": get_textblocks(big_block), "start": 1}
+                        blocks["first"] = blocks['rects'][0]
+                        blocks["last"] = blocks['rects'][-1]
+                        text_blocks.append(blocks)
+                    extra_json['textblocks'] = text_blocks
         return extra_json
 
     def walk(self, node):
@@ -115,9 +119,9 @@ class FreeplaneToBookxnote:
 
 
 if __name__ == '__main__':
-    mm, pdf, _ = filelist['Java核心技术卷1']
+    mm, pdf, _ = filelist['FluentPython']
     t = FreeplaneToBookxnote(path_fit_platform(pdf),
-                             path_fit_platform(r'E:\学习资料\bookxnote\test.mm'),
+                             path_fit_platform(mm),
                              path_fit_platform(bookxnote_root_windows),
                              )
     j = t.translate()
