@@ -16,17 +16,17 @@ for root, folders, files in os.walk(r"G:\收藏\图片\ESO"):
         file = file.split('.')[0]
         file = name_unify(file)
         ls_local.append(file)
-with open("skipped_eso.txt") as f:
+with open("results/skipped_eso.txt") as f:
     for url in f:
         file = url.split('/')[-1][:-1].split('.')[0]
         file = name_unify(file)
         ls_skipped.append(file)
-with open("processed_list_eso.txt") as f:
+with open("results/processed_list_eso.txt") as f:
     for file in f:
         file = file[:-1]
         file = name_unify(file)
         ls_processed.append(file)
-with open("refetch_eso_image_list") as f:
+with open("results/refetch_eso_image_list") as f:
     for file in f:
         file = file[:-1]
         file = name_unify(file)
@@ -102,5 +102,5 @@ if refetch:
         images.extend(get_image_urls(f"{eso_attributes['basename']}/{i}/?sort=-release_date"))
         print(f"page {i} collected!")
     images = '\n'.join([s.split('/')[-1] for s in images])
-    with open('refetch_eso_image_list', 'w') as f:
+    with open('results/refetch_eso_image_list', 'w') as f:
         f.write(images)

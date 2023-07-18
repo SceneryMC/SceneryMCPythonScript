@@ -75,7 +75,7 @@ def temp_get_image(i, serial, folder, address_temp):
 
 
 if __name__ == '__main__':
-    with open("n_site.txt", 'r') as f:
+    with open("text_files/n_site.txt", 'r') as f:
         for line in f:
             line = [int(x) for x in line.strip().split()]
             if len(line) == 3:

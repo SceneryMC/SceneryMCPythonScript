@@ -10,9 +10,9 @@ import json
 global driver, d_last, d_all
 tmp_path = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
 test_url = "https://nhentai.net/g/400000"
-last_log = 'last_n_site.json'
-all_log = 'all_n_site.json'
-download_list_file = 'n_site.txt'
+last_log = 'text_files/last_n_site.json'
+all_log = 'text_files/all_n_site.json'
+download_list_file = 'text_files/n_site.txt'
 
 
 def get_basic_info(url):

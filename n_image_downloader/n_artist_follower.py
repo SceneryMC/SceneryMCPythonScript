@@ -73,7 +73,7 @@ def default_artist():
 
 
 def load_specified():
-    with open('n_artist.txt') as f:
+    with open('text_files/n_artist.txt') as f:
         d = {s.strip() : 0 for s in f.readlines()}
     return d
 

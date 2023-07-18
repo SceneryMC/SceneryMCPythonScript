@@ -54,7 +54,7 @@ def download_image(image, suffix):
     image_size = int(r.headers['content-length'])
     if image_size > 96 * 1024 ** 2:
         print(f"TOO LARGE: SIZE = {image_size / 1024 ** 2} MB!")
-        with open(f"skipped_{attributes['name']}.txt", 'a') as f:
+        with open(f"results/skipped_{attributes['name']}.txt", 'a') as f:
             f.write(f"{attributes['source']}/{image}.{suffix}\n")
         return False
 
@@ -112,14 +112,14 @@ def get_download_list(downloaded):
 
 if __name__ == '__main__':
     attributes = attribute_map[input("网站：")]
-    with open(f'processed_amount_{attributes["name"]}.txt') as f:
+    with open(f'results/processed_amount_{attributes["name"]}.txt') as f:
         downloaded = int(f.readline())
 
     images = get_download_list(downloaded)
     for i in range(len(images)):
         if download_image(images[i], get_suffix(images[i])):
             print(f"{images[i]} downloaded!")
-        with open(f"processed_list_{attributes['name']}.txt", 'a') as f:
+        with open(f"results/processed_list_{attributes['name']}.txt", 'a') as f:
             f.write(f"{images[i]}\n")
-        with open(f'processed_amount_{attributes["name"]}.txt', 'w') as f:
+        with open(f'results/processed_amount_{attributes["name"]}.txt', 'w') as f:
             f.write(str(downloaded + i + 1))

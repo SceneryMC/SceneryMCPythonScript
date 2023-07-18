@@ -24,7 +24,7 @@ def generate_tmp():
 
 
 def get_newest_info():
-    with open('netease_artist_works.json', encoding='utf-8') as f:
+    with open('results/netease_artist_works.json', encoding='utf-8') as f:
         artist_works = json.load(f)
     artist_works_tmp = generate_tmp()
 
@@ -44,20 +44,20 @@ def get_newest_info():
         artist_works_tmp[artist_name] = new
         print(new)
 
-    with open('netease_artist_works_tmp.json', 'w', encoding='utf-8') as f:
+    with open('results/netease_artist_works_tmp.json', 'w', encoding='utf-8') as f:
         json.dump(artist_works_tmp, f, ensure_ascii=False, indent=True)
 
 
 def merge():
-    with open('netease_artist_works.json', encoding='utf-8') as f:
+    with open('results/netease_artist_works.json', encoding='utf-8') as f:
         artist_works = json.load(f)
-    with open('netease_artist_works_tmp.json', encoding='utf-8') as f:
+    with open('results/netease_artist_works_tmp.json', encoding='utf-8') as f:
         artist_works_tmp = json.load(f)
 
     for artist_name in artist_works:
         artist_works[artist_name].extend(artist_works_tmp[artist_name])
 
-    with open('netease_artist_works.json', 'w', encoding='utf-8') as f:
+    with open('results/netease_artist_works.json', 'w', encoding='utf-8') as f:
         json.dump(artist_works, f, ensure_ascii=False, indent=True)
 
 
