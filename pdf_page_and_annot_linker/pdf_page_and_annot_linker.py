@@ -60,6 +60,23 @@ def save_vertices(node, vertices):
     node._node.append(text_blocks)
 
 
+def get_hightlighted_text(sep, annot, wordlist) -> str:
+    words = []
+    points = annot.vertices
+    quad_count = len(points) // 4
+    for i in range(quad_count):
+        r = fitz.Quad(points[i * 4: i * 4 + 4]).rect
+        for w in wordlist:
+            tmp_rect = fitz.Rect(w[:4])
+            tmp_intersect_rect = fitz.Rect(tmp_rect).intersect(r)
+            if tmp_intersect_rect.get_area() > intersect_portion * min(tmp_rect.get_area(), r.get_area()):
+                word = w[4]
+                unit_length = (w[2] - w[0]) / len(word)
+                start, end = round((r[0] - w[0]) / unit_length, 0), round((r[2] - w[0]) / unit_length, 0)
+                words.append(word[max(0, int(start)):min(len(word), int(end))])
+    return sep.join(words)
+
+
 class PDFAnnotationLinker:
     def __init__(self, pdf_path: str, mm_path: str, mode: str='text', image_size: float=0.5):
         self.mm_base, self.mm_name = os.path.split(mm_path)
@@ -91,22 +108,6 @@ class PDFAnnotationLinker:
             else:
                 self.link_simple_endpoint(endpoint, int(r.group(5)) - 1) # 从1开始转为从0开始
 
-    def get_hightlighted_text(self, annot, wordlist) -> str:
-        words = []
-        points = annot.vertices
-        quad_count = len(points) // 4
-        for i in range(quad_count):
-            r = fitz.Quad(points[i * 4: i * 4 + 4]).rect
-            for w in wordlist:
-                tmp_rect = fitz.Rect(w[:4])
-                tmp_intersect_rect = fitz.Rect(tmp_rect).intersect(r)
-                if tmp_intersect_rect.get_area() > intersect_portion * min(tmp_rect.get_area(), r.get_area()):
-                    word = w[4]
-                    unit_length = (w[2] - w[0]) / len(word)
-                    start, end = round((r[0] - w[0]) / unit_length, 0), round((r[2] - w[0]) / unit_length, 0)
-                    words.append(word[max(0, int(start)):min(len(word), int(end))])
-        return self.sep.join(words)
-
     def link_full_endpoint(self, endpoint: etree._Element, page_num: int, annot_num: int) -> None:
         print(f"P{page_num + 1}-{annot_num + 1}")
         method_map = {"text": self.change_text, "image": self.add_image}
@@ -132,7 +133,7 @@ class PDFAnnotationLinker:
         wordlist = page.get_text("words")
         # 先y后x，升序排列
         wordlist.sort(key=lambda w: tuple(w[5:]))
-        highlight = error_correction(self.get_hightlighted_text(annot, wordlist))
+        highlight = error_correction(get_hightlighted_text(self.sep, annot, wordlist))
         endpoint.set("TEXT", f'{endpoint.get("TEXT")} {html.escape(highlight)}"')
 
     def add_image(self, page, annot, endpoint: etree._Element) -> None:

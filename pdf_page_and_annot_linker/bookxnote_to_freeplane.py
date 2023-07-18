@@ -3,7 +3,6 @@ import shutil
 import freeplane
 import lxml.etree, lxml.html
 import os
-
 from path_cross_platform import path_fit_platform
 from mm_filelist import *
 from pdf_page_and_annot_linker import generate_command
@@ -53,10 +52,13 @@ class BooxnoteToFreeplane:
         if (page := object['page']) != -1:
             node.hyperlink = f"execute:_{generate_command(self.pdf_path, page)}"
             if 'textblocks' in object:
-                blocks = lxml.etree.Element("blocks")
-                for r in object['textblocks'][0]['rects']:
-                    blocks.append(lxml.etree.fromstring(f'<block x0="{r[0]}" y0="{r[1]}" width="{r[2]}" height="{r[3]}"/>'))
-                node._node.append(blocks)
+                text_blocks = lxml.etree.Element("textblocks")
+                for big_block in object['textblocks']:
+                    blocks = lxml.etree.Element("blocks")
+                    text_blocks.append(blocks)
+                    for r in big_block['rects']:
+                        blocks.append(lxml.etree.fromstring(f'<block x0="{r[0]}" y0="{r[1]}" width="{r[2]}" height="{r[3]}"/>'))
+                node._node.append(text_blocks)
 
     def add_annotations(self, node, object, node_type):
         for d in object["annotations"]:

@@ -1,6 +1,5 @@
 import json
 import shutil
-import fitz
 import freeplane
 import time
 import re
@@ -11,9 +10,9 @@ from mm_filelist import filelist, bookxnote_root_windows
 from path_cross_platform import *
 
 
-def get_textblocks(node):
+def get_textblocks(big_block):
     rects = []
-    for r in node._node.find('blocks').iterfind("./block"):
+    for r in big_block.iterfind('./block'):
         rects.append([float(r.get('x0')), float(r.get('y0')), float(r.get('width')), float(r.get('height'))])
     return rects
 
@@ -39,7 +38,6 @@ class FreeplaneToBookxnote:
     freeplane_style = {'重要': "fffb8c00", '极其重要': 'ffe53935', '图片': 'ff0000cc', '代码':'ffcc0099', '': 'fffeeb73', '总结':'ff00897b'}
     def __init__(self, pdf_path, mm_path, bookxnote_root, pdf_name=None, docid=0):
         bookxnote_pdf_name = os.path.basename(pdf_path)[:-4]
-        self.pdf = fitz.open(pdf_path)
         self.mm = freeplane.Mindmap(mm_path)
         self.mm_parent = os.path.dirname(mm_path)
         self.pdf_name = pdf_name if pdf_name is not None else bookxnote_pdf_name
@@ -61,10 +59,10 @@ class FreeplaneToBookxnote:
                 "page": page,
                 "type": 5,
             }
-            if blocks := get_textblocks(node):
-                text_blocks = [{"text": plain_text, "length": len(plain_text), "rects": blocks, "start": 0}]
-                text_blocks[0]['first'] = text_blocks[0]['rects'][0]
-                text_blocks[0]['last'] = text_blocks[0]['rects'][-1]
+            if (textblocks := node._node.find('./textblocks')) is not None:
+                text_blocks = []
+                for big_block in textblocks.iterfind('./blocks'):
+                    text_blocks.append({"text": plain_text, "length": len(plain_text), "rects": get_textblocks(big_block), "start": 0})
                 extra_json['textblocks'] = text_blocks
         else:
             extra_json = {
