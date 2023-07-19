@@ -33,7 +33,7 @@ def add_detail(node, text):
 
 class BooxnoteToFreeplane:
     color_to_style = {'fffb8c00': '重要', 'ffe53935': '极其重要', 'ff0000cc': '图片', 'ffcc0099': '代码', 'ff00897b': '总结',
-                      'fff89e02': '重要', 'ffff8280': '极其重要', 'ff59c6ff': '图片', }
+                      'fff89e02': '重要', 'ffff8280': '极其重要', }
     color_dict = {"ref": "fillcolor", "nonref": "linecolor"}
     text_dict = {"ref": "originaltext", "nonref": "content"}
 
