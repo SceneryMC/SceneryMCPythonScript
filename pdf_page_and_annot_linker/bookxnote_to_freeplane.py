@@ -50,7 +50,7 @@ class BooxnoteToFreeplane:
 
     def save_textblocks(self, node, object):
         if (page := object['page']) != -1:
-            node.hyperlink = f"execute:_{generate_command(self.pdf_path, page)}"
+            node.hyperlink = f"execute:_{generate_command(self.pdf_path, page + 1)}"
             if 'textblocks' in object:
                 text_blocks = lxml.etree.Element("textblocks")
                 for big_block in object['textblocks']:
@@ -108,7 +108,7 @@ class BooxnoteToFreeplane:
 if __name__ == '__main__':
     mm, pdf, _ = filelist['Java核心技术卷1']
     t = BooxnoteToFreeplane(path_fit_platform(pdf),
-                            path_fit_platform('/mnt/E/学习资料/bookxnote/test.mm'),
+                            path_fit_platform(mm),
                             path_fit_platform(r"E:\学习资料\bookxnote\notebooks\Java核心技术·卷I12ed"),
                             "Java核心技术·卷I12ed")
     t.translate()

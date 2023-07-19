@@ -60,13 +60,11 @@ class FreeplaneToBookxnote:
         if hyperlink := node.hyperlink:
             if page_r := re.search(self.regex, hyperlink):
                 if (textblocks := node._node.find('./textblocks')) is not None:
-                    page = int(page_r.group(1)) - 1
                     extra_json = {
                         "docid": self.docid,
                         "fillcolor": FreeplaneToBookxnote.freeplane_style.get(node.style,
                                                                               FreeplaneToBookxnote.default_color),
                         "originaltext": get_original_text(node),
-                        "page": page,
                         "type": 5,
                     }
 
@@ -77,6 +75,8 @@ class FreeplaneToBookxnote:
                         blocks["last"] = blocks['rects'][-1]
                         text_blocks.append(blocks)
                     extra_json['textblocks'] = text_blocks
+                page = int(page_r.group(1)) - 1
+                extra_json['page'] = page
         return extra_json
 
     def walk(self, node):
