@@ -97,6 +97,8 @@ class BooxnoteToFreeplane:
 
 
     def translate(self):
+        prop = self.mm.rootnode._node.find('.//properties')
+        prop.set("associatedTemplateLocation", 'template:/xmind2021_default.mm')
         with open(f"{self.json_parent_path}/markups.json", encoding='utf-8') as f:
             j = json.load(f)
         self.json_to_freeplane(j['markups'], self.mm.rootnode)

@@ -4,7 +4,8 @@ from path_cross_platform import *
 from pdf_page_and_annot_linker import generate_command
 
 files = {
-
+"Java核心技术卷1": (r"E:\学习资料\计算机\参考书\可能会读的书\Java\入门\Java核心技术\Java核心技术卷1_test.mm",
+                        r"E:\学习资料\计算机\参考书\可能会读的书\Java\入门\Java核心技术\Java核心技术·卷I12ed.pdf", 0.5),
 }
 template_address = path_fit_platform(
     r"C:\Users\SceneryMC\AppData\Roaming\Freeplane\1.10.x\templates\xmind2021_default.mm")
