@@ -83,12 +83,14 @@ class FreeplaneToBookxnote:
         node_json = {
             "date": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),  # "2023-05-16 22:21:24"
             "id": self.maxid,
-            "title": "-",  # 在导出的.md中将 ###### - 替换为 ###
+            "title": "",  # 在导出的.md中将 ###### - 替换为 ###则需要改为"title" : "-"
+            "docid": 0,
             "type": 7,
             "page": -1,
             "uuid": f"{random.randint(0, 0xffffffffffffffffffffffffffffffff):x}",
         }
         extra_json = self.get_extra_json(node)
+        self.maxid += 1
 
         annotations = []
         if node.imagepath:
@@ -110,7 +112,6 @@ class FreeplaneToBookxnote:
         if markups:
             node_json['markups'] = markups
 
-        self.maxid += 1
         return node_json
 
 
@@ -123,9 +124,9 @@ class FreeplaneToBookxnote:
 
 
 if __name__ == '__main__':
-    mm, pdf, _ = filelist['C++Primer']
+    mm, pdf, _ = filelist['Java核心技术卷1']
     t = FreeplaneToBookxnote(path_fit_platform(pdf),
-                             path_fit_platform(mm),
+                             path_fit_platform(r"E:\学习资料\计算机\参考书\可能会读的书\Java\入门\Java核心技术\Java核心技术卷1_test.mm"),
                              path_fit_platform(bookxnote_root_windows),
                              )
     j = t.translate()
