@@ -38,15 +38,14 @@ class BooxnoteToFreeplane:
     text_dict = {"ref": "originaltext", "nonref": "content"}
 
 
-    def __init__(self, pdf_path, mm_path, json_parent_path, pdf_name=None):
-        bookxnote_pdf_name = os.path.basename(pdf_path)[:-4]
+    def __init__(self, pdf_path, mm_path, json_parent_path):
         self.pdf_path = pdf_path
         self.mm = freeplane.Mindmap()
         self.mm_path = mm_path
-        self.pdf_name = pdf_name if pdf_name is not None else bookxnote_pdf_name
+        self.mm_name = os.path.basename(mm_path)[:-3]
         self.json_parent_path = json_parent_path
 
-        os.makedirs(f"{os.path.dirname(self.mm_path)}/{self.pdf_name}_files", exist_ok=True)
+        os.makedirs(f"{os.path.dirname(self.mm_path)}/{self.mm_name}_files", exist_ok=True)
 
     def save_textblocks(self, node, object):
         if (page := object['page']) != -1:
@@ -63,9 +62,9 @@ class BooxnoteToFreeplane:
     def add_annotations(self, node, object, node_type):
         for d in object["annotations"]:
             if d["style"] == 1:
-                node.set_image(link=f'{self.pdf_name}_files/{d["content"]}', size=0.6)
+                node.set_image(link=f'{self.mm_name}_files/{d["content"]}', size=0.6)
                 shutil.copy(f"{self.json_parent_path}/imgfiles/{d['content']}",
-                            f"{os.path.dirname(self.mm_path)}/{self.pdf_name}_files")
+                            f"{os.path.dirname(self.mm_path)}/{self.mm_name}_files")
             elif d["style"] == 0 and node_type == "nonref":
                 add_detail(node, d["content"])
 
@@ -110,5 +109,5 @@ if __name__ == '__main__':
     t = BooxnoteToFreeplane(path_fit_platform(pdf),
                             path_fit_platform(mm),
                             path_fit_platform(r"E:\学习资料\bookxnote\notebooks\Java核心技术·卷I12ed"),
-                            "Java核心技术·卷I12ed")
+                            )
     t.translate()
