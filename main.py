@@ -1,14 +1,5 @@
-import html
-import json
-import os
-import re
-import urllib.request
-
-import freeplane
-import lxml.etree
-from lxml import etree
-
-from path_cross_platform import path_fit_platform
+import argparse
+import yaml
 
 # new_lines = []
 # with open(r"C:\Users\SceneryMC\Source\Repos\assembly\first_window.asm") as f:
@@ -132,3 +123,28 @@ from path_cross_platform import path_fit_platform
 # s = re.sub(r"<p>.*?</p>", unquot, s, flags=re.DOTALL)
 # with open(path, 'w', encoding='utf=8') as f:
 #     f.write(s)
+
+# mm = lxml.etree.parse('/home/scenerymc/.config/freeplane/1.11.x/templates/xmind2021_default.mm').getroot()
+# styles = mm.find('.//map_styles')
+# new_styles = lxml.etree.fromstring("<map_styles></map_styles>")
+# styles.getparent().replace(styles, new_styles)
+# print(lxml.etree.tostring(mm, encoding='utf-8').decode())
+
+with open('pdf_page_and_annot_linker/default_args.yaml') as f:
+    default_args = yaml.full_load(f)['bookxnote_to_freeplane']
+arg_parser = argparse.ArgumentParser()
+arg_parser.add_argument('--template', nargs='?', default=default_args['template'])
+arg_parser.add_argument('--filelist-entry', nargs='?', default=default_args['filelist_entry'])
+arg_parser.add_argument('--pdf', nargs='?', default=default_args['pdf'])
+arg_parser.add_argument('--mm', nargs='?', default=default_args['mm'])
+arg_parser.add_argument('--note', nargs='?', default=default_args['note'])
+arg_parser.add_argument('--color-to-style', nargs='*', default=default_args['color_to_style'])
+ns_args = arg_parser.parse_args()
+print(ns_args.color_to_style)
+
+# with open('pdf_page_and_annot_linker/default_args.yaml') as f:
+#     r = yaml.full_load(f)
+# print(r)
+
+# ls = [1,2,3,4,5,6]
+# print(dict(zip(ls[0::2], ls[1::2])))

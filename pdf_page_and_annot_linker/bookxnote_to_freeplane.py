@@ -3,6 +3,8 @@ import shutil
 import freeplane
 import lxml.etree, lxml.html
 import os
+import argparse
+import yaml
 from path_cross_platform import path_fit_platform
 from mm_filelist import *
 from pdf_page_and_annot_linker import generate_command
@@ -32,18 +34,17 @@ def add_detail(node, text):
 
 
 class BooxnoteToFreeplane:
-    color_to_style = {'fffb8c00': '重要', 'ffe53935': '极其重要', 'ff0000cc': '图片', 'ffcc0099': '代码', 'ff00897b': '总结',
-                      'fff89e02': '重要', 'ffff8280': '极其重要', }
     color_dict = {"ref": "fillcolor", "nonref": "linecolor"}
     text_dict = {"ref": "originaltext", "nonref": "content"}
 
-
-    def __init__(self, pdf_path, mm_path, json_parent_path):
+    def __init__(self, pdf_path, mm_path, note_path, template, color_to_style):
         self.pdf_path = pdf_path
         self.mm = freeplane.Mindmap()
         self.mm_path = mm_path
         self.mm_name = os.path.basename(mm_path)[:-3]
-        self.json_parent_path = json_parent_path
+        self.json_parent_path = note_path
+        self.template = template
+        self.color_to_style = color_to_style
 
         os.makedirs(f"{os.path.dirname(self.mm_path)}/{self.mm_name}_files", exist_ok=True)
 
@@ -78,7 +79,7 @@ class BooxnoteToFreeplane:
             add_detail(node, object["content"])
         if "annotations" in object:
             self.add_annotations(node, object, node_type)
-        if style := BooxnoteToFreeplane.color_to_style.get(
+        if style := self.color_to_style.get(
                 object[BooxnoteToFreeplane.color_dict[node_type]], ""):
             node.style = style
 
@@ -94,20 +95,47 @@ class BooxnoteToFreeplane:
             if 'markups' in object:
                 self.json_to_freeplane(object['markups'], this_node)
 
+    def copy_style(self):
+        prop = self.mm.rootnode._node.find('.//properties')
+        prop.set("associatedTemplateLocation", f'template:/{os.path.basename(self.template)}')
+        styles = self.mm.rootnode._node.find('.//map_styles')
+        new_styles = freeplane.Mindmap(self.template).rootnode._node.find('.//map_styles')
+        styles.getparent().replace(styles, new_styles)
 
     def translate(self):
-        prop = self.mm.rootnode._node.find('.//properties')
-        prop.set("associatedTemplateLocation", 'template:/xmind2021_default.mm')
+        self.copy_style()
         with open(f"{self.json_parent_path}/markups.json", encoding='utf-8') as f:
             j = json.load(f)
         self.json_to_freeplane(j['markups'], self.mm.rootnode)
         self.mm.save(self.mm_path, encoding='utf-8')
 
 
+def parse_command_args():
+    with open('default_args.yaml') as f:
+        default_args = yaml.full_load(f)['bookxnote_to_freeplane']
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument('--template', nargs='?', default=default_args['template'])
+    arg_parser.add_argument('--filelist-entry', nargs='?', default=default_args['filelist_entry'])
+    arg_parser.add_argument('--pdf', nargs='?', default=default_args['pdf'])
+    arg_parser.add_argument('--mm', nargs='?', default=default_args['mm'])
+    arg_parser.add_argument('--note', nargs='?', default=default_args['note'])
+    arg_parser.add_argument('--color-to-style', nargs='*', default=default_args['color_to_style'])
+    return arg_parser.parse_args()
+
+
 if __name__ == '__main__':
-    mm, pdf, _ = filelist['Java核心技术卷1']
+    args = parse_command_args()
+    if args.filelist_entry is not None:
+        mm, pdf, _ = filelist[args.filelist_entry]
+    else:
+        mm = args.mm
+        pdf = args.pdf
+    if not isinstance(arg_color_to_style := args.color_to_style, dict):
+        arg_color_to_style = dict(zip(arg_color_to_style[::2], arg_color_to_style[1::2]))
+
     t = BooxnoteToFreeplane(path_fit_platform(pdf),
                             path_fit_platform(mm),
-                            path_fit_platform(r"E:\学习资料\bookxnote\notebooks\Java核心技术·卷I12ed"),
-                            )
+                            path_fit_platform(args.note),
+                            path_fit_platform(args.template),
+                            arg_color_to_style)
     t.translate()
