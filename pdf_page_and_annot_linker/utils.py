@@ -53,3 +53,6 @@ filelist = {
 }
 
 bookxnote_root_windows = r'E:\学习资料\bookxnote\notebooks'
+command_template = {"Linux":'okular --unique -p PAGE_NUM PDF_PATH',
+                    "Windows":'"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /A "page=PAGE_NUM=OpenActions" "PDF_PATH"'}
+endpoint_regex = r'^(P(\d+)-(\d+))|(p(\d+))$'

@@ -20,4 +20,9 @@ freeplane_to_bookxnote:
   color: fffeeb73
 
 pdf_page_and_annot_linker:
+  filelist_entry: FluentPython
+  pdf: ~
+  mm: ~
+  image_size: ~
+  mode: text
 

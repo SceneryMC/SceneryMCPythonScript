@@ -6,22 +6,19 @@ import itertools
 import random
 import urllib.request
 import fitz
-
+import yaml
+import argparse
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from lxml import etree
 from PIL import Image
 from error_correction_dictionary import character_error_correction, word_error_correction
 from path_cross_platform import *
-from utils import filelist
+from utils import *
 
 intersect_portion = 0.3
 length_to_pixel = 2.05
 mat = fitz.Matrix(2, 2)
 ns_re = {"re": "http://exslt.org/regular-expressions"}
-endpoint_regex = '^(P(\\d+)-(\\d+))|(p(\\d+))$'
-acrobat_path = r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
-command_template = {"Linux":f'okular --unique -p PAGE_NUM PDF_PATH',
-                    "Windows":f'"{acrobat_path}" /A "page=PAGE_NUM=OpenActions" "PDF_PATH"'}
 
 
 def error_correction(s):
@@ -171,11 +168,30 @@ class PDFAnnotationLinker:
             f.write(etree.tounicode(self.mm))
 
 
+def parse_command_args():
+    with open('default_args.yaml') as f:
+        default_args = yaml.full_load(f)['pdf_page_and_annot_linker']
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument('--filelist-entry', nargs='?', default=default_args['filelist_entry'])
+    arg_parser.add_argument('--pdf', nargs='?', default=default_args['pdf'])
+    arg_parser.add_argument('--mm', nargs='?', default=default_args['mm'])
+    arg_parser.add_argument('--image-size', nargs='?', type=float, default=default_args['image_size'])
+    arg_parser.add_argument('--mode', nargs='?',choices=['text', 'image'], default=default_args['mode'])
+    return arg_parser.parse_args()
+
+
 if __name__ == '__main__':
-    mode, mm_path, pdf_path, image_size = get_args(sys.argv)
-    p = PDFAnnotationLinker(path_fit_platform(pdf_path),
-                            path_fit_platform(mm_path),
-                            mode, image_size)
+    args = parse_command_args()
+    if args.filelist_entry is not None:
+        mm, pdf, image_size = filelist[args.filelist_entry]
+    else:
+        mm = args.mm
+        pdf = args.pdf
+        image_size = args.image_size
+
+    p = PDFAnnotationLinker(path_fit_platform(pdf),
+                            path_fit_platform(mm),
+                            args.mode, image_size)
     p.link_endpoints()
     p.save()
 
