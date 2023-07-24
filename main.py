@@ -1,4 +1,7 @@
 import argparse
+
+import freeplane
+import lxml.etree
 import yaml
 
 # new_lines = []
@@ -130,17 +133,18 @@ import yaml
 # styles.getparent().replace(styles, new_styles)
 # print(lxml.etree.tostring(mm, encoding='utf-8').decode())
 
-with open('pdf_page_and_annot_linker/default_args.yaml') as f:
-    default_args = yaml.full_load(f)['bookxnote_to_freeplane']
-arg_parser = argparse.ArgumentParser()
-arg_parser.add_argument('--template', nargs='?', default=default_args['template'])
-arg_parser.add_argument('--filelist-entry', nargs='?', default=default_args['filelist_entry'])
-arg_parser.add_argument('--pdf', nargs='?', default=default_args['pdf'])
-arg_parser.add_argument('--mm', nargs='?', default=default_args['mm'])
-arg_parser.add_argument('--note', nargs='?', default=default_args['note'])
-arg_parser.add_argument('--color-to-style', nargs='*', default=default_args['color_to_style'])
-ns_args = arg_parser.parse_args()
-print(ns_args.color_to_style)
+# with open('pdf_page_and_annot_linker/config.yaml') as f:
+#     default_args = yaml.full_load(f)
+# print(default_args['open_pdf_command']['Windows'])
+# arg_parser = argparse.ArgumentParser()
+# arg_parser.add_argument('--template', nargs='?', default=default_args['template'])
+# arg_parser.add_argument('--filelist-entry', nargs='?', default=default_args['filelist_entry'])
+# arg_parser.add_argument('--pdf', nargs='?', default=default_args['pdf'])
+# arg_parser.add_argument('--mm', nargs='?', default=default_args['mm'])
+# arg_parser.add_argument('--note', nargs='?', default=default_args['note'])
+# arg_parser.add_argument('--color-to-style', nargs='*', default=default_args['color_to_style'])
+# ns_args = arg_parser.parse_args()
+# print(ns_args.color_to_style)
 
 # with open('pdf_page_and_annot_linker/default_args.yaml') as f:
 #     r = yaml.full_load(f)
@@ -148,3 +152,10 @@ print(ns_args.color_to_style)
 
 # ls = [1,2,3,4,5,6]
 # print(dict(zip(ls[0::2], ls[1::2])))
+
+# mm = freeplane.Mindmap('/mnt/E/学习资料/计算机/参考书/可能会读的书/Java/入门/Java核心技术/Java核心技术卷1.mm')
+# print(mm.styles)
+
+# xml_tree = lxml.etree.fromstring('<test r="1" s="2"></test>')
+# tag = xml_tree.get("s") or xml_tree.get('r')
+# print(tag)

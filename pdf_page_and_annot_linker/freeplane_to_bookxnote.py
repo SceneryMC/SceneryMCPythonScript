@@ -5,6 +5,8 @@ import time
 import re
 import random
 import lxml
+import yaml
+import argparse
 from pdf_page_and_annot_linker import generate_command
 from mm_filelist import filelist, bookxnote_root_windows
 from path_cross_platform import *
@@ -35,35 +37,41 @@ def get_original_text(node):
 
 
 class FreeplaneToBookxnote:
-    default_color = 'fffeeb73'
-    freeplane_style = {'重要': "fffb8c00", '极其重要': 'ffe53935', '图片': 'ff0000cc', '代码':'ffcc0099', '': default_color, '总结':'ff00897b'}
-
-    def __init__(self, pdf_path, mm_path, bookxnote_root, pdf_name=None, docid=0):
+    def __init__(self, pdf_path, mm_path, default_color, pdf_name=None, docid=0):
         bookxnote_pdf_name = os.path.basename(pdf_path)[:-4]
         self.mm = freeplane.Mindmap(mm_path)
         self.mm_parent = os.path.dirname(mm_path)
+        self.styles = self.mm.rootnode._node.find('.//map_styles')
+        self.default_color = default_color
         self.pdf_name = pdf_name if pdf_name is not None else bookxnote_pdf_name
-        self.note = f"{bookxnote_root}/{bookxnote_pdf_name}"
+        self.note = f"{path_fit_platform(bookxnote_root_windows)}/{bookxnote_pdf_name}"
         self.docid = docid
         self.maxid = 0
         self.regex = re.escape(generate_command(pdf_path, "PAGE_NUM")).replace('PAGE_NUM', r'(\d+)')
 
         os.makedirs(f"{self.note}/imgfiles", exist_ok=True)
 
+    def style_to_color(self, style_name):
+        if (style := self.styles.find(f".//stylenode[@TEXT='{style_name}']")) is not None:
+            if (color := style.get('BACKGROUND_COLOR')) is not None and color != '#ffffff':
+                return f"ff{color[1:]}"
+            if (color := style.get('BORDER_COLOR')) is not None and color != '#ffffff':
+                return f"ff{color[1:]}"
+        return self.default_color
+
+
     def get_extra_json(self, node):
         plain_text = node.plaintext
         extra_json = {
             "content": get_original_text(node),
-            "linecolor": FreeplaneToBookxnote.freeplane_style.get(node.style,
-                                                                  FreeplaneToBookxnote.default_color),
+            "linecolor": self.style_to_color(node.style),
         }
         if hyperlink := node.hyperlink:
             if page_r := re.search(self.regex, hyperlink):
                 if (textblocks := node._node.find('./textblocks')) is not None:
                     extra_json = {
                         "docid": self.docid,
-                        "fillcolor": FreeplaneToBookxnote.freeplane_style.get(node.style,
-                                                                              FreeplaneToBookxnote.default_color),
+                        "fillcolor": self.style_to_color(node.style),
                         "originaltext": get_original_text(node),
                         "type": 5,
                     }
@@ -119,16 +127,31 @@ class FreeplaneToBookxnote:
         tmp = {"EpubVersion": 2, "filepath": "", "floatingtheme": [], "folded": False, "notelinks": [],
                "scalingratio": 90, "title": self.pdf_name, "unimportant": [],
                "markups": self.walk(self.mm.rootnode)['markups'], 'maxid': self.maxid}  # self.walk(self.mm.rootnode)
-        print(self.maxid)
-        return tmp
+        with open(f'{self.note}/markups.json', 'w', encoding='utf-8') as f:
+            json.dump(tmp, f, ensure_ascii=False)
+
+
+def parse_command_args():
+    with open('default_args.yaml') as f:
+        default_args = yaml.full_load(f)['freeplane_to_bookxnote']
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument('--filelist-entry', nargs='?', default=default_args['filelist_entry'])
+    arg_parser.add_argument('--pdf', nargs='?', default=default_args['pdf'])
+    arg_parser.add_argument('--mm', nargs='?', default=default_args['mm'])
+    arg_parser.add_argument('--default-color', nargs='?', default=default_args['color'])
+    return arg_parser.parse_args()
 
 
 if __name__ == '__main__':
-    mm, pdf, _ = filelist['Java核心技术卷1']
+    args = parse_command_args()
+    if args.filelist_entry is not None:
+        mm, pdf, _ = filelist[args.filelist_entry]
+    else:
+        mm = args.mm
+        pdf = args.pdf
+
     t = FreeplaneToBookxnote(path_fit_platform(pdf),
-                             path_fit_platform(r"E:\学习资料\计算机\参考书\可能会读的书\Java\入门\Java核心技术\Java核心技术卷1_test.mm"),
-                             path_fit_platform(bookxnote_root_windows),
-                             )
-    j = t.translate()
-    with open(f'{t.note}/markups.json', 'w', encoding='utf-8') as f:
-        json.dump(j, f, ensure_ascii=False)
+                             path_fit_platform(mm),
+                             args.default_color)
+    t.translate()
+
