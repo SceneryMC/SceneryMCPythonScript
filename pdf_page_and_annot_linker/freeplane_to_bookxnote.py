@@ -8,7 +8,7 @@ import lxml
 import yaml
 import argparse
 from pdf_page_and_annot_linker import generate_command
-from mm_filelist import filelist, bookxnote_root_windows
+from utils import filelist, bookxnote_root_windows
 from path_cross_platform import *
 
 

@@ -2,7 +2,7 @@ import json
 import re
 from path_cross_platform import *
 from pdf_page_and_annot_linker import generate_command
-from mm_filelist import filelist, bookxnote_root_windows
+from utils import filelist, bookxnote_root_windows
 
 # 在IDE中执行python程序，编译器会自动把当前项目的根目录加入到包查找路径中，可以理解为加到PYTHONPATH下，所以直接执行是没有问题的
 # 但是在cmd或者terminal控制台中直接使用python相关命令来执行程序，不会自动将当前项目加入到PYTHONPATH环境变量下，

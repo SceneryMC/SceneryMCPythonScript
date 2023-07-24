@@ -6,7 +6,7 @@ import os
 import argparse
 import yaml
 from path_cross_platform import path_fit_platform
-from mm_filelist import *
+from utils import *
 from pdf_page_and_annot_linker import generate_command
 
 

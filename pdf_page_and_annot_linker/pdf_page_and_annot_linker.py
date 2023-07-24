@@ -12,7 +12,7 @@ from lxml import etree
 from PIL import Image
 from error_correction_dictionary import character_error_correction, word_error_correction
 from path_cross_platform import *
-from mm_filelist import filelist
+from utils import filelist
 
 intersect_portion = 0.3
 length_to_pixel = 2.05
