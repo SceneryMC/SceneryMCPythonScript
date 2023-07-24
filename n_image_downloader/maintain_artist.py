@@ -7,7 +7,7 @@ from n_image_downloader_fixed import tmp_path, last_log
 
 sync_path = r"F:\存储\其它\SYNC"
 artist_path = rf"{sync_path}\ARTIST"
-artist_alias = 'artist_alias.json'
+artist_alias = 'text_files/artist_alias.json'
 with open(last_log) as f:
     info = json.load(f)
 with open(artist_alias) as f:

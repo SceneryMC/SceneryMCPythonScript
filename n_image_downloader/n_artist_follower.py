@@ -9,7 +9,8 @@ from n_image_downloader_fixed import all_log, test_url
 from collections import defaultdict
 
 global local_last_work, driver
-artist_new_work = 'n_new_work.json'
+artist_new_work = 'text_files/n_new_work.json'
+n_artist = 'text_files/n_artist.txt'
 works_per_page = 25
 
 
@@ -73,7 +74,7 @@ def default_artist():
 
 
 def load_specified():
-    with open('text_files/n_artist.txt') as f:
+    with open(n_artist) as f:
         d = {s.strip() : 0 for s in f.readlines()}
     return d
 

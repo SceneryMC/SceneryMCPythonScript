@@ -16,7 +16,7 @@ for w in s_diff:
 with open(all_log, 'w') as f:
     json.dump(j, f, ensure_ascii=False, indent=True)
 
-with open(all_log) as f:
+with open(last_log) as f:
     j = json.load(f)
 for w in s_diff:
     try:
