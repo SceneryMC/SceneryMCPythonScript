@@ -10,6 +10,13 @@ from utils import *
 from pdf_page_and_annot_linker import generate_command
 
 
+def remove_style_attribute(xml_node):
+    for x in xml_node.iterfind('.//body[@style]'):
+        x.attrib.pop('style')
+    for x in xml_node.xpath('.//p[@style]'):
+        x.attrib.pop('style')
+
+
 def add_text(node, text):
     if '<body' not in text:
         node.plaintext = text.replace('\n', '&#xa;')
@@ -17,6 +24,7 @@ def add_text(node, text):
         _element = lxml.etree.Element("richcontent", TYPE='NODE')
         _html = lxml.etree.SubElement(_element, "html")
         _html.append(lxml.etree.fromstring(text))
+        remove_style_attribute(_element)
         node._node.append(_element)
 
 
@@ -30,6 +38,7 @@ def add_detail(node, text):
             _p.text = line
     else:
         _html.append(lxml.etree.fromstring(text))
+    remove_style_attribute(_element)
     node._node.append(_element)
 
 
