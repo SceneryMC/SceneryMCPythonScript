@@ -1,7 +1,7 @@
 import os
 import json
 
-minecraft_server_path = '/mnt/E/时间的沉淀/游戏/Minecraft/Minecraft服务器/灵工艺/server'
+minecraft_server_path = '/mnt/E/Minecraft/MinecraftServer/灵工艺/server'
 with os.popen("curl -X 'GET' \
   'https://api.papermc.io/v2/projects/paper' \
   -H 'accept: application/json'") as f:
