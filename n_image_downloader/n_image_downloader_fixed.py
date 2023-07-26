@@ -4,20 +4,28 @@ from selenium import webdriver
 from multiprocessing.dummy import Pool
 import re
 import os
+import random
 import time
 import json
 
 global driver, d_last, d_all
 tmp_path = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
-test_url = "https://nhentai.net/g/400000"
+test_url = f"https://nhentai.net/g/{random.randrange(400000, 450000)}"
 last_log = 'text_files/last_n_site.json'
 all_log = 'text_files/all_n_site.json'
 download_list_file = 'text_files/n_site.txt'
 
 
 def get_basic_info(url):
-    driver.get(url)
-    src = driver.page_source
+    while True:
+        driver.get(url)
+        src = driver.page_source
+        if (result := re.search(r'<span class="name">(\d+)</span></a></span></div><div class="tag-container field-name">',
+                          src)) is not None:
+            n = int(result.group(1))
+            break
+        print(src)
+        time.sleep(30)
 
     artist = re.search(r'<span class="tags"><a href="/artist/([^/]+)/"', src)
     parodies = re.search('/parody/([^/]+)/', src)
@@ -25,10 +33,7 @@ def get_basic_info(url):
             'tags': re.findall(r'"/tag/([^/]+)/"', src),
             'characters': re.findall(r'"/character/([^/]+)/"', src),
             'parodies': parodies.group(1) if parodies else None,
-            }, int(
-                re.search(r'<span class="name">(\d+)</span></a></span></div><div class="tag-container field-name">',
-                          src).group(
-                    1)), "/language/chinese/" in src
+            }, n, "/language/chinese/" in src
 
 
 def generate_url(work):
@@ -88,7 +93,7 @@ def init_driver():
     driver = uc.Chrome(options=options)
     driver.set_window_size(192, 168)
     driver.get(test_url)
-    time.sleep(90)
+    time.sleep(30)
 
 
 def load_log():

@@ -85,7 +85,7 @@ def init_driver():
     driver = uc.Chrome(options=options)
     driver.set_window_size(192, 168)
     driver.get(test_url)
-    time.sleep(90)
+    time.sleep(30)
 
 
 if __name__ == '__main__':
