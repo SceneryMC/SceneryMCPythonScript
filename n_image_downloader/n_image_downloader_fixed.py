@@ -106,7 +106,7 @@ def load_log():
 
 def process_requests(allow_duplicate):
     with open(download_list_file) as f:
-        content = re.findall("(\d{1,6})", f.read())
+        content = re.findall("(\d{3,6})", f.read())
     for s in content:
         if s not in d_last and (allow_duplicate or s not in d_all):
             visit_work(s, Chinese_only=True)
