@@ -82,7 +82,7 @@ def load_specified():
 def init_driver():
     global driver
     options = webdriver.ChromeOptions()
-    driver = uc.Chrome(options=options)
+    driver = uc.Chrome(options=options, version_main=113)
     driver.set_window_size(192, 168)
     driver.get(test_url)
     time.sleep(30)
