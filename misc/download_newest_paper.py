@@ -20,5 +20,5 @@ if old_version != name:
       'https://api.papermc.io/v2/projects/paper/versions/{latest_version}/builds/{num}/downloads/{name}' \
       -H 'accept: application/json' \
       --output '{minecraft_server_path}/paper-{latest_version}-{num}.jar'")
-    os.system(f"nautilus {minecraft_server_path}")
+    os.system(f"dolphin {minecraft_server_path} & disown")
     exit(0)
