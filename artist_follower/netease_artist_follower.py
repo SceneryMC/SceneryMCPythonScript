@@ -1,8 +1,8 @@
 import json
-
 import requests
 import re
 import html
+
 
 artists = {12074343: "Ampyx", 31973045: "CHPTRS", 12037010: "Vexento", 783446: "Dabin", 845098: "Lights & Motion",
            1046308: "Marcus Warner", 99093: "The Piano Guys", 45336:"Thomas Bergerson", 79757: "Tony Anderson",
@@ -16,17 +16,10 @@ headers = {
     }
 
 
-def generate_tmp():
-    d = {}
-    for artist_name in artists.values():
-        d[artist_name] = []
-    return d
-
-
 def get_newest_info():
     with open('results/netease_artist_works.json', encoding='utf-8') as f:
         artist_works = json.load(f)
-    artist_works_tmp = generate_tmp()
+    artist_works_tmp = {}
 
     for aritst_id, artist_name in artists.items():
         print(artist_name, end="\t")
