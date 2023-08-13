@@ -62,6 +62,7 @@ def merge():
 
 
 if __name__ == '__main__':
-    get_newest_info()
-    if input("更新") == 'y':
+    if input("抓取？") == 'y':
+        get_newest_info()
+    if input("合并？") == 'y':
         merge()
