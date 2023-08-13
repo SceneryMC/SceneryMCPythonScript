@@ -37,5 +37,6 @@ class GenerateMM:
                 stack.append(node)
 
 
-for file in files.values():
-    GenerateMM(path_fit_platform(file[0]), path_fit_platform(file[1])).generate()
+if __name__ == '__main__':
+    for file in files.values():
+        GenerateMM(path_fit_platform(file[0]), path_fit_platform(file[1])).generate()
