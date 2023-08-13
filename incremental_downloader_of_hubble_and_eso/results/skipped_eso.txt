@@ -1929,3 +1929,10 @@ https://cdn.eso.org/images/original/eso2309d.tif
 https://cdn.eso.org/images/original/elt360-seismic-isolators.tif
 https://cdn.eso.org/images/original/elt360-transfer-ring.tif
 https://cdn.eso.org/images/original/elt360-entrance-02.tif
+https://cdn.eso.org/images/original/eso2310c.tif
+https://cdn.eso.org/images/original/eso2310b.tif
+https://cdn.eso.org/images/original/ann23012a.tif
+https://cdn.eso.org/images/original/ann23012c.tif
+https://cdn.eso.org/images/original/ann23012b.tif
+https://cdn.eso.org/images/original/eso2312f.tif
+https://cdn.eso.org/images/original/vitacura-360-drone.tif
