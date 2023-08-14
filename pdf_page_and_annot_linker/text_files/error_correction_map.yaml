@@ -1,0 +1,23 @@
+character_error_correction:
+  —: _
+  －: "-"
+  ＞: >
+  ＜: <
+  ·: ""
+  七: t
+  ＋: +
+  千: 于
+  儿: 几
+  巳: 已
+  û: fi
+  （: (
+  ）: )
+  ．: .
+
+word_error_correction:
+  变址: 变量
+
+tmp:
+  l: 1
+  "-": _
+  ",": ,

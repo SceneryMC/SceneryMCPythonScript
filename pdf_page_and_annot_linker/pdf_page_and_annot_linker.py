@@ -11,23 +11,25 @@ import argparse
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from lxml import etree
 from PIL import Image
-from error_correction_dictionary import character_error_correction, word_error_correction
 from path_cross_platform import *
-from utils import *
 
-# 相交比：设一个词在pdf中的范围为x，选区y，若x & y的面积 > intersect_portion * min(x, y)则认为该词属于y
-intersect_portion = 0.3
-# image图片像素数到pdf导出的各个选区对应的坐标的换算，应该和image的dpi有关，这里直接写死
-length_to_pixel = 2.05
-# 别动就完事了
+
+# 读取配置文件
+with open('text_files/config.yaml') as f:
+    config = yaml.full_load(f)
+with open('text_files/filelist.yaml') as f:
+    filelist = yaml.full_load(f)
+with open('text_files/error_correction_map.yaml') as f:
+    correct = yaml.full_load(f)
+# 不可能用在他处的常量，别动就完事了
 mat = fitz.Matrix(2, 2)
 ns_re = {"re": "http://exslt.org/regular-expressions"}
 
 
 def error_correction(s):
     # 按字替换与按词替换
-    s = s.translate(str.maketrans(character_error_correction))
-    for original, correction in word_error_correction.items():
+    s = s.translate(str.maketrans(correct["character_error_correction"]))
+    for original, correction in correct["word_error_correction"].items():
         s = s.replace(original, correction)
     return s
 
@@ -41,7 +43,7 @@ def mm_open_as_xml(mm_path: str) -> etree._ElementTree:
 
 def generate_command(pdf_path: str, page_num: int|str, pf=platform) -> str:
     # 生成跳转到pdf的命令，Window必须用quote
-    command = command_template[pf].replace("PAGE_NUM", str(page_num)).replace("PDF_PATH", path_fit_platform(pdf_path, pf))
+    command = config['command_template'][pf].replace("PAGE_NUM", str(page_num)).replace("PDF_PATH", path_fit_platform(pdf_path, pf))
     if pf == "Windows":
         command = urllib.request.quote(command)
     return command
@@ -66,7 +68,7 @@ def get_hightlighted_text(sep, annot, wordlist) -> str:
         for w in wordlist:
             tmp_rect = fitz.Rect(w[:4])
             tmp_intersect_rect = fitz.Rect(tmp_rect).intersect(r)
-            if tmp_intersect_rect.get_area() > intersect_portion * min(tmp_rect.get_area(), r.get_area()):
+            if tmp_intersect_rect.get_area() > config["intersect_portion"] * min(tmp_rect.get_area(), r.get_area()):
                 word = w[4]
                 unit_length = (w[2] - w[0]) / len(word)
                 start, end = round((r[0] - w[0]) / unit_length, 0), round((r[2] - w[0]) / unit_length, 0)
@@ -93,12 +95,12 @@ class PDFAnnotationLinker:
     def get_new_endpoints(self) -> list[etree._Element]:
         # 查找没有样式（否则text不为tag，而为element.text）、没有添加LINK的新节点
         # 不同时retrun self.mm.xpath(f".//*[re:match(text(), '{endpoint_regex}')]", namespaces=ns_re)的结果：不允许添加样式
-        return self.mm.xpath(f".//*[re:match(@TEXT, '{endpoint_regex}') and not(@LINK)]", namespaces=ns_re)
+        return self.mm.xpath(f""".//*[re:match(@TEXT, '{config["endpoint_regex"]}') and not(@LINK)]""", namespaces=ns_re)
 
     def link_endpoints(self) -> None:
         endpoints = self.get_new_endpoints()
         for endpoint in endpoints:
-            r = re.search(endpoint_regex, endpoint.get('TEXT'))
+            r = re.search(config['endpoint_regex'], endpoint.get('TEXT'))
             # element已经经过一次regex，这里能保证group1和group4有且仅有一个非None
             if r.group(1):
                 self.link_full_endpoint(endpoint, int(r.group(2)) - 1, int(r.group(3)) - 1) # 从1开始转为从0开始
@@ -146,7 +148,7 @@ class PDFAnnotationLinker:
         l, u, r, b = min(x), min(y), max(x), max(y)
 
         # 由边界创建白背景（否则为空背景）
-        plane = Image.new('RGB', (int((r - l) * length_to_pixel), int((b - u) * length_to_pixel)), color="white")
+        plane = Image.new('RGB', (int((r - l) * config["length_to_pixel"]), int((b - u) * config["length_to_pixel"])), color="white")
         points = annot.vertices
         quad_count = len(points) // 4
         # 将文字按Quad截图，粘贴到白背景上
@@ -154,7 +156,7 @@ class PDFAnnotationLinker:
             clip = fitz.Quad(points[i * 4: i * 4 + 4]).rect
             pix = page.get_pixmap(matrix=mat, clip=clip, annots=False)
             plane.paste(Image.frombytes('RGB', (pix.width, pix.height), pix.samples),
-                        (int((clip.x0 - l) * length_to_pixel), int((clip.y0 - u) * length_to_pixel)))
+                        (int((clip.x0 - l) * config["length_to_pixel"]), int((clip.y0 - u) * config["length_to_pixel"])))
 
         # 生成图片文件，并在当前节点上添加该图片
         png_filename = f"png_{random.randrange(0, 0xffffffffffff)}.png"
@@ -175,7 +177,7 @@ class PDFAnnotationLinker:
 
 
 def parse_command_args():
-    with open('default_args.yaml') as f:
+    with open('text_files/default_args.yaml') as f:
         default_args = yaml.full_load(f)['pdf_page_and_annot_linker']
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('--filelist-entry', nargs='?', default=default_args['filelist_entry'])

@@ -1,16 +1,21 @@
 import json
 import re
+import yaml
 from path_cross_platform import *
 from pdf_page_and_annot_linker import generate_command
-from utils import filelist, bookxnote_root_windows
 
 # 在IDE中执行python程序，编译器会自动把当前项目的根目录加入到包查找路径中，可以理解为加到PYTHONPATH下，所以直接执行是没有问题的
 # 但是在cmd或者terminal控制台中直接使用python相关命令来执行程序，不会自动将当前项目加入到PYTHONPATH环境变量下，
 # 如果涉及到import其他文件夹下的变量就会报类似ImportError: No module named xxx这样的错误。
-#
 # 解决方法是使用sys.path.append()命令把报警包的所在文件夹路径加入到PYTHONPATH
 
 global pdf_path
+with open('text_files/config.yaml') as f:
+    config = yaml.full_load(f)
+with open('text_files/filelist.yaml') as f:
+    filelist = yaml.full_load(f)
+
+
 def switch_platform(match):
     page_num = match.group(1)
     command = generate_command(pdf_path, page_num, platform)
@@ -31,8 +36,8 @@ for file in filelist.values():
         with open(mm_path, 'w', encoding="utf-8") as f:
             f.write(new_content)
 
-for root, _, files in os.walk(path_fit_platform(bookxnote_root_windows)):
-    if os.path.dirname(root) == path_fit_platform(bookxnote_root_windows):
+for root, _, files in os.walk(path_fit_platform(config["bookxnote_root_windows"])):
+    if os.path.dirname(root) == path_fit_platform(config["bookxnote_root_windows"]):
         with open(f"{root}/manifest.json", encoding='utf-8') as f:
             j = json.load(f)
         print(j)

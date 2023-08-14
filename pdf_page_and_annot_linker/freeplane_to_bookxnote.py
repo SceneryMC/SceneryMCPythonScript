@@ -8,8 +8,13 @@ import lxml
 import yaml
 import argparse
 from pdf_page_and_annot_linker import generate_command
-from utils import filelist, bookxnote_root_windows
 from path_cross_platform import *
+
+
+with open('text_files/config.yaml') as f:
+    config = yaml.full_load(f)
+with open('text_files/filelist.yaml') as f:
+    filelist = yaml.full_load(f)
 
 
 def get_textblocks(big_block):
@@ -44,7 +49,7 @@ class FreeplaneToBookxnote:
         self.styles = self.mm.rootnode._node.find('.//map_styles')
         self.default_color = default_color
         self.pdf_name = pdf_name if pdf_name is not None else bookxnote_pdf_name
-        self.note = f"{path_fit_platform(bookxnote_root_windows)}/{bookxnote_pdf_name}"
+        self.note = f"{path_fit_platform(config['bookxnote_root_windows'])}/{bookxnote_pdf_name}"
         self.docid = docid
         self.maxid = 0
         self.regex = re.escape(generate_command(pdf_path, "PAGE_NUM")).replace('PAGE_NUM', r'(\d+)')
@@ -132,7 +137,7 @@ class FreeplaneToBookxnote:
 
 
 def parse_command_args():
-    with open('default_args.yaml') as f:
+    with open('text_files/default_args.yaml') as f:
         default_args = yaml.full_load(f)['freeplane_to_bookxnote']
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('--filelist-entry', nargs='?', default=default_args['filelist_entry'])

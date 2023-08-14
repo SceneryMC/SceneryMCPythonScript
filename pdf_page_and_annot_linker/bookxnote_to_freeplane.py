@@ -6,8 +6,11 @@ import os
 import argparse
 import yaml
 from path_cross_platform import path_fit_platform
-from utils import *
 from pdf_page_and_annot_linker import generate_command
+
+
+with open('text_files/filelist.yaml') as f:
+    filelist = yaml.full_load(f)
 
 
 def remove_style_attribute(xml_node):
@@ -120,7 +123,7 @@ class BooxnoteToFreeplane:
 
 
 def parse_command_args():
-    with open('default_args.yaml') as f:
+    with open('text_files/default_args.yaml') as f:
         default_args = yaml.full_load(f)['bookxnote_to_freeplane']
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('--template', nargs='?', default=default_args['template'])

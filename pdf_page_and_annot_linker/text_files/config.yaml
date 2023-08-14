@@ -1,0 +1,14 @@
+# bookxnote的笔记目录，Windows
+bookxnote_root_windows: 'E:\学习资料\bookxnote\notebooks'
+# freeplane的模板目录，Windows
+template_path_windows: "C:\Users\SceneryMC\AppData\Roaming\Freeplane\1.10.x\templates\xmind2021_default.mm"
+# 链接到PDF的命令
+command_template:
+  "Linux":'okular --unique -p PAGE_NUM PDF_PATH'
+  "Windows":'"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /A "page=PAGE_NUM=OpenActions" "PDF_PATH"'
+# 相交比：设一个词在pdf中的范围为x，选区y，若x & y的面积 > intersect_portion * min(x, y)则认为该词属于y
+intersect_portion: 0.3
+# image图片像素数到pdf导出的各个选区对应的坐标的换算，应该和image的dpi有关，这里直接写死
+length_to_pixel: 2.05
+# 表示该节点要链接到PDF的标记
+endpoint_regex: '^(P(\d+)-(\d+))|(p(\d+))$'
