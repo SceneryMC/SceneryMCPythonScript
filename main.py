@@ -1,5 +1,6 @@
 import argparse
 
+import fitz
 import freeplane
 import lxml.etree
 import yaml
@@ -46,7 +47,9 @@ import yaml
 #         f.write(f"{random.choice(dis)}\t{random.randint(0, 12)}\t{random.randint(0, 12)}\t"
 #                 f"{random.randint(1, 28)}/{random.randint(1, 12)}/{random.randint(2000, 2023)}\n")
 
-# doc = fitz.open('/mnt/E/学习资料/计算机/参考书/可能会读的书/C++/入门/C++Primer/C++Primer5edCN（复件）.pdf')
+# doc = fitz.open('/mnt/E/学习资料/计算机/参考书/可能会读的书/C++/入门/C++Primer/C++Primer5edCN.pdf')
+# page = doc[99]
+# print(page.get_text("words"))
 # for page in doc:
 #     for annot in page.annots():
 #         if annot.colors['stroke'] == (1.0, 1.0, 0.0):
@@ -159,3 +162,6 @@ import yaml
 # xml_tree = lxml.etree.fromstring('<test r="1" s="2"></test>')
 # tag = xml_tree.get("s") or xml_tree.get('r')
 # print(tag)
+
+d = {1: [2, 3, 3], 2: (34, 5, 6, 6, 7,)}
+print(max(d.values(), key=len))

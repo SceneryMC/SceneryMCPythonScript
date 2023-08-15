@@ -20,4 +20,4 @@ word_error_correction:
 tmp:
   l: 1
   "-": _
-  ",": ,
+  ",": ','
