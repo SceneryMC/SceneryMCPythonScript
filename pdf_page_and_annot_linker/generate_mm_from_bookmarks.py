@@ -1,3 +1,4 @@
+import math
 import fitz
 import freeplane
 import yaml
@@ -13,11 +14,12 @@ with open('text_files/config.yaml') as f:
 
 
 class GenerateMM:
-    def __init__(self, mm_path, pdf_path):
+    def __init__(self, mm_path, pdf_path, with_annot):
         self.pdf_path = pdf_path
         self.mm_path = mm_path
-        doc = fitz.open(path_fit_platform(self.pdf_path))
-        self.toc = doc.get_toc()
+        self.with_annot = with_annot
+        self.doc = fitz.open(path_fit_platform(self.pdf_path))
+        self.toc = self.doc.get_toc()
 
     def generate(self):
         mm = freeplane.Mindmap(template_address)
@@ -28,7 +30,7 @@ class GenerateMM:
 
     def add_node(self, root):
         stack = [root]
-        toc_ls = self.toc + [[1]]
+        toc_ls = self.toc + [[1, 0, 999999]]
         for i in range(len(self.toc)):
             node = stack[-1].add_child()
             node.plaintext = self.toc[i][1]
@@ -37,8 +39,14 @@ class GenerateMM:
                 stack = stack[:-diff]
             elif toc_ls[i][0] < toc_ls[i + 1][0]:
                 stack.append(node)
+            if self.with_annot:
+                self.add_annot(toc_ls[i][2], toc_ls[i + 1][2])
+
+    def add_annot(self, begin, end):
+        pass
 
 
 if __name__ == '__main__':
     for file in files.values():
-        GenerateMM(path_fit_platform(file[0]), path_fit_platform(file[1])).generate()
+        t = GenerateMM(path_fit_platform(file[0]), path_fit_platform(file[1]), False)
+        t.generate()
