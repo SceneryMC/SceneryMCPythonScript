@@ -177,7 +177,7 @@ class PDFAnnotationLinker:
 
 
 def parse_command_args():
-    with open('text_files/default_args.yaml') as f:
+    with open('text_files/default_args.yaml', encoding='utf-8') as f:
         default_args = yaml.full_load(f)['pdf_page_and_annot_linker']
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('--filelist-entry', nargs='?', default=default_args['filelist_entry'])
