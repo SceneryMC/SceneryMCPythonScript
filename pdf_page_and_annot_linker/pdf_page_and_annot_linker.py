@@ -15,11 +15,11 @@ from path_cross_platform import *
 
 
 # 读取配置文件
-with open('text_files/config.yaml') as f:
+with open('text_files/config.yaml', encoding='utf-8') as f:
     config = yaml.full_load(f)
-with open('text_files/filelist.yaml') as f:
+with open('text_files/filelist.yaml', encoding='utf-8') as f:
     filelist = yaml.full_load(f)
-with open('text_files/error_correction_map.yaml') as f:
+with open('text_files/error_correction_map.yaml', encoding='utf-8') as f:
     correct = yaml.full_load(f)
 # 不可能用在他处的常量，别动就完事了
 mat = fitz.Matrix(2, 2)

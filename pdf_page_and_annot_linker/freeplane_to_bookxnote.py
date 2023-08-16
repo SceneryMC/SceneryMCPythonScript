@@ -11,9 +11,9 @@ from pdf_page_and_annot_linker import generate_command
 from path_cross_platform import *
 
 
-with open('text_files/config.yaml') as f:
+with open('text_files/config.yaml', encoding='utf-8') as f:
     config = yaml.full_load(f)
-with open('text_files/filelist.yaml') as f:
+with open('text_files/filelist.yaml', encoding='utf-8') as f:
     filelist = yaml.full_load(f)
 
 

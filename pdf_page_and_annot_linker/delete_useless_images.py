@@ -4,7 +4,7 @@ import yaml
 from path_cross_platform import path_fit_platform
 
 
-with open('text_files/filelist.yaml') as f:
+with open('text_files/filelist.yaml', encoding='utf-8') as f:
     filelist = yaml.full_load(f)
 
 

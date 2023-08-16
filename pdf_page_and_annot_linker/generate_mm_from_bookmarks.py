@@ -6,7 +6,7 @@ from path_cross_platform import *
 from pdf_page_and_annot_linker import generate_command
 
 
-with open('text_files/config.yaml') as f:
+with open('text_files/config.yaml', encoding='utf-8') as f:
     template_address = path_fit_platform(yaml.full_load(f)["template_path_windows"])
 
 
