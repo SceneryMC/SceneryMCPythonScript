@@ -123,7 +123,7 @@ class BooxnoteToFreeplane:
 
 
 def parse_command_args():
-    with open('text_files/default_args.yaml') as f:
+    with open('text_files/default_args.yaml', encoding='utf-8') as f:
         default_args = yaml.full_load(f)['bookxnote_to_freeplane']
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('--template', nargs='?', default=default_args['template'])
