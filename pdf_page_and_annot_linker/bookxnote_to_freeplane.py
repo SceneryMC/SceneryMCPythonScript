@@ -8,7 +8,6 @@ import yaml
 from path_cross_platform import path_fit_platform
 from pdf_page_and_annot_linker import generate_command
 
-
 with open('text_files/filelist.yaml', encoding='utf-8') as f:
     filelist = yaml.full_load(f)
 
@@ -69,7 +68,8 @@ class BooxnoteToFreeplane:
                     blocks = lxml.etree.Element("blocks")
                     text_blocks.append(blocks)
                     for r in big_block['rects']:
-                        blocks.append(lxml.etree.fromstring(f'<block x0="{r[0]}" y0="{r[1]}" width="{r[2]}" height="{r[3]}"/>'))
+                        blocks.append(
+                            lxml.etree.fromstring(f'<block x0="{r[0]}" y0="{r[1]}" width="{r[2]}" height="{r[3]}"/>'))
                 node._node.append(text_blocks)
 
     def add_annotations(self, node, object, node_type):
@@ -96,7 +96,6 @@ class BooxnoteToFreeplane:
             node.style = style
 
         return node
-
 
     def json_to_freeplane(self, object, parent_node):
         if isinstance(object, list):
@@ -137,7 +136,7 @@ def parse_command_args():
 
 if __name__ == '__main__':
     args = parse_command_args()
-    if args.filelist_entry is not None:
+    if args.filelist_entry:
         mm, pdf, _ = filelist[args.filelist_entry]
     else:
         mm = args.mm

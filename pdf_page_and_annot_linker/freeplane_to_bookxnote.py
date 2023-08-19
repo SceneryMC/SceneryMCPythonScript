@@ -149,7 +149,7 @@ def parse_command_args():
 
 if __name__ == '__main__':
     args = parse_command_args()
-    if args.filelist_entry is not None:
+    if args.filelist_entry:
         mm, pdf, _ = filelist[args.filelist_entry]
     else:
         mm = args.mm
