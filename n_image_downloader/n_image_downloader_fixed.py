@@ -102,6 +102,8 @@ def load_log():
         d_last = json.load(f)
     with open(all_log) as f:
         d_all = json.load(f)
+    if d_last and (input("last_log未清空！输入clear清空……") == 'clear'):
+        d_last = {}
 
 
 def process_requests(allow_duplicate):
