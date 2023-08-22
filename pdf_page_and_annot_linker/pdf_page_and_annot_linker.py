@@ -113,7 +113,7 @@ class PDFAnnotationLinker:
         method_map = {"text": self.change_text, "image": self.add_image}
 
         page = self.pdf[page_num]
-        command = generate_command(self.pdf_path, page_num)
+        command = generate_command(self.pdf_path, page_num + 1)
         # 获取annot_num指定的高亮，用itertools避免构建整个list
         annot = next(itertools.islice(page.annots(types=[fitz.PDF_ANNOT_HIGHLIGHT]), annot_num, None))
         annot_text = error_correction(annot.info['content'])
@@ -168,7 +168,7 @@ class PDFAnnotationLinker:
     def link_simple_endpoint(self, endpoint: etree._Element, page_num: int) -> None:
         print(f"p{page_num + 1}")
 
-        command = generate_command(self.pdf_path, page_num)
+        command = generate_command(self.pdf_path, page_num + 1)
         endpoint.set("LINK", f"execute:_{command}")
 
     def save(self) -> None:
