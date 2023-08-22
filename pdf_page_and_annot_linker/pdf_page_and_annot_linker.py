@@ -138,7 +138,7 @@ class PDFAnnotationLinker:
         # 先y后x，升序排列
         wordlist.sort(key=lambda w: tuple(w[5:]))
         highlight = error_correction(get_hightlighted_text(self.sep, annot, wordlist))
-        endpoint.set("TEXT", f'{endpoint.get("TEXT")} {html.escape(highlight)}"')
+        endpoint.set("TEXT", f'{endpoint.get("TEXT")} {html.escape(highlight)}')
 
     def add_image(self, page, annot, endpoint: etree._Element) -> None:
         # annot.vertices内容：[(x0, y0), ...]
