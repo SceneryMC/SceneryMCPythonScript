@@ -163,5 +163,70 @@ import yaml
 # tag = xml_tree.get("s") or xml_tree.get('r')
 # print(tag)
 
-d = {1: [2, 3, 3], 2: (34, 5, 6, 6, 7,)}
-print(max(d.values(), key=len))
+# d = {1: [2, 3, 3], 2: (34, 5, 6, 6, 7,)}
+# print(max(d.values(), key=len))
+# def np(n):
+#     while n != 1:
+#         print(n)
+#         n = 3 * n + 1 if (n & 1) == 1 else n // 2
+#
+# np(27)
+
+import re
+
+
+
+SIZE = 8
+WIDTH = 128
+HEIGHT = 96
+tmp = [0] * ((WIDTH + 2) * (HEIGHT + 2))
+board = [0] * ((WIDTH + 2) * (HEIGHT + 2))
+num_to_char = ['▁▁', '▂▂', '▃▃', '▄▄', '▅▅', '▆▆', '▇▇', '██']
+
+def block(x, y):
+    if 0 <= (value := tmp[WIDTH * (x - 1) + (y - 1)]) <= 7:
+        return num_to_char[value]
+    else:
+        return f"{value:02}"
+
+
+
+def print_a_frame():
+    for x in range(1, HEIGHT + 1):
+        for y in range(1, WIDTH + 1):
+            print(block(x, y), end='')
+        print()
+
+
+with open(r'E:\学习资料\小学期\计组和汇编\cpu\testcases\lifegame\vmem.txt', encoding='utf-8') as f:
+    lines = f.readlines()
+
+for line in lines:
+    if 'NEW FRAME!' in line :
+        print(tmp)
+        print_a_frame()
+        print("--------------------------------------")
+    if (result := re.match("VMEM:(\w+), (\w+)", line)) is not None:
+        addr = int(result.group(1), base=16)
+        data = int(result.group(2), base=16)
+        tmp[addr] = data
+
+
+# for line in lines:
+#     if (result := re.match("DMEM:(\w+) at (\w+)", line)) is not None:
+#         data = int(result.group(1), base=16)
+#         addr = int(result.group(2), base=16)
+#         if addr >= 16 + (SIZE + 2) ** 2:
+#             tmp[addr - (16 + (SIZE + 2) ** 2)] = data
+#         else:
+#             board[addr - 16] = data
+# for x in range(SIZE + 2):
+#     for y in range(SIZE + 2):
+#         print(board[(SIZE + 2) * x + y], end=' ')
+#     print()
+# print("----------------------------------------------")
+# for x in range(SIZE + 2):
+#     for y in range(SIZE + 2):
+#         print(tmp[(SIZE + 2) * x + y], end=' ')
+#     print()
+
