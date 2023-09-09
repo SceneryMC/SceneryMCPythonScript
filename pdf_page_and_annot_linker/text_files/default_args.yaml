@@ -1,9 +1,9 @@
 bookxnote_to_freeplane:
   template: /mnt/C/Users/SceneryMC/AppData/Roaming/Freeplane/1.10.x/templates/xmind2021_default.mm
-  filelist_entry: Java核心技术卷1
+  filelist_entry: progit
   pdf: ~
   mm: ~
-  note: /mnt/E/学习资料/bookxnote/notebooks/Java核心技术·卷I12ed/
+  note: /mnt/E/学习资料/bookxnote/notebooks/progit2edCN/
   color_to_style:
     fffb8c00: 重要
     ffe53935: 极其重要
@@ -20,7 +20,7 @@ freeplane_to_bookxnote:
   color: fffeeb73
 
 pdf_page_and_annot_linker:
-  filelist_entry: FluentPython
+  filelist_entry: progit
   pdf: ~
   mm: ~
   image_size: ~
