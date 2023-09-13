@@ -106,17 +106,20 @@ def load_log():
         d_last = {}
 
 
-def process_requests(allow_duplicate):
+def process_requests(allow_duplicate, Chinese_only):
     with open(download_list_file) as f:
         content = re.findall("(\d{3,6})", f.read())
     for s in content:
         if s not in d_last and (allow_duplicate or s not in d_all):
-            visit_work(s, Chinese_only=True)
+            visit_work(s, Chinese_only=Chinese_only)
 
 
 if __name__ == '__main__':
+    ad = input('允许重复下载？') == "True"
+    co = input('仅下载中文？') != "False"
+
     init_driver()
     load_log()
-    process_requests(allow_duplicate=False)
+    process_requests(allow_duplicate=ad, Chinese_only=co)
 
     driver.close()
