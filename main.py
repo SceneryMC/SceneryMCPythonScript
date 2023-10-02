@@ -172,44 +172,43 @@ import yaml
 #
 # np(27)
 
-import re
-
-
-
-SIZE = 8
-WIDTH = 128
-HEIGHT = 96
-tmp = [0] * ((WIDTH + 2) * (HEIGHT + 2))
-board = [0] * ((WIDTH + 2) * (HEIGHT + 2))
-num_to_char = ['▁▁', '▂▂', '▃▃', '▄▄', '▅▅', '▆▆', '▇▇', '██']
-
-def block(x, y):
-    if 0 <= (value := tmp[WIDTH * (x - 1) + (y - 1)]) <= 7:
-        return num_to_char[value]
-    else:
-        return f"{value:02}"
-
-
-
-def print_a_frame():
-    for x in range(1, HEIGHT + 1):
-        for y in range(1, WIDTH + 1):
-            print(block(x, y), end='')
-        print()
-
-
-with open(r'E:\学习资料\小学期\计组和汇编\cpu\testcases\lifegame\vmem.txt', encoding='utf-8') as f:
-    lines = f.readlines()
-
-for line in lines:
-    if 'NEW FRAME!' in line :
-        print(tmp)
-        print_a_frame()
-        print("--------------------------------------")
-    if (result := re.match("VMEM:(\w+), (\w+)", line)) is not None:
-        addr = int(result.group(1), base=16)
-        data = int(result.group(2), base=16)
-        tmp[addr] = data
+# import re
+#
+#
+# SIZE = 8
+# WIDTH = 128
+# HEIGHT = 96
+# tmp = [0] * ((WIDTH + 2) * (HEIGHT + 2))
+# board = [0] * ((WIDTH + 2) * (HEIGHT + 2))
+# num_to_char = ['▁▁', '▂▂', '▃▃', '▄▄', '▅▅', '▆▆', '▇▇', '██']
+#
+# def block(x, y):
+#     if 0 <= (value := tmp[WIDTH * (x - 1) + (y - 1)]) <= 7:
+#         return num_to_char[value]
+#     else:
+#         return f"{value:02}"
+#
+#
+#
+# def print_a_frame():
+#     for x in range(1, HEIGHT + 1):
+#         for y in range(1, WIDTH + 1):
+#             print(block(x, y), end='')
+#         print()
+#
+#
+# with open(r'E:\学习资料\小学期\计组和汇编\cpu\testcases\lifegame\vmem.txt', encoding='utf-8') as f:
+#     lines = f.readlines()
+#
+# for line in lines:
+#     if 'NEW FRAME!' in line :
+#         print(tmp)
+#         print_a_frame()
+#         print("--------------------------------------")
+#     if (result := re.match("VMEM:(\w+), (\w+)", line)) is not None:
+#         addr = int(result.group(1), base=16)
+#         data = int(result.group(2), base=16)
+#         tmp[addr] = data
 
 
 # for line in lines:
@@ -229,4 +228,16 @@ for line in lines:
 #     for y in range(SIZE + 2):
 #         print(tmp[(SIZE + 2) * x + y], end=' ')
 #     print()
+a = 678256785266743746749745991597595974957449495794595975499751974676434162672415672465747564276542567712546127651256742657215764256125641
 
+
+def sum_digits(a):
+    s = 0
+    for d in str(a):
+        s += int(d)
+    return s
+
+
+while a >= 10:
+    a = sum_digits(a)
+print(a)
