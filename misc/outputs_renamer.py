@@ -23,7 +23,7 @@ def rename(src, dst, num_renamed=0):
 
 for root, folders, files in os.walk(outputs_path):
     if not all([x[:-4].isdigit() for x in files]):
-        len_before = len(files)
+        len_before = len(files) + len(folders)
         print(root)
 
         renamed_index = 0
