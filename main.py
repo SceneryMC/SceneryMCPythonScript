@@ -228,16 +228,46 @@ import yaml
 #     for y in range(SIZE + 2):
 #         print(tmp[(SIZE + 2) * x + y], end=' ')
 #     print()
-a = 678256785266743746749745991597595974957449495794595975499751974676434162672415672465747564276542567712546127651256742657215764256125641
+# a = 678256785266743746749745991597595974957449495794595975499751974676434162672415672465747564276542567712546127651256742657215764256125641
+#
+#
+# def sum_digits(a):
+#     s = 0
+#     for d in str(a):
+#         s += int(d)
+#     return s
+#
+#
+# while a >= 10:
+#     a = sum_digits(a)
+# print(a)
 
+import random
+from collections import Counter
 
-def sum_digits(a):
-    s = 0
-    for d in str(a):
-        s += int(d)
-    return s
+# T = 1000000
+# M = 5
+# n = 10
+# c = set()
+# count = 0
+# for _ in range(T):
+#     for _ in range(n):
+#         c.add(random.randint(1, M))
+#     if c.issuperset(set(range(1, M))):
+#         count += 1
+#     c.clear()
+# print(count / T)
 
-
-while a >= 10:
-    a = sum_digits(a)
-print(a)
+T = 1000000
+n = 60
+M = 5
+r = 7
+c = Counter()
+times = 0
+for _ in range(T):
+    for _ in range(n):
+        c.update([random.randint(1, M)])
+    if c.most_common(M)[-1][1] >= r:
+        times += 1
+    c.clear()
+print(times / T)  # ans = 0.8489
