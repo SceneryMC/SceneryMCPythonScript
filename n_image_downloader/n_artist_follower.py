@@ -24,10 +24,16 @@ def visit_artist(artist, last_work):
     inf = max(last_work, local_last_work[artist])
     tmp_works = list(range(works_per_page))
     while len(tmp_works) == works_per_page:
-        driver.get(generate_url(artist, page))
-        src = driver.page_source
+        while True:
+            driver.get(generate_url(artist, page))
+            src = driver.page_source
+            if ((ls := re.findall(r'<a href="/g/(\d+)/" class="cover"', src))
+                    or '<h3>No results, sorry.</h3>' in src):
+                break
+            print(src)
+            time.sleep(30)
 
-        tmp_works = [int(w) for w in re.findall(r'<a href="/g/(\d+)/" class="cover"', src) if int(w) > inf]
+        tmp_works = [int(w) for w in ls if int(w) > inf]
         works.extend(tmp_works)
         page += 1
 
@@ -43,8 +49,9 @@ def visit_artists(last_work, load_func):
 
     new_works = defaultdict(list)
     for artist in local_last_work.keys():
-        new_works[alias.get(artist, artist)].extend(visit_artist(artist, last_work))
-        print(f"{artist} done!")
+        new_work = visit_artist(artist, last_work)
+        new_works[alias.get(artist, artist)].extend(new_work)
+        print(f"{artist} done! {new_work}")
 
     with open(artist_new_work, 'w') as f:
         json.dump(new_works, f, ensure_ascii=False, indent=True)
@@ -82,7 +89,7 @@ def load_specified():
 def init_driver():
     global driver
     options = webdriver.ChromeOptions()
-    driver = uc.Chrome(options=options, version_main=113)
+    driver = uc.Chrome(options=options)
     driver.set_window_size(192, 168)
     driver.get(test_url)
     time.sleep(30)
