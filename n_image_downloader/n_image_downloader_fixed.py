@@ -24,6 +24,8 @@ def get_basic_info(url):
                           src)) is not None:
             n = int(result.group(1))
             break
+        if '404 - Not Found' in src:
+            return {}, -1, False
         print(src)
         time.sleep(30)
 
@@ -45,6 +47,9 @@ def visit_work(work, Chinese_only):
     d, n, isChinese = get_basic_info(url)
     print(f'{url}: n = {n}')
 
+    if n == -1:
+        print(f'{url}不存在！')
+        return
     if not Chinese_only or isChinese:
         download_images(work, n)
         d_last[work] = d_all[work] = d
