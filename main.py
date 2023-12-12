@@ -245,7 +245,7 @@ import yaml
 import random
 from collections import Counter
 
-# T = 1000000
+T = 10000
 # M = 5
 # n = 10
 # c = set()
@@ -258,16 +258,20 @@ from collections import Counter
 #     c.clear()
 # print(count / T)
 
-T = 1000000
-n = 60
-M = 5
-r = 7
-c = Counter()
-times = 0
+# T = 1000000
+# n = 60
+# M = 5
+# r = 7
+# c = Counter()
+# times = 0
+# for _ in range(T):
+#     for _ in range(n):
+#         c.update([random.randint(1, M)])
+#     if c.most_common(M)[-1][1] >= r:
+#         times += 1
+#     c.clear()
+# print(times / T)  # ans = 0.8489
+count = 0
 for _ in range(T):
-    for _ in range(n):
-        c.update([random.randint(1, M)])
-    if c.most_common(M)[-1][1] >= r:
-        times += 1
-    c.clear()
-print(times / T)  # ans = 0.8489
+    count += (random.random() <= 0.5)
+print(count / T)
