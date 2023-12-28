@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
     last_work = int(input("最近作品？"))
     if last_work == -1:
-        with open("n_image_downloader/text_files/all_n_site.json") as f:
+        with open("text_files/all_n_site.json") as f:
             m = json.load(f)
             last_work = max(m.keys(), key=lambda x: int(x))
     target = input("全部a/指定s？")
