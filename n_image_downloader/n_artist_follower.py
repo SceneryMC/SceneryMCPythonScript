@@ -102,8 +102,9 @@ if __name__ == '__main__':
     if last_work == -1:
         with open("text_files/all_n_site.json") as f:
             m = json.load(f)
-            last_work = max(m.keys(), key=lambda x: int(x))
+            last_work = max(int(x) for x in m.keys())
     target = input("全部a/指定s？")
+    print(f"last_work = {last_work}")
 
     init_driver()
     visit_artists(last_work, cmd_to_func[target])
