@@ -9,7 +9,7 @@ hubble_attributes = {'folder': 'Hubble', 'name': 'hubble',
                      'suffix': "https://esahubble.org/images",
                      'basename': "https://esahubble.org/images/page"}
 eso_attributes = {'folder': 'ESO', 'name': 'eso',
-                  'source': 'https://cdn.eso.org/images/original',
+                  'source': 'https://www.eso.org/public/archives/images/original',
                   'suffix': "https://www.eso.org/public/images",
                   'basename': "https://www.eso.org/public/images/list"}
 attribute_map = {"eso": eso_attributes, "hubble": hubble_attributes}
