@@ -1963,3 +1963,14 @@ https://cdn.eso.org/images/original/IMG_6523.tif
 https://cdn.eso.org/images/original/IMG_6530.tif
 https://cdn.eso.org/images/original/potw2344a.tif
 https://cdn.eso.org/images/original/potw2346a.tif
+https://www.eso.org/public/archives/images/original/lasilla_aerial_1.tif
+https://www.eso.org/public/archives/images/original/potw2350c.tif
+https://www.eso.org/public/archives/images/original/potw2350b.tif
+https://www.eso.org/public/archives/images/original/potw2350a.tif
+https://www.eso.org/public/archives/images/original/ESO-height_profiles_with_text.tif
+https://www.eso.org/public/archives/images/original/ESO-height_profiles.tif
+https://www.eso.org/public/archives/images/original/eso2320b.tif
+https://www.eso.org/public/archives/images/original/eso2320a.tif
+https://www.eso.org/public/archives/images/original/potw2404a.tif
+https://www.eso.org/public/archives/images/original/eso1436g.tif
+https://www.eso.org/public/archives/images/original/potw2406a.tif
