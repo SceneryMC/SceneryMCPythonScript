@@ -242,36 +242,20 @@ import yaml
 #     a = sum_digits(a)
 # print(a)
 
-import random
-from collections import Counter
+A = 52969
 
-T = 10000
-# M = 5
-# n = 10
-# c = set()
-# count = 0
-# for _ in range(T):
-#     for _ in range(n):
-#         c.add(random.randint(1, M))
-#     if c.issuperset(set(range(1, M))):
-#         count += 1
-#     c.clear()
-# print(count / T)
 
-# T = 1000000
-# n = 60
-# M = 5
-# r = 7
-# c = Counter()
-# times = 0
-# for _ in range(T):
-#     for _ in range(n):
-#         c.update([random.randint(1, M)])
-#     if c.most_common(M)[-1][1] >= r:
-#         times += 1
-#     c.clear()
-# print(times / T)  # ans = 0.8489
-count = 0
-for _ in range(T):
-    count += (random.random() <= 0.5)
-print(count / T)
+def operation_naive_impl(A, B, C):
+    while A != 1:
+        while True:
+            B += 1
+            C += 1
+            if A % (B + 1) == 0:
+                A = A // (B + 1) * (B ** C)
+                B = 0
+                break
+    return C
+
+
+print(operation_naive_impl(A, 0, 0))
+
