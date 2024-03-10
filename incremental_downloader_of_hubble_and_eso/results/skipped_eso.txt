@@ -1974,3 +1974,7 @@ https://www.eso.org/public/archives/images/original/eso2320a.tif
 https://www.eso.org/public/archives/images/original/potw2404a.tif
 https://www.eso.org/public/archives/images/original/eso1436g.tif
 https://www.eso.org/public/archives/images/original/potw2406a.tif
+https://www.eso.org/public/archives/images/original/potw2407a.tif
+https://www.eso.org/public/archives/images/original/eso2405b.tif
+https://www.eso.org/public/archives/images/original/eso2405c.tif
+https://www.eso.org/public/archives/images/original/eso2405d.tif
