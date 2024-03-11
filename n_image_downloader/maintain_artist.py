@@ -23,6 +23,14 @@ def get_all_exist(root_path):
     return d
 
 
+def get_all_works_of_authors():
+    result = {}
+    for rank in ["0", "3", "4", "5", "6"]:
+        for author in os.listdir(os.path.join(artist_path, rank)):
+            result[author] = get_all_exist(os.path.join(artist_path, rank, author))
+    return result
+
+
 def get_artist_rank_exist(root_path):
     d = {}
     for base, folder, files in os.walk(root_path):
