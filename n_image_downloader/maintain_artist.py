@@ -2,7 +2,7 @@ import os
 import json
 import re
 import shutil
-from n_image_downloader_fixed import tmp_path, last_log
+from n_image_downloader_fixed import tmp_file_path, last_log
 
 
 sync_path = r"F:\存储\其它\SYNC"
@@ -62,5 +62,5 @@ def remove_empty_folder(root_path):
 
 
 if __name__ == '__main__':
-    move_folder_to_artist(tmp_path, artist_path)
+    move_folder_to_artist(tmp_file_path, artist_path)
     # remove_empty_folder(artist_path)

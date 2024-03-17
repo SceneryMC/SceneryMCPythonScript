@@ -1,8 +1,8 @@
-from n_image_downloader.clean_duplicates import is_work_duplicate
+from n_image_downloader.clean_duplicates import is_work_duplicate, get_keypoints_of_a_work, database, database_path
 from n_image_downloader_tmp import tmp_get_image, base_url_pre, base_url_suf
-from collections import defaultdict
 from selenium import webdriver
 from multiprocessing.dummy import Pool
+from collections import defaultdict
 import undetected_chromedriver as uc
 import re
 import os
@@ -10,9 +10,12 @@ import shutil
 import random
 import time
 import json
+import pickle
 
 
-tmp_path = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
+tmp_file_path = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
+tmp_keypoints_database = 'tmp_keypoints_database.pickle'
+tmp_artist_database = 'tmp_artist_database.pickle'
 last_log = 'text_files/last_n_site.json'
 all_log = 'text_files/all_n_site.json'
 download_list_file = 'text_files/n_site.txt'
@@ -83,7 +86,10 @@ class NImageDownloader:
             return
         if (not Chinese_only or isChinese) and self.download_images(work, n, d['artist']):
             self.d_last[work] = self.d_all[work] = d
+            self.tmp_artist_database[d['artist']].append(work)
+            self.tmp_keypoints_database[work] = get_keypoints_of_a_work(rf"{tmp_file_path}\{work}")
             self.save_log()
+            self.save_tmp_database()
             print(f'{url}完成！')
 
     def get_inner_info(self, work):
@@ -91,14 +97,16 @@ class NImageDownloader:
             try:
                 self.driver.get(f"{generate_url(work)}/1")
                 s = self.driver.page_source
-                pattern = re.search(r'<img src="https://i(\d)\.nhentai\.net/galleries/(\d+)/\d+\.(jpg|png|gif)', s)
+                pattern = re.search(
+                    r'<img src="https://i(\d)\.nhentai\.net/galleries/(\d+)/\d+\.(jpg|png|gif)',
+                    s)
                 return pattern.group(1), pattern.group(2)
             except:
                 time.sleep(5)
                 print("VPN DOWN!")
 
     def download_images(self, work, n, artist):
-        path_tmp = rf"{tmp_path}\{work}"
+        path_tmp = rf"{tmp_file_path}\{work}"
         if not os.path.exists(path_tmp):
             os.mkdir(path_tmp)
         server, inner_serial = self.get_inner_info(work)
@@ -125,27 +133,37 @@ class NImageDownloader:
 
     def check_duplication(self, new_work, path, artist):
         work = is_work_duplicate(path, artist, self.tmp_keypoints_database, self.tmp_artist_database)
-        if work != -1:
+        if work == -1:
             work = is_work_duplicate(path, artist)
-            if work != -1:
+            if work == -1:
                 return True
         print(f"{new_work} duplicates with {work}")
         return False
 
-    def update_tmp_database(self):
-        pass
+    def save_tmp_database(self):
+        with open(tmp_keypoints_database, 'wb') as f:
+            pickle.dump(self.tmp_keypoints_database, f)
+        with open(tmp_artist_database, 'wb') as f:
+            pickle.dump(self.tmp_artist_database, f)
 
-    def merge_database(self):
-        pass
+    def merge_databases(self):
+        self.tmp_keypoints_database.update(database)
+        with open(database_path, 'wb') as f:
+            pickle.dump(self.tmp_keypoints_database, f)
+        self.tmp_keypoints_database = {}
+        self.tmp_artist_database = defaultdict(list)
+        self.save_tmp_database()
 
     def load_tmp_database(self):
-        pass
+        with open(tmp_keypoints_database, 'rb') as f:
+            self.tmp_keypoints_database = pickle.load(f)
+        with open(tmp_artist_database, 'rb') as f:
+            self.tmp_artist_database = pickle.load(f)
 
     def process_requests(self, allow_duplicate, Chinese_only):
         self.init_driver()
         self.load_log()
-        self.tmp_artist_database = defaultdict(list)
-        self.tmp_keypoints_database = {}
+        self.load_tmp_database()
 
         with open(download_list_file) as f:
             content = re.findall("(\d{3,6})", f.read())
@@ -153,7 +171,7 @@ class NImageDownloader:
             if s not in self.d_last and (allow_duplicate or s not in self.d_all):
                 self.visit_work(s, Chinese_only=Chinese_only)
 
-        self.merge_database()
+        self.merge_databases()
         self.driver.close()
         self.driver = None
 

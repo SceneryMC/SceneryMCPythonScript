@@ -10,7 +10,8 @@ import re
 a = 32
 d = get_all_exist(artist_path)
 artists = get_all_works_of_artists()
-with open("database.pickle", 'rb') as f:
+database_path = "text_files/database.pickle"
+with open(database_path, 'rb') as f:
     database = pickle.load(f)
 
 
@@ -87,7 +88,7 @@ def clean_duplicates_in_database(database):
 
 if __name__ == '__main__':
     # database = build_keypoints_database()
-    # with open('database.pickle', 'wb') as f:
+    # with open(database_path, 'wb') as f:
     #     pickle.dump(database, f)
     # clean_duplicates_in_database(database)
     r = is_work_duplicate(r"C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n\500156",
