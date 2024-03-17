@@ -24,11 +24,11 @@ headers = {
 }
 
 
-def temp_get_images(serial, n, inner_serial):
+def tmp_get_images(serial, n, inner_serial):
     urllib3.disable_warnings()
-    address_temp = rf"{path}\{serial}"
-    if not os.path.exists(address_temp):
-        os.mkdir(address_temp)
+    address_tmp = rf"{path}\{serial}"
+    if not os.path.exists(address_tmp):
+        os.mkdir(address_tmp)
 
     print(f'{serial}开始下载！n = {n}')
     for server in servers:
@@ -38,7 +38,7 @@ def temp_get_images(serial, n, inner_serial):
             if int(r.headers['content-length']) > 1024:
                 folder = f"{base_url_pre}{server}{base_url_suf}/{inner_serial}"
                 break
-    while len(dir_ls := os.listdir(address_temp)) != n:
+    while len(dir_ls := os.listdir(address_tmp)) != n:
         ls = [int(x[:x.find('.')]) for x in dir_ls]
         ls_download = []
         for i in range(1, n + 1):
@@ -48,13 +48,13 @@ def temp_get_images(serial, n, inner_serial):
 
         p = Pool()
         for i in ls_download:
-            p.apply_async(temp_get_image, args=(i, serial, folder, address_temp,))
+            p.apply_async(tmp_get_image, args=(i, serial, folder, address_tmp,))
         p.close()
         p.join()
     print(f'{serial}下载完成！')
 
 
-def temp_get_image(i, serial, folder, address_temp):
+def tmp_get_image(i, serial, folder, address_tmp):
     urllib3.disable_warnings()
     print(f"{serial}-{i}开始下载！")
 
@@ -68,7 +68,7 @@ def temp_get_image(i, serial, folder, address_temp):
                 except:
                     print(f"图片{i}出现一次下载错误！重试中……")
                     time.sleep(5)
-            with open(rf"{address_temp}\{i}.{fmt}", 'wb') as f:
+            with open(rf"{address_tmp}\{i}.{fmt}", 'wb') as f:
                 f.write(r_sub.content)
                 print(f"{i}完成！")
             break
@@ -79,7 +79,7 @@ if __name__ == '__main__':
         for line in f:
             line = [int(x) for x in line.strip().split()]
             if len(line) == 3:
-                temp_get_images(*line)
+                tmp_get_images(*line)
 
 
 # view-source:https://nhentai.net/g//1

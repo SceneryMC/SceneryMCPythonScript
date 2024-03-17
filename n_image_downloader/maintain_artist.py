@@ -23,7 +23,7 @@ def get_all_exist(root_path):
     return d
 
 
-def get_all_works_of_authors():
+def get_all_works_of_artists():
     result = {}
     for rank in ["0", "3", "4", "5", "6"]:
         for author in os.listdir(os.path.join(artist_path, rank)):
