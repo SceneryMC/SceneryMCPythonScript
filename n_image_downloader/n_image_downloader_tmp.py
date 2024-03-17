@@ -56,7 +56,7 @@ def tmp_get_images(serial, n, inner_serial):
 
 def tmp_get_image(i, serial, folder, address_tmp):
     urllib3.disable_warnings()
-    print(f"{serial}-{i}开始下载！")
+    # print(f"{serial}-{i}开始下载！", end='\t')
 
     for fmt in fmts:
         r_sub = requests.get(f"{folder}/{i}.{fmt}", verify=False, headers=headers, stream=True)

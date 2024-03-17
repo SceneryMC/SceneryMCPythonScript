@@ -4,8 +4,7 @@ import re
 import time
 import undetected_chromedriver as uc
 from selenium import webdriver
-from maintain_artist import artist_alias, artist_path
-from n_image_downloader_fixed import all_log, test_url
+from maintain_artist import alias, artist_path
 from collections import defaultdict
 
 global local_last_work, driver
@@ -44,8 +43,6 @@ def visit_artist(artist, last_work):
 def visit_artists(last_work, load_func):
     global local_last_work
     local_last_work = load_func()
-    with open(artist_alias) as f:
-        alias = json.load(f)
 
     new_works = defaultdict(list)
     for artist in local_last_work.keys():

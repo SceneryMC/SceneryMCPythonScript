@@ -1,4 +1,4 @@
-from maintain_artist import get_all_exist, artist_path, get_all_works_of_artists
+from maintain_artist import get_all_exist, artist_path, get_all_works_of_artists, alias
 import numpy as np
 import pickle
 import cv2
@@ -49,6 +49,8 @@ def is_work_duplicate(new_path, new_artist,
     if new_result is None:
         new_result = get_keypoints_of_a_work(new_path)
 
+    if (new_artist := alias.get(new_artist, new_artist)) not in artist_database:
+        return -1
     for work_id in artist_database[new_artist]:
         if new_id == work_id:
             continue

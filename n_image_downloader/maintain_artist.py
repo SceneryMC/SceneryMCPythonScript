@@ -2,12 +2,8 @@ import os
 import json
 import re
 import shutil
-from n_image_downloader_fixed import tmp_file_path, last_log
+from n_image_downloader.utils import last_log, artist_alias, artist_path, tmp_file_path
 
-
-sync_path = r"F:\存储\其它\SYNC"
-artist_path = rf"{sync_path}\ARTIST"
-artist_alias = 'text_files/artist_alias.json'
 with open(last_log) as f:
     info = json.load(f)
 with open(artist_alias) as f:
@@ -26,8 +22,8 @@ def get_all_exist(root_path):
 def get_all_works_of_artists():
     result = {}
     for rank in ["0", "3", "4", "5", "6"]:
-        for author in os.listdir(os.path.join(artist_path, rank)):
-            result[author] = get_all_exist(os.path.join(artist_path, rank, author))
+        for artist in os.listdir(os.path.join(artist_path, rank)):
+            result[artist] = get_all_exist(os.path.join(artist_path, rank, artist))
     return result
 
 

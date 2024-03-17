@@ -1,4 +1,6 @@
-from n_image_downloader.clean_duplicates import is_work_duplicate, get_keypoints_of_a_work, database, database_path
+from clean_duplicates import is_work_duplicate, get_keypoints_of_a_work, database, database_path, d
+from n_image_downloader.utils import last_log, all_log, tmp_file_path, tmp_keypoints_database, tmp_artist_database, \
+    download_list_file
 from n_image_downloader_tmp import tmp_get_image, base_url_pre, base_url_suf
 from selenium import webdriver
 from multiprocessing.dummy import Pool
@@ -13,13 +15,6 @@ import json
 import pickle
 
 
-tmp_file_path = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
-tmp_keypoints_database = 'tmp_keypoints_database.pickle'
-tmp_artist_database = 'tmp_artist_database.pickle'
-last_log = 'text_files/last_n_site.json'
-all_log = 'text_files/all_n_site.json'
-download_list_file = 'text_files/n_site.txt'
-
 def generate_url(work):
     return f"https://nhentai.net/g/{work}"
 
@@ -29,8 +24,8 @@ class NImageDownloader:
         self.d_last = None
         self.d_all = None
         self.driver = None
-        self.tmp_artist_database = None
-        self.tmp_keypoints_database = None
+        self.tmp_keypoints_database = {}
+        self.tmp_artist_database = defaultdict(list)
         self.test_url = f"https://nhentai.net/g/{random.randrange(400000, 450000)}"
 
 
@@ -70,10 +65,10 @@ class NImageDownloader:
 
         artist = re.search(r'<span class="tags"><a href="/artist/([^/]+)/"', src)
         parodies = re.search('/parody/([^/]+)/', src)
-        return {'artist': artist.group(1) if artist else None,
+        return {'artist': artist.group(1) if artist else "None",
                 'tags': re.findall(r'"/tag/([^/]+)/"', src),
                 'characters': re.findall(r'"/character/([^/]+)/"', src),
-                'parodies': parodies.group(1) if parodies else None,
+                'parodies': parodies.group(1) if parodies else "None",
                 }, n, "/language/chinese/" in src
 
     def visit_work(self, work, Chinese_only):
@@ -122,23 +117,25 @@ class NImageDownloader:
         while len(dir_ls := os.listdir(path_tmp)) != n:
             if len(dir_ls) == 0:
                 download_a_group(set(range(1, min(n, 20) + 1)))
-                if not self.check_duplication(work, path_tmp, artist):
-                    shutil.rmtree(path_tmp)
-                    return False
+                if (p := self.check_duplication(work, path_tmp, artist)) != -1:
+                    if n <= len(os.listdir(d[p])) + 2:
+                        print(f"{work} duplicates with {p}, and has less pages, abort!")
+                        shutil.rmtree(path_tmp)
+                        return False
+                    else:
+                        print(f"{work} duplicates with {p}, but has more pages, continue...")
+                print(f"{work} is unique!")
             else:
                 ls_download = set(range(1, n + 1)) - {int(x.split('.')[0]) for x in dir_ls}
                 print(ls_download)
                 download_a_group(ls_download)
         return True
 
-    def check_duplication(self, new_work, path, artist):
-        work = is_work_duplicate(path, artist, self.tmp_keypoints_database, self.tmp_artist_database)
+    def check_duplication(self, work, path, artist):
+        work = is_work_duplicate(path, artist, self.tmp_keypoints_database, self.tmp_artist_database, work)
         if work == -1:
             work = is_work_duplicate(path, artist)
-            if work == -1:
-                return True
-        print(f"{new_work} duplicates with {work}")
-        return False
+        return work
 
     def save_tmp_database(self):
         with open(tmp_keypoints_database, 'wb') as f:
@@ -182,4 +179,5 @@ if __name__ == '__main__':
 
     downloader_instance = NImageDownloader()
     downloader_instance.process_requests(allow_duplicate=ad, Chinese_only=co)
+    # downloader_instance.save_tmp_database()
 
