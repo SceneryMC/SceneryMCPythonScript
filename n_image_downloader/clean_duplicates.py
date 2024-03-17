@@ -1,10 +1,9 @@
-from maintain_artist import get_all_exist, artist_path, get_all_works_of_artists, alias
 import numpy as np
 import pickle
 import cv2
 import os
 import re
-
+from n_image_downloader.utils import get_all_exist, artist_path, get_all_works_of_artists, alias
 
 # 思路是对的，但SIFT完全不能用
 a = 32

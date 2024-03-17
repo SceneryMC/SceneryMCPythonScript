@@ -4,8 +4,9 @@ import re
 import time
 import undetected_chromedriver as uc
 from selenium import webdriver
-from maintain_artist import alias, artist_path
 from collections import defaultdict
+from n_image_downloader.utils import alias, all_log, artist_path
+
 
 global local_last_work, driver
 artist_new_work = 'text_files/n_new_work.json'
@@ -70,8 +71,6 @@ def default_artist():
     s |= set(os.listdir(rf"{artist_path}\4"))
     s |= set(os.listdir(rf"{artist_path}\5"))
     s |= set(os.listdir(rf"{artist_path}\6"))
-    with open(artist_alias) as f:
-        alias = json.load(f)
     s |= set(alias.keys())
 
     return s

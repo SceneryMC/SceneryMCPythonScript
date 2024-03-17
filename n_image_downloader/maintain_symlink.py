@@ -1,7 +1,6 @@
 import json
 import os
-from maintain_artist import get_all_exist, info, alias
-from n_image_downloader.utils import artist_path, all_log, sync_path
+from n_image_downloader.utils import artist_path, all_log, sync_path, get_all_exist, info, alias
 
 classifiers = {
     'tags': {'time-stop', 'mind-control', 'mind-break', 'exhibitionism', 'bondage', 'tentacles', 'orgasm-denial',

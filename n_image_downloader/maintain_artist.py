@@ -1,30 +1,7 @@
 import os
-import json
 import re
 import shutil
-from n_image_downloader.utils import last_log, artist_alias, artist_path, tmp_file_path
-
-with open(last_log) as f:
-    info = json.load(f)
-with open(artist_alias) as f:
-    alias = json.load(f)
-
-def get_all_exist(root_path):
-    d = {}
-    for base, folder, files in os.walk(root_path):
-        if not folder:
-            name = os.path.basename(base)
-            if name.isdigit() and 100 < int(name) < 1000000:
-                d[name] = os.path.dirname(base)
-    return d
-
-
-def get_all_works_of_artists():
-    result = {}
-    for rank in ["0", "3", "4", "5", "6"]:
-        for artist in os.listdir(os.path.join(artist_path, rank)):
-            result[artist] = get_all_exist(os.path.join(artist_path, rank, artist))
-    return result
+from n_image_downloader.utils import artist_path, tmp_file_path, get_all_exist, info, alias
 
 
 def get_artist_rank_exist(root_path):
