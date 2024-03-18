@@ -1,6 +1,6 @@
 from clean_duplicates import is_work_duplicate, get_keypoints_of_a_work, database, database_path, d
 from n_image_downloader.utils import last_log, all_log, tmp_file_path, tmp_keypoints_database, tmp_artist_database, \
-    download_list_file
+    download_list_file, tmp_duplicate_path
 from n_image_downloader_tmp import tmp_get_image, base_url_pre, base_url_suf
 from selenium import webdriver
 from multiprocessing.dummy import Pool
@@ -100,7 +100,7 @@ class NImageDownloader:
                 time.sleep(5)
                 print("VPN DOWN!")
 
-    def download_images(self, work, n, artist):
+    def download_images(self, work: str, n, artist):
         path_tmp = rf"{tmp_file_path}\{work}"
         if not os.path.exists(path_tmp):
             os.mkdir(path_tmp)
@@ -117,14 +117,16 @@ class NImageDownloader:
         while len(dir_ls := os.listdir(path_tmp)) != n:
             if len(dir_ls) == 0:
                 download_a_group(set(range(1, min(n, 20) + 1)))
-                if (p := self.check_duplication(work, path_tmp, artist)) != -1:
-                    if n <= len(os.listdir(d[p])) + 2:
-                        print(f"{work} duplicates with {p}, and has less pages, abort!")
+                if (p := self.check_duplication(work, path_tmp, artist)) != '':
+                    if n <= len(os.listdir(os.path.join(d[p], p))) + 2:
+                        with open(tmp_duplicate_path, 'a') as f:
+                            f.write(f"{work} duplicates with {p}, and has fewer pages, abort!\n")
                         shutil.rmtree(path_tmp)
                         return False
                     else:
-                        print(f"{work} duplicates with {p}, but has more pages, continue...")
-                print(f"{work} is unique!")
+                        with open(tmp_duplicate_path, 'a') as f:
+                            f.write(f"{work} duplicates with {p}, but has more pages, continue...\n")
+                print(f"{work} continue!")
             else:
                 ls_download = set(range(1, n + 1)) - {int(x.split('.')[0]) for x in dir_ls}
                 print(ls_download)
@@ -163,7 +165,7 @@ class NImageDownloader:
         self.load_tmp_database()
 
         with open(download_list_file) as f:
-            content = re.findall("(\d{3,6})", f.read())
+            content: list[str] = re.findall("(\d{3,6})", f.read())
         for s in content:
             if s not in self.d_last and (allow_duplicate or s not in self.d_all):
                 self.visit_work(s, Chinese_only=Chinese_only)

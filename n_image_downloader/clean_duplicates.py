@@ -13,12 +13,13 @@ database_path = "text_files/database.pickle"
 with open(database_path, 'rb') as f:
     database = pickle.load(f)
 
+keypoints_storage = list[int]
 
 def cv_imread(path):
     return cv2.imdecode(np.fromfile(path, dtype=np.uint8), cv2.IMREAD_GRAYSCALE)
 
 
-def get_keypoints_of_a_work(work_path):
+def get_keypoints_of_a_work(work_path) -> keypoints_storage:
     result = []
     file_list = [file for file in os.listdir(work_path) if re.match(r"\d+\.(png|jpg)", file)]
     for image_name in sorted(file_list, key=lambda x: int(x[:x.index('.')])):
@@ -44,12 +45,12 @@ def get_keypoints_of_a_work(work_path):
 
 def is_work_duplicate(new_path, new_artist,
                       keypoints_database=database, artist_database=artists,
-                      new_id=-1, new_result=None):
+                      new_id='', new_result=None) -> str:
     if new_result is None:
         new_result = get_keypoints_of_a_work(new_path)
 
     if (new_artist := alias.get(new_artist, new_artist)) not in artist_database:
-        return -1
+        return ''
     for work_id in artist_database[new_artist]:
         if new_id == work_id:
             continue
@@ -64,7 +65,7 @@ def is_work_duplicate(new_path, new_artist,
         denominator = min(len(new_result), len(keypoints_database[work_id]))
         if denominator != 0 and duplicate_count / denominator > 0.9:
             return work_id
-    return -1
+    return ''
 
 
 def build_keypoints_database():
