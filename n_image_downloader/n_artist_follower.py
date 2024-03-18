@@ -5,8 +5,7 @@ import time
 import undetected_chromedriver as uc
 from selenium import webdriver
 from collections import defaultdict
-from n_image_downloader.utils import alias, all_log, artist_path
-
+from n_image_downloader.utils import alias, all_log, artist_path, generate_test_url
 
 global local_last_work, driver
 artist_new_work = 'text_files/n_new_work.json'
@@ -87,7 +86,7 @@ def init_driver():
     options = webdriver.ChromeOptions()
     driver = uc.Chrome(options=options)
     driver.set_window_size(192, 168)
-    driver.get(test_url)
+    driver.get(generate_test_url())
     time.sleep(30)
 
 

@@ -1,6 +1,6 @@
 import json
 import os
-
+import random
 
 tmp_file_path = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
 tmp_keypoints_database = 'text_files/tmp_keypoints_database.pickle'
@@ -21,6 +21,11 @@ with open(last_log) as f:
     info = json.load(f)
 with open(artist_alias) as f:
     alias = json.load(f)
+
+
+def generate_test_url():
+    return f"https://nhentai.net/g/{random.randrange(400000, 450000)}"
+
 
 def get_all_exist(root_path) -> id_to_path:
     d = {}

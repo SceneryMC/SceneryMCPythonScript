@@ -1,6 +1,6 @@
 from clean_duplicates import is_work_duplicate, get_keypoints_of_a_work, database, database_path, d
 from n_image_downloader.utils import last_log, all_log, tmp_file_path, tmp_keypoints_database, tmp_artist_database, \
-    download_list_file, tmp_duplicate_path
+    download_list_file, tmp_duplicate_path, generate_test_url
 from n_image_downloader_tmp import tmp_get_image, base_url_pre, base_url_suf
 from selenium import webdriver
 from multiprocessing.dummy import Pool
@@ -26,7 +26,7 @@ class NImageDownloader:
         self.driver = None
         self.tmp_keypoints_database = {}
         self.tmp_artist_database = defaultdict(list)
-        self.test_url = f"https://nhentai.net/g/{random.randrange(400000, 450000)}"
+        self.test_url = generate_test_url()
 
 
     def init_driver(self):
