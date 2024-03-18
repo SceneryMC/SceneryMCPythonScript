@@ -23146,20 +23146,6 @@
   ],
   "parodies": "granblue-fantasy"
  },
- "407912": {
-  "artist": "gosaiji",
-  "tags": [
-   "sole-female",
-   "sole-male",
-   "schoolgirl-uniform",
-   "blowjob",
-   "defloration",
-   "schoolboy-uniform",
-   "virginity"
-  ],
-  "characters": [],
-  "parodies": null
- },
  "409522": {
   "artist": "wataame",
   "tags": [
@@ -32729,20 +32715,6 @@
   "characters": [],
   "parodies": null
  },
- "225357": {
-  "artist": "honda-arima",
-  "tags": [
-   "stockings",
-   "glasses",
-   "full-censorship",
-   "story-arc",
-   "catgirl",
-   "kemonomimi",
-   "monster-girl"
-  ],
-  "characters": [],
-  "parodies": null
- },
  "199566": {
   "artist": "honda-arima",
   "tags": [
@@ -32871,21 +32843,6 @@
    "ohana-matsumae"
   ],
   "parodies": "hanasaku-iroha"
- },
- "324225": {
-  "artist": "yukiyoshi-mamizu",
-  "tags": [
-   "sole-female",
-   "sole-male",
-   "nakadashi",
-   "rape",
-   "dilf",
-   "multi-work-series",
-   "cheating",
-   "bald"
-  ],
-  "characters": [],
-  "parodies": "original"
  },
  "298134": {
   "artist": "yukiyoshi-mamizu",
@@ -47528,17 +47485,6 @@
   "characters": [],
   "parodies": null
  },
- "500067": {
-  "artist": "yaya-hinata",
-  "tags": [
-   "nakadashi",
-   "blowjob",
-   "defloration",
-   "demon-girl"
-  ],
-  "characters": [],
-  "parodies": null
- },
  "500037": {
   "artist": "osomatsu",
   "tags": [
@@ -49037,5 +48983,66 @@
   ],
   "characters": [],
   "parodies": null
+ },
+ "500250": {
+  "artist": "None",
+  "tags": [
+   "sole-female",
+   "sole-male",
+   "nakadashi",
+   "blowjob",
+   "mind-control"
+  ],
+  "characters": [
+   "fern",
+   "stark"
+  ],
+  "parodies": "sousou-no-frieren-frieren-beyond-journeys-end"
+ },
+ "500513": {
+  "artist": "yaya-hinata",
+  "tags": [
+   "group",
+   "nakadashi",
+   "blowjob",
+   "defloration",
+   "mind-control",
+   "demon-girl",
+   "kimono",
+   "oni"
+  ],
+  "characters": [],
+  "parodies": "None"
+ },
+ "500582": {
+  "artist": "yaneko-uta-hayashi-naotaka",
+  "tags": [
+   "sole-female",
+   "sole-male",
+   "lolicon",
+   "multi-work-series",
+   "full-censorship",
+   "mind-control",
+   "torture",
+   "tickling"
+  ],
+  "characters": [
+   "producer",
+   "arisu-tachibana"
+  ],
+  "parodies": "the-idolmaster"
+ },
+ "484681": {
+  "artist": "yaneko-uta",
+  "tags": [
+   "lolicon",
+   "torture",
+   "nipple-stimulation",
+   "tickling"
+  ],
+  "characters": [
+   "arisu-tachibana"
+  ],
+  "parodies": "the-idolmaster"
  }
 }
