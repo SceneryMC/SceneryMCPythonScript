@@ -19,7 +19,9 @@ def move_folder_to_artist(from_root_path, to_root_path):
     for key, value in info.items():
         artist = alias.get(value['artist'], value['artist'])
         rank = local_artist.get(artist, 0)
-        if (dst := rf"{to_root_path}\{rank}\{artist}") not in local_path[key]:
+        if key not in local_path:
+            print(f"{key} already moved")
+        elif (dst := rf"{to_root_path}\{rank}\{artist}") not in local_path[key]:
             shutil.move(rf"{local_path[key]}\{key}", rf"{dst}\{key}")
             total += 1
             print(rf"{key} from {local_path[key]}\{key} to {dst}\{key}")

@@ -59,11 +59,11 @@ def is_work_duplicate(new_path, new_artist,
         for i in range(len(new_result)):
             for j in range(len(keypoints_database[work_id])):
                 s = f"{new_result[i] ^ keypoints_database[work_id][j]:0{a**2}b}"
-                if s.count("0") > a ** 2 * 0.85:
+                if s.count("0") > a ** 2 * 0.9:
                     duplicate_count += 1
-        # print(work_id, duplicate_count, end=' ')
         denominator = min(len(new_result), len(keypoints_database[work_id]))
-        if denominator != 0 and duplicate_count / denominator > 0.9:
+        print(work_id, duplicate_count, denominator)
+        if denominator != 0 and duplicate_count / denominator > 0.3:
             return work_id
     return ''
 
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     # with open(database_path, 'wb') as f:
     #     pickle.dump(database, f)
     # clean_duplicates_in_database(database)
-    r = is_work_duplicate(r"C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n\500156",
-                      "kyockcho",
+    r = is_work_duplicate(r"C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n\500854",
+                      "kakao",
                       database, artists)
     print(r)

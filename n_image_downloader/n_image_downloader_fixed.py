@@ -9,7 +9,6 @@ import undetected_chromedriver as uc
 import re
 import os
 import shutil
-import random
 import time
 import json
 import pickle
@@ -117,16 +116,16 @@ class NImageDownloader:
         while len(dir_ls := os.listdir(path_tmp)) != n:
             if len(dir_ls) == 0:
                 download_a_group(set(range(1, min(n, 20) + 1)))
-                if (p := self.check_duplication(work, path_tmp, artist)) != '':
-                    if n <= len(os.listdir(os.path.join(d[p], p))) + 2:
-                        with open(tmp_duplicate_path, 'a') as f:
-                            f.write(f"{work} duplicates with {p}, and has fewer pages, abort!\n")
-                        shutil.rmtree(path_tmp)
-                        return False
-                    else:
-                        with open(tmp_duplicate_path, 'a') as f:
-                            f.write(f"{work} duplicates with {p}, but has more pages, continue...\n")
-                print(f"{work} continue!")
+                is_duplicate, p = self.check_duplication(work, path_tmp, artist)
+                if is_duplicate == "new" and n <= len(os.listdir(rf"{tmp_file_path}\{p}")) + 2:
+                    with open(tmp_duplicate_path, 'a', encoding='utf-8') as f:
+                        f.write(f"{work}与新作品{p}重复且页数更少，下载终止！\n")
+                    shutil.rmtree(path_tmp)
+                    return False
+                elif is_duplicate != "unique":
+                    with open(tmp_duplicate_path, 'a', encoding='utf-8') as f:
+                        f.write(f"{work}与作品{p}重复，但更新或页数更多，下载继续……\n")
+                print(f"{work}继续下载!")
             else:
                 ls_download = set(range(1, n + 1)) - {int(x.split('.')[0]) for x in dir_ls}
                 print(ls_download)
@@ -134,10 +133,12 @@ class NImageDownloader:
         return True
 
     def check_duplication(self, work, path, artist):
-        work = is_work_duplicate(path, artist, self.tmp_keypoints_database, self.tmp_artist_database, work)
-        if work == -1:
-            work = is_work_duplicate(path, artist)
-        return work
+        if (p := is_work_duplicate(path, artist, self.tmp_keypoints_database, self.tmp_artist_database, work)) != '':
+            return "new", p
+        elif (q := is_work_duplicate(path, artist)) != '':
+            return "storage", q
+        else:
+            return "unique", ''
 
     def save_tmp_database(self):
         with open(tmp_keypoints_database, 'wb') as f:
