@@ -61,6 +61,7 @@ def is_work_duplicate(new_path, new_artist,
                 s = f"{new_result[i] ^ keypoints_database[work_id][j]:0{a**2}b}"
                 if s.count("0") > a ** 2 * 0.9:
                     duplicate_count += 1
+                    break
         denominator = min(len(new_result), len(keypoints_database[work_id]))
         print(work_id, duplicate_count, denominator)
         if denominator != 0 and duplicate_count / denominator > 0.3:

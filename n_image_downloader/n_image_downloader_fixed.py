@@ -70,7 +70,7 @@ class NImageDownloader:
                 'parodies': parodies.group(1) if parodies else "None",
                 }, n, "/language/chinese/" in src
 
-    def visit_work(self, work, Chinese_only):
+    def visit_work(self, work, Chinese_only, check_duplication):
         url = generate_url(work)
         d, n, isChinese = self.get_basic_info(url)
         print(f'{url}: n = {n}')
@@ -78,7 +78,7 @@ class NImageDownloader:
         if n == -1:
             print(f'{url}不存在！')
             return
-        if (not Chinese_only or isChinese) and self.download_images(work, n, d['artist']):
+        if (not Chinese_only or isChinese) and self.download_images(work, n, d['artist'], check_duplication):
             self.d_last[work] = self.d_all[work] = d
             self.tmp_artist_database[d['artist']].append(work)
             self.tmp_keypoints_database[work] = get_keypoints_of_a_work(rf"{tmp_file_path}\{work}")
@@ -99,7 +99,7 @@ class NImageDownloader:
                 time.sleep(5)
                 print("VPN DOWN!")
 
-    def download_images(self, work: str, n, artist):
+    def download_images(self, work: str, n, artist, check_duplication):
         path_tmp = rf"{tmp_file_path}\{work}"
         if not os.path.exists(path_tmp):
             os.mkdir(path_tmp)
@@ -117,12 +117,12 @@ class NImageDownloader:
             if len(dir_ls) == 0:
                 download_a_group(set(range(1, min(n, 20) + 1)))
                 is_duplicate, p = self.check_duplication(work, path_tmp, artist)
-                if is_duplicate == "new" and n <= len(os.listdir(rf"{tmp_file_path}\{p}")) + 2:
+                if check_duplication and is_duplicate == "new" and n <= len(os.listdir(rf"{tmp_file_path}\{p}")) + 2:
                     with open(tmp_duplicate_path, 'a', encoding='utf-8') as f:
                         f.write(f"{work}与新作品{p}重复且页数更少，下载终止！\n")
                     shutil.rmtree(path_tmp)
                     return False
-                elif is_duplicate != "unique":
+                elif check_duplication and is_duplicate != "unique":
                     with open(tmp_duplicate_path, 'a', encoding='utf-8') as f:
                         f.write(f"{work}与作品{p}重复，但更新或页数更多，下载继续……\n")
                 print(f"{work}继续下载!")
@@ -160,7 +160,7 @@ class NImageDownloader:
         with open(tmp_artist_database, 'rb') as f:
             self.tmp_artist_database = pickle.load(f)
 
-    def process_requests(self, allow_duplicate, Chinese_only):
+    def process_requests(self, allow_redownload, Chinese_only, check_duplication):
         self.init_driver()
         self.load_log()
         self.load_tmp_database()
@@ -168,8 +168,8 @@ class NImageDownloader:
         with open(download_list_file) as f:
             content: list[str] = re.findall("(\d{3,6})", f.read())
         for s in content:
-            if s not in self.d_last and (allow_duplicate or s not in self.d_all):
-                self.visit_work(s, Chinese_only=Chinese_only)
+            if s not in self.d_last and (allow_redownload or s not in self.d_all):
+                self.visit_work(s, Chinese_only=Chinese_only, check_duplication=check_duplication)
 
         self.merge_databases()
         self.driver.close()
@@ -177,10 +177,11 @@ class NImageDownloader:
 
 
 if __name__ == '__main__':
-    ad = input('允许重复下载？') == "True"
+    ar = input('允许重复下载？') == "True"
     co = input('仅下载中文？') != "False"
+    cd = input('检测重复作品？') != "False"
 
     downloader_instance = NImageDownloader()
-    downloader_instance.process_requests(allow_duplicate=ad, Chinese_only=co)
+    downloader_instance.process_requests(allow_redownload=ar, Chinese_only=co, check_duplication=cd)
     # downloader_instance.save_tmp_database()
 

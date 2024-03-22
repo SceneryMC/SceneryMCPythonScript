@@ -5,11 +5,10 @@ import time
 import undetected_chromedriver as uc
 from selenium import webdriver
 from collections import defaultdict
-from n_image_downloader.utils import alias, all_log, artist_path, generate_test_url
+from n_image_downloader.utils import alias, all_log, artist_path, generate_test_url, download_list_file
 
 global local_last_work, driver
 artist_new_work = 'text_files/n_new_work.json'
-n_artist = 'text_files/n_artist.txt'
 works_per_page = 25
 
 
@@ -76,8 +75,8 @@ def default_artist():
 
 
 def load_specified():
-    with open(n_artist) as f:
-        d = {s.strip() : 0 for s in f.readlines()}
+    with open(download_list_file) as f:
+        d = {s : 0 for s in re.findall(r'https://nhentai\.net/artist/([^/]+)/', f.read())}
     return d
 
 
@@ -95,7 +94,7 @@ if __name__ == '__main__':
 
     last_work = int(input("最近作品？"))
     if last_work == -1:
-        with open("text_files/all_n_site.json") as f:
+        with open(all_log) as f:
             m = json.load(f)
             last_work = max(int(x) for x in m.keys())
     target = input("全部a/指定s？")
