@@ -124,7 +124,7 @@ class NImageDownloader:
                     return False
                 elif check_duplication and is_duplicate != "unique":
                     with open(tmp_duplicate_path, 'a', encoding='utf-8') as f:
-                        f.write(f"{work}与作品{p}重复，但更新或页数更多，下载继续……\n")
+                        f.write(f"{work}与作品{p}重复，但刚刚下载或页数更多，下载继续……\n")
                 print(f"{work}继续下载!")
             else:
                 ls_download = set(range(1, n + 1)) - {int(x.split('.')[0]) for x in dir_ls}
