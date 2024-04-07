@@ -27,7 +27,6 @@ class NImageDownloader:
         self.tmp_artist_database = defaultdict(list)
         self.test_url = generate_test_url()
 
-
     def init_driver(self):
         self.driver = uc.Chrome(options=webdriver.ChromeOptions())
         self.driver.set_window_size(192, 168)
@@ -48,13 +47,13 @@ class NImageDownloader:
         with open(all_log, 'w') as f:
             json.dump(self.d_all, f, ensure_ascii=False, indent=True)
 
-
     def get_basic_info(self, url):
         while True:
             self.driver.get(url)
             src = self.driver.page_source
-            if (result := re.search(r'<span class="name">(\d+)</span></a></span></div><div class="tag-container field-name">',
-                              src)) is not None:
+            if (result := re.search(
+                    r'<span class="name">(\d+)</span></a></span></div><div class="tag-container field-name">',
+                    src)) is not None:
                 n = int(result.group(1))
                 break
             if '404 - Not Found' in src:
@@ -86,7 +85,7 @@ class NImageDownloader:
             self.save_tmp_database()
             print(f'{url}完成！')
 
-    def get_inner_info(self, work):
+    def get_internal_info(self, work):
         while True:
             try:
                 self.driver.get(f"{generate_url(work)}/1")
@@ -103,7 +102,7 @@ class NImageDownloader:
         path_tmp = rf"{tmp_file_path}\{work}"
         if not os.path.exists(path_tmp):
             os.mkdir(path_tmp)
-        server, inner_serial = self.get_inner_info(work)
+        server, inner_serial = self.get_internal_info(work)
 
         def download_a_group(ls):
             p = Pool()
@@ -114,15 +113,15 @@ class NImageDownloader:
 
         folder = f"{base_url_pre}{server}{base_url_suf}/{inner_serial}"
         while len(dir_ls := os.listdir(path_tmp)) != n:
-            if len(dir_ls) == 0:
+            if check_duplication and len(dir_ls) == 0:
                 download_a_group(set(range(1, min(n, 20) + 1)))
                 is_duplicate, p = self.check_duplication(work, path_tmp, artist)
-                if check_duplication and is_duplicate == "new" and n <= len(os.listdir(rf"{tmp_file_path}\{p}")) + 2:
+                if is_duplicate == "new" and n <= len(os.listdir(rf"{tmp_file_path}\{p}")) + 2:
                     with open(tmp_duplicate_path, 'a', encoding='utf-8') as f:
                         f.write(f"{work}与新作品{p}重复且页数更少，下载终止！\n")
                     shutil.rmtree(path_tmp)
                     return False
-                elif check_duplication and is_duplicate != "unique":
+                elif is_duplicate != "unique":
                     with open(tmp_duplicate_path, 'a', encoding='utf-8') as f:
                         f.write(f"{work}与作品{p}重复，但刚刚下载或页数更多，下载继续……\n")
                 print(f"{work}继续下载!")
@@ -166,7 +165,7 @@ class NImageDownloader:
         self.load_tmp_database()
 
         with open(download_list_file) as f:
-            content: list[str] = re.findall("(\d{3,6})", f.read())
+            content: list[str] = re.findall(r"(\d{3,6})", f.read())
         for s in content:
             if s not in self.d_last and (allow_redownload or s not in self.d_all):
                 self.visit_work(s, Chinese_only=Chinese_only, check_duplication=check_duplication)
@@ -184,4 +183,3 @@ if __name__ == '__main__':
     downloader_instance = NImageDownloader()
     downloader_instance.process_requests(allow_redownload=ar, Chinese_only=co, check_duplication=cd)
     # downloader_instance.save_tmp_database()
-
