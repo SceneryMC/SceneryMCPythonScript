@@ -13,7 +13,8 @@ database_path = "text_files/database.pickle"
 with open(database_path, 'rb') as f:
     database = pickle.load(f)
 
-keypoints_storage = list[int]
+type keypoints_storage = list[int]
+
 
 def cv_imread(path):
     return cv2.imdecode(np.fromfile(path, dtype=np.uint8), cv2.IMREAD_GRAYSCALE)
@@ -58,7 +59,7 @@ def is_work_duplicate(new_path, new_artist,
         duplicate_count = 0
         for i in range(len(new_result)):
             for j in range(len(keypoints_database[work_id])):
-                s = f"{new_result[i] ^ keypoints_database[work_id][j]:0{a**2}b}"
+                s = f"{new_result[i] ^ keypoints_database[work_id][j]:0{a ** 2}b}"
                 if s.count("0") > a ** 2 * 0.9:
                     duplicate_count += 1
                     break
@@ -95,6 +96,6 @@ if __name__ == '__main__':
     #     pickle.dump(database, f)
     # clean_duplicates_in_database(database)
     r = is_work_duplicate(r"C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n\500854",
-                      "kakao",
-                      database, artists)
+                          "kakao",
+                          database, artists)
     print(r)

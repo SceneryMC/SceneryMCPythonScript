@@ -64,7 +64,6 @@ class FreeplaneToBookxnote:
                 return f"ff{color[1:]}"
         return self.default_color
 
-
     def get_extra_json(self, node):
         plain_text = node.plaintext
         extra_json = {
@@ -126,7 +125,6 @@ class FreeplaneToBookxnote:
             node_json['markups'] = markups
 
         return node_json
-
 
     def translate(self):
         tmp = {"EpubVersion": 2, "filepath": "", "floatingtheme": [], "folded": False, "notelinks": [],
