@@ -1,4 +1,6 @@
 import argparse
+import json
+import pickle
 
 import fitz
 import freeplane
@@ -242,20 +244,22 @@ import yaml
 #     a = sum_digits(a)
 # print(a)
 
-A = 52969
+import itertools as it
+
+weapon = ['法器', '长枪', '单手剑', '大剑', '弓']
+sex_and_age = ['成男', '少男', '成女', '少女', '萝莉']
+rarity = ['四星', '常驻五星', '限定五星']
+ability = ['主C', '副C', '辅助']
+element = ['风', '岩', '雷', '草', '水', '火', '冰']
 
 
-def operation_naive_impl(A, B, C):
-    while A != 1:
-        while True:
-            B += 1
-            C += 1
-            if A % (B + 1) == 0:
-                A = A // (B + 1) * (B ** C)
-                B = 0
-                break
-    return C
+result = [''.join(t) for t in it.product(rarity, element, weapon, sex_and_age, ability)]
+print(f"我们{'、'.join(result)}共{len(result)}推人怎么你了？？")
 
-
-print(operation_naive_impl(A, 0, 0))
-
+with open(r'n_image_downloader/text_files/all_n_site.json') as f:
+    j = json.load(f)
+with open(r'n_image_downloader/text_files/artist_alias.json') as f:
+    alias = json.load(f)
+for work, work_info in j.items():
+    if 'artist' in work_info and work_info['artist'] in alias.keys():
+        print(work)

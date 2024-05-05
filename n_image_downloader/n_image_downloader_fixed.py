@@ -1,6 +1,6 @@
 from clean_duplicates import is_work_duplicate, get_keypoints_of_a_work, database, database_path, d
 from n_image_downloader.utils import last_log, all_log, tmp_file_path, tmp_keypoints_database, tmp_artist_database, \
-    download_list_file, tmp_duplicate_path, generate_test_url
+    download_list_file, tmp_duplicate_path, generate_test_url, alias
 from n_image_downloader_tmp import tmp_get_image, base_url_pre, base_url_suf
 from selenium import webdriver
 from multiprocessing.dummy import Pool
@@ -63,7 +63,7 @@ class NImageDownloader:
 
         artist = re.search(r'<span class="tags"><a href="/artist/([^/]+)/"', src)
         parodies = re.search('/parody/([^/]+)/', src)
-        return {'artist': artist.group(1) if artist else "None",
+        return {'artist': alias.get(artist.group(1), artist.group(1)) if artist else "None",
                 'tags': re.findall(r'"/tag/([^/]+)/"', src),
                 'characters': re.findall(r'"/character/([^/]+)/"', src),
                 'parodies': parodies.group(1) if parodies else "None",
@@ -104,31 +104,32 @@ class NImageDownloader:
             os.mkdir(path_tmp)
         server, inner_serial = self.get_internal_info(work)
 
+        def get_downloaded_images():
+            return {int(x.split('.')[0]) for x in os.listdir(path_tmp)}
+
         def download_a_group(ls):
-            p = Pool()
-            for i in ls:
-                p.apply_async(tmp_get_image, args=(i, work, folder, path_tmp,))
-            p.close()
-            p.join()
+            while len(rest := ls - get_downloaded_images()) != 0:
+                print(rest)
+                pool = Pool()
+                for i in rest:
+                    pool.apply_async(tmp_get_image, args=(i, work, folder, path_tmp,))
+                pool.close()
+                pool.join()
 
         folder = f"{base_url_pre}{server}{base_url_suf}/{inner_serial}"
-        while len(dir_ls := os.listdir(path_tmp)) != n:
-            if check_duplication and len(dir_ls) == 0:
-                download_a_group(set(range(1, min(n, 20) + 1)))
-                is_duplicate, p = self.check_duplication(work, path_tmp, artist)
-                if is_duplicate == "new" and n <= len(os.listdir(rf"{tmp_file_path}\{p}")) + 2:
-                    with open(tmp_duplicate_path, 'a', encoding='utf-8') as f:
-                        f.write(f"{work}与新作品{p}重复且页数更少，下载终止！\n")
-                    shutil.rmtree(path_tmp)
-                    return False
-                elif is_duplicate != "unique":
-                    with open(tmp_duplicate_path, 'a', encoding='utf-8') as f:
-                        f.write(f"{work}与作品{p}重复，但刚刚下载或页数更多，下载继续……\n")
-                print(f"{work}继续下载!")
-            else:
-                ls_download = set(range(1, n + 1)) - {int(x.split('.')[0]) for x in dir_ls}
-                print(ls_download)
-                download_a_group(ls_download)
+        if check_duplication:
+            download_a_group(set(range(1, min(n, 20) + 1)))
+            is_duplicate, p = self.check_duplication(work, path_tmp, artist)
+            if is_duplicate == "new" and n <= len(os.listdir(rf"{tmp_file_path}\{p}")) + 2:
+                with open(tmp_duplicate_path, 'a', encoding='utf-8') as f:
+                    f.write(f"{work}与新作品{p}重复且页数更少，下载终止！\n")
+                shutil.rmtree(path_tmp)
+                return False
+            elif is_duplicate != "unique":
+                with open(tmp_duplicate_path, 'a', encoding='utf-8') as f:
+                    f.write(f"{work}与作品{p}重复，但刚刚下载或页数更多，下载继续……\n")
+            print(f"{work}继续下载!")
+        download_a_group(set(range(1, n + 1)))
         return True
 
     def check_duplication(self, work, path, artist):
