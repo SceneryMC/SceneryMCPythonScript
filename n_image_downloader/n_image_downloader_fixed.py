@@ -13,6 +13,8 @@ import time
 import json
 import pickle
 
+test_image_num = 20
+
 
 def generate_url(work):
     return f"https://nhentai.net/g/{work}"
@@ -117,8 +119,8 @@ class NImageDownloader:
                 pool.join()
 
         folder = f"{base_url_pre}{server}{base_url_suf}/{inner_serial}"
-        if check_duplication:
-            download_a_group(set(range(1, min(n, 20) + 1)))
+        if check_duplication and len(get_downloaded_images()) < test_image_num:
+            download_a_group(set(range(1, min(n, test_image_num) + 1)))
             is_duplicate, p = self.check_duplication(work, path_tmp, artist)
             if is_duplicate == "new" and n <= len(os.listdir(rf"{tmp_file_path}\{p}")) + 2:
                 with open(tmp_duplicate_path, 'a', encoding='utf-8') as f:
