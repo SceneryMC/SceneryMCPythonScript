@@ -1,6 +1,7 @@
 import argparse
 import json
 import pickle
+from math import sqrt
 
 import fitz
 import freeplane
@@ -256,10 +257,17 @@ element = ['风', '岩', '雷', '草', '水', '火', '冰']
 result = [''.join(t) for t in it.product(rarity, element, weapon, sex_and_age, ability)]
 print(f"我们{'、'.join(result)}共{len(result)}推人怎么你了？？")
 
-with open(r'n_image_downloader/text_files/all_n_site.json') as f:
-    j = json.load(f)
-with open(r'n_image_downloader/text_files/artist_alias.json') as f:
-    alias = json.load(f)
-for work, work_info in j.items():
-    if 'artist' in work_info and work_info['artist'] in alias.keys():
-        print(work)
+# with open(r'n_image_downloader/text_files/all_n_site.json') as f:
+#     j = json.load(f)
+# with open(r'n_image_downloader/text_files/artist_alias.json') as f:
+#     alias = json.load(f)
+# for work, work_info in j.items():
+#     if 'artist' in work_info and work_info['artist'] in alias.keys():
+#         print(work)
+
+primes = {2, 3, 5, 7, 11, 13, 17, 19}
+N = 10000000
+for n in range(2, N):
+    if all(n % p for p in primes if p < sqrt(n) + 1):
+        primes.add(n)
+print(sorted(primes))
