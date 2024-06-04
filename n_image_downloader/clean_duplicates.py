@@ -86,8 +86,8 @@ def clean_duplicates_in_database(database):
         for work_id, work_path in works.items():
             # print(f"processing {work_id}...", end='\t')
             if (p := is_work_duplicate(os.path.join(work_path, work_id), artist, database, artists,
-                                       work_id, database[work_id])) != -1:
-                print(f"{work_id} duplicate with {p}!")
+                                       work_id, database[work_id])) != '':
+                print(f"{work_id} duplicates with {p}!")
 
 
 if __name__ == '__main__':

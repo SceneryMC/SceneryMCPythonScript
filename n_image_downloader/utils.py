@@ -2,7 +2,7 @@ import json
 import os
 import random
 
-tmp_file_path = r'C:\Users\SceneryMC\Downloads\图片助手(ImageAssistant)_批量图片下载器\n'
+tmp_file_path = r'files'
 tmp_keypoints_database = 'text_files/tmp_keypoints_database.pickle'
 tmp_artist_database = 'text_files/tmp_artist_database.pickle'
 tmp_duplicate_path = 'text_files/duplicates.txt'

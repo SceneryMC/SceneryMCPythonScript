@@ -1,6 +1,7 @@
 import argparse
 import json
 import pickle
+from collections import defaultdict
 from math import sqrt
 
 import fitz
@@ -265,9 +266,9 @@ print(f"我们{'、'.join(result)}共{len(result)}推人怎么你了？？")
 #     if 'artist' in work_info and work_info['artist'] in alias.keys():
 #         print(work)
 
-primes = {2, 3, 5, 7, 11, 13, 17, 19}
-N = 10000000
-for n in range(2, N):
-    if all(n % p for p in primes if p < sqrt(n) + 1):
-        primes.add(n)
-print(sorted(primes))
+# primes = {2, 3, 5, 7, 11, 13, 17, 19}
+# N = 10000000
+# for n in range(2, N):
+#     if all(n % p for p in primes if p < sqrt(n) + 1):
+#         primes.add(n)
+# print(sorted(primes))
