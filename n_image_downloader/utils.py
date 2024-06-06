@@ -24,7 +24,7 @@ with open(artist_alias) as f:
 
 
 def generate_test_url():
-    return f"https://nhentai.net/g/{random.randrange(400000, 450000)}"
+    return f"https://nhentai.net/g/{random.randrange(400000, 500000)}"
 
 
 def get_all_exist(root_path) -> id_to_path:
