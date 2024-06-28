@@ -1,5 +1,6 @@
 import argparse
 import json
+import os.path
 import pickle
 from collections import defaultdict
 from math import sqrt
@@ -272,3 +273,12 @@ print(f"我们{'、'.join(result)}共{len(result)}推人怎么你了？？")
 #     if all(n % p for p in primes if p < sqrt(n) + 1):
 #         primes.add(n)
 # print(sorted(primes))
+
+path = os.path.join(r'F:\存储\其它\SYNC\ARTIST\0')
+ls = []
+for folder in os.listdir(path):
+    if (p := len(os.listdir(os.path.join(path, folder)))) > 2:
+        ls.append((folder, p))
+ls.sort(key=lambda x: -x[1])
+for folder, works in ls:
+    print(f"{folder:20}, {works}")
