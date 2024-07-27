@@ -1,17 +1,8 @@
 import json
 import os
-from n_image_downloader.utils import artist_path, all_log, sync_path, get_all_exist, info, alias
+from n_image_downloader.config import map_classifier_to_folder, sync_path, classifiers, artist_path
+from n_image_downloader.utils import all_log, get_all_exist, info, alias
 
-classifiers = {
-    'tags': {'time-stop', 'mind-control', 'mind-break', 'exhibitionism', 'bondage', 'tentacles', 'orgasm-denial',
-             'fox-girl', 'yuri', 'full-color', 'cat-girl', 'bdsm', 'demon-girl', },
-    'characters': {'cirno', 'flandre-scarlet', 'remilia-scarlet', 'patchouli-knowledge', 'reimu-hakurei', 'sakuya-izayoi'
-                   'marisa-kirisame', 'yukari-yakumo', 'sanae-kochiya', 'momiji-inubashiri', 'yuuka-kazami',
-                   'tenshi-hinanai', 'nue-houjuu', 'satori-komeiji', 'madoka-higuchi', 'yuuka-hayase', 'rin-tosaka', 'neeko',
-                   'xiangling', 'hu-tao', 'furina', 'focalors', 'collei'},
-    'parodies': {'touhou-project', 'genshin-impact', 'arknights', 'blue-archive', 'league-of-legends'}
-}
-map_classifier_to_folder = {'tags': "TAG", "characters": "CHARACTER", 'parodies': "PARODY"}
 local_path = get_all_exist(artist_path)
 
 

@@ -1,5 +1,6 @@
 from clean_duplicates import is_work_duplicate, get_keypoints_of_a_work, database, database_path, d
-from n_image_downloader.utils import last_log, all_log, tmp_file_path, tmp_keypoints_database, tmp_artist_database, \
+from n_image_downloader.config import tmp_file_path
+from n_image_downloader.utils import last_log, all_log, tmp_keypoints_database, tmp_artist_database, \
     download_list_file, tmp_duplicate_path, generate_test_url, alias
 from n_image_downloader_tmp import tmp_get_image, base_url_pre, base_url_suf
 from selenium import webdriver

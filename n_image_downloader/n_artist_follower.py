@@ -5,7 +5,9 @@ import time
 import undetected_chromedriver as uc
 from selenium import webdriver
 from collections import defaultdict
-from n_image_downloader.utils import alias, all_log, artist_path, generate_test_url, download_list_file
+from n_image_downloader.config import artist_path
+from n_image_downloader.utils import alias, all_log, generate_test_url, download_list_file, \
+    get_all_works_of_artists
 
 global local_last_work, driver
 artist_new_work = 'text_files/n_new_work.json'
@@ -54,7 +56,7 @@ def visit_artists(last_work, load_func):
 
 
 def load_local():
-    d = defaultdict(lambda :0)
+    d = defaultdict(lambda: 0)
     selected = default_artist()
     with open(all_log, encoding='utf-8') as f:
         j = json.load(f)
@@ -74,9 +76,14 @@ def default_artist():
     return s
 
 
-def load_specified():
+def load_specified(ignore_existed=True):
     with open(download_list_file) as f:
-        d = {s : 0 for s in re.findall(r'https://nhentai\.net/artist/([^/]+)/', f.read())}
+        d = {s: 0 for s in re.findall(r'https://nhentai\.net/artist/([^/]+)/', f.read())}
+    if ignore_existed:
+        ignored = set(d.keys()) & set(get_all_works_of_artists().keys())
+        for artist in ignored:
+            del d[artist]
+            print(f"已存在，跳过：{artist}")
     return d
 
 
@@ -102,4 +109,3 @@ if __name__ == '__main__':
 
     init_driver()
     visit_artists(last_work, cmd_to_func[target])
-

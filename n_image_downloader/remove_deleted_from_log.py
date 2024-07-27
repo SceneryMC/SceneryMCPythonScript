@@ -2,7 +2,8 @@ import json
 import os
 import pickle
 from n_image_downloader.clean_duplicates import database_path
-from n_image_downloader.utils import get_all_exist, artist_path, tmp_file_path, all_log, last_log
+from n_image_downloader.config import artist_path, tmp_file_path
+from n_image_downloader.utils import get_all_exist, all_log, last_log
 
 
 s1 = set(get_all_exist(artist_path).keys()) | set(os.listdir(tmp_file_path))

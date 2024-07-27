@@ -1,7 +1,8 @@
 import os
 import re
 import shutil
-from n_image_downloader.utils import artist_path, tmp_file_path, get_all_exist, info, alias
+from n_image_downloader.config import tmp_file_path, artist_path
+from n_image_downloader.utils import get_all_exist, info, alias
 
 
 def get_artist_rank_exist(root_path):
